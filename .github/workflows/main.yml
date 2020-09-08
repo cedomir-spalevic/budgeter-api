@@ -6,6 +6,15 @@ on:
       - master
 
 jobs:
+  setup-envfile:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Make envfile
+      uses: SpicyPizza/create-envfile@v1
+      with:
+        JWT_KEY: ${{ secrets.JWT_KEY }}
+        FAUNADB_KEY: ${{ secrets.FAUNADB_KEY }}
+        file_name: .env
   deploy:
     name: deploy
     runs-on: ubuntu-latest
