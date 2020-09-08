@@ -1,0 +1,256 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: budgeter-api
+app: budgeter-api
+org: cedomirspalevic
+frameworkVersion: '1'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: prod
+
+  environment:
+    FAUNADBKEY: ${env:FAUNADBKEY}
+    JWTKEY: ${env:JWTKEY}
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+package:
+  individually: true
+#package:
+#  include:
+#    - include-me.js
+#    - include-me-dir/**
+#  exclude:
+#    - exclude-me.js
+#    - exclude-me-dir/**
+
+functions:
+  auth-register:
+    handler: src/lambda/auth/register/index.handler
+    events:
+      - http:
+          path: auth/register
+          method: post
+  auth-signin:
+    handler: src/lambda/auth/signIn/index.handler
+    events:
+      - http:
+          path: auth/signin
+          method: post
+  auth-verify:
+    handler: src/lambda/auth/verify/index.handler
+    events:
+      - http:
+          path: auth/verify
+          method: post
+  budget-payments-complete:
+    handler: src/lambda/budgetPayments/complete/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}/payments/{paymentId}/complete
+          method: get
+          request:
+            parameters:
+              paths:
+                budgetId: true
+                paymentId: true
+  budget-payments-create:
+    handler: src/lambda/budgetPayments/create/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}/payments
+          method: post
+          request:
+            parameters:
+              paths:
+                budgetId: true
+  budget-payments-delete:
+    handler: src/lambda/budgetPayments/delete/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}/payments/{paymentId}
+          method: delete
+          request:
+            parameters:
+              paths:
+                budgetId: true
+                paymentId: true
+  budget-payments-get-all:
+    handler: src/lambda/budgetPayments/getAll/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}/payments
+          method: get
+          request:
+            parameters:
+              paths:
+                budgetId: true
+  budget-payments-uncomplete:
+    handler: src/lambda/budgetPayments/uncomplete/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}/payments/{paymentId}/uncomplete
+          method: get
+          request:
+            parameters:
+              paths:
+                budgetId: true
+                paymentId: true
+  budgets-create:
+    handler: src/lambda/budgets/create/index.handler
+    events:
+      - http:
+          path: budgets
+          method: post
+  budgets-get:
+    handler: src/lambda/budgets/get/index.handler
+    events:
+      - http:
+          path: budgets
+          method: get
+  budgets-update:
+    handler: src/lambda/budgets/update/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}
+          method: patch
+          request:
+            parameters:
+              paths:
+                budgetId: true
+  budgets-delete:
+    handler: src/lambda/budgets/delete/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}
+          method: delete
+          request:
+            parameters:
+              paths:
+                budgetId: true
+  payments-create:
+    handler: src/lambda/payments/create/index.handler
+    events:
+      - http:
+          path: payments
+          method: post
+  payments-get:
+    handler: src/lambda/payments/get/index.handler
+    events:
+      - http:
+          path: payments
+          method: get
+  payments-update:
+    handler: src/lambda/payments/update/index.handler
+    events:
+      - http:
+          path: payments/{paymentId}
+          method: patch
+          request:
+            parameters:
+              paths:
+                paymentId: true
+  payments-delete:
+    handler: src/lambda/payments/delete/index.handler
+    events:
+      - http:
+          path: payments/{paymentId}
+          method: delete
+          request:
+            parameters:
+              paths:
+                paymentId: true
+#    The following are a few example events you can configure
+#    NOTE: Please make sure to change your handler code to work with those events
+#    Check the event documentation for details
+#    events:
+#      - http:
+#          path: users/create
+#          method: get
+#      - websocket: $connect
+#      - s3: ${env:BUCKET}
+#      - schedule: rate(10 minutes)
+#      - sns: greeter-topic
+#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
+#      - alexaSkill: amzn1.ask.skill.xx-xx-xx-xx
+#      - alexaSmartHome: amzn1.ask.skill.xx-xx-xx-xx
+#      - iot:
+#          sql: "SELECT * FROM 'some_topic'"
+#      - cloudwatchEvent:
+#          event:
+#            source:
+#              - "aws.ec2"
+#            detail-type:
+#              - "EC2 Instance State-change Notification"
+#            detail:
+#              state:
+#                - pending
+#      - cloudwatchLog: '/aws/lambda/hello'
+#      - cognitoUserPool:
+#          pool: MyUserPool
+#          trigger: PreSignUp
+#      - alb:
+#          listenerArn: arn:aws:elasticloadbalancing:us-east-1:XXXXXX:listener/app/my-load-balancer/50dc6c495c0c9188/
+#          priority: 1
+#          conditions:
+#            host: example.com
+#            path: /hello
+
+#    Define function environment variables here
+#    environment:
+#      variable2: value2
+
+# you can add CloudFormation resource templates here
+#resources:
+#  Resources:
+#    NewResource:
+#      Type: AWS::S3::Bucket
+#      Properties:
+#        BucketName: my-new-bucket
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"
+
+plugins:
+  - '@serverless/safeguards-plugin'
+  - 'serverless-bundle'
+  - 'serverless-offline'
+  - 'serverless-dotenv-plugin'
+
+# Custom variables read from serverless-bundle
+custom:
+  bundle:
+    sourcemaps: false

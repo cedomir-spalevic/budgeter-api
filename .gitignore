@@ -1,0 +1,15 @@
+# Build folder
+dist
+
+# Node modules
+node_modules
+jspm_packages
+
+# ENV variables
+.env
+
+# Serverless
+.serverless
+
+# Webpack
+.webpack
