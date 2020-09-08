@@ -8,7 +8,7 @@ export default class UsersAuthService {
    constructor() {
       this.index = "userAuth";
       this.resource = "auth";
-      this.faunaDbClient = new Client({ secret: "fnADqVJnc0ACEqPqaIoYJ9xPZ1jArM-NLqLNblI4" })
+      this.faunaDbClient = new Client({ secret: process.env.FAUNADB_KEY });
    }
 
    /**

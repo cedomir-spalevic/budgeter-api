@@ -9,8 +9,8 @@ provider:
   stage: prod
 
   environment:
-    FAUNADBKEY: ${env:FAUNADBKEY}
-    JWTKEY: ${env:JWTKEY}
+    FAUNADBKEY: ${env:FAUNADB_KEY}
+    JWTKEY: ${env:JWT_KEY}
 
 # For serverless-bundle to remove dead code
 package:

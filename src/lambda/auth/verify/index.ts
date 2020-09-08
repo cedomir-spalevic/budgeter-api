@@ -11,9 +11,15 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       token = authorizationHeader.replace("Bearer ", "");
 
    // Verify the token is valid
-   const valid = decodeJwtToken(token);
+   let statusCode = 401;
+   try {
+      const valid = decodeJwtToken(token);
+      if (valid)
+         statusCode = 200;
+   }
+   catch (error) { }
    return {
-      statusCode: (valid ? 200 : 401),
+      statusCode: statusCode,
       body: ""
    }
 }

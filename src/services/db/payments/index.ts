@@ -14,7 +14,7 @@ export default class PaymentsService {
       this.singularIndex = "userPayment"
       this.pluralIndex = "userPayments";
       this.resource = "payments";
-      this.faunaDbClient = new Client({ secret: "fnADqVJnc0ACEqPqaIoYJ9xPZ1jArM-NLqLNblI4" })
+      this.faunaDbClient = new Client({ secret: process.env.FAUNADB_KEY });
    }
 
    /**

@@ -9,7 +9,7 @@ export default class UsersService {
    constructor() {
       this.index = "userEmail";
       this.resource = "users";
-      this.faunaDbClient = new Client({ secret: "fnADqVJnc0ACEqPqaIoYJ9xPZ1jArM-NLqLNblI4" })
+      this.faunaDbClient = new Client({ secret: process.env.FAUNADB_KEY });
    }
 
    /**
