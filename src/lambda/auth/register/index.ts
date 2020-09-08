@@ -32,7 +32,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       user = await usersService.create(email);
    }
    catch (error) {
-      authResponse.emailError = "A user already exists with this email, dumbass";
+      authResponse.emailError = "A user already exists with this email";
       return {
          statusCode: 400,
          body: JSON.stringify(authResponse)
