@@ -6,14 +6,6 @@ on:
       - master
 
 jobs:
-  setup-envfile:
-    runs-on: ubuntu-18.04
-    steps:
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v1
-      with:
-        envkey_JWT_KEY: ${{ secrets.JWT_KEY }}
-        envkey_FAUNADB_KEY: ${{ secrets.FAUNADB_KEY }}
   deploy:
     name: deploy
     runs-on: ubuntu-latest
@@ -21,11 +13,12 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v1
-      with:
-        envkey_JWT_KEY: ${{ secrets.JWT_KEY }}
-        envkey_FAUNADB_KEY: ${{ secrets.FAUNADB_KEY }}
+    - name: Create ent file
+      run: |
+        cat > .env <<EOF
+        JWT_KEY=${{ secrets.JWT_KEY }}
+        FAUNADB_KEY=${{ secrets.FAUNADB_KEY }}
+        EOF
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
