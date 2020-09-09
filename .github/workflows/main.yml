@@ -13,17 +13,17 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
-    - name: Create ent file
-      run: |
-        cat > .env <<EOF
-        JWT_KEY=${{ secrets.JWT_KEY }}
-        FAUNADB_KEY=${{ secrets.FAUNADB_KEY }}
-        EOF
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{ matrix.node-version }}      
+    - name: Create env file
+      run: |
+        cat > .env << EOF
+        JWT_KEY=${{ secrets.JWT_KEY }}
+        FAUNADB_KEY=${{ secrets.FAUNADB_KEY }}
+        EOF
     - run: npm ci
     - name: serverless deploy
       uses: serverless/github-action@master
