@@ -16,10 +16,15 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       const valid = decodeJwtToken(token);
       if (valid)
          statusCode = 200;
+      return {
+         statusCode: statusCode,
+         body: ""
+      }
    }
-   catch (error) { }
-   return {
-      statusCode: statusCode,
-      body: ""
+   catch (error) {
+      return {
+         statusCode: 401,
+         body: ""
+      }
    }
 }
