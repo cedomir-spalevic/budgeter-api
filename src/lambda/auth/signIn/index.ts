@@ -10,7 +10,7 @@ import UsersAuthService from "services/db/userAuth";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    const requestFormBody = JSON.parse(event.body);
-   const email = requestFormBody["email"];
+   let email: string = requestFormBody["email"];
    const password = requestFormBody["password"];
 
    // Check if email and password exist in the request
@@ -20,6 +20,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
          body: "Email and password must be sent in the body"
       };
    }
+
+   // Set email to all lowercase
+   email = email.toLowerCase();
 
    let user: User;
    const authResponse: AuthResponse = {
