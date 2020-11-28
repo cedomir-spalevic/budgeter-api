@@ -1,5 +1,8 @@
+import { User } from "./data";
+
 export interface AuthResponse {
    valid: boolean;
+   user?: User;
    token?: string;
    emailError?: string;
    passwordError?: string;

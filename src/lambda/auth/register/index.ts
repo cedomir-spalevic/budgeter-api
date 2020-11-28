@@ -5,13 +5,22 @@ import {
 import { User } from "models/data";
 import { AuthResponse } from "models/responses";
 import { generateToken } from "services/security";
-import UsersService from "services/db/users";
+import UsersService, { UserClaims } from "services/db/users";
 import UsersAuthService from "services/db/userAuth";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    const requestFormBody = JSON.parse(event.body);
    let email: string = requestFormBody["email"];
    const password = requestFormBody["password"];
+   const userClaims: UserClaims[] = [];
+   if (requestFormBody["claims"]) {
+      const claims = requestFormBody["claims"] as string;
+      const list = claims.split(",");
+      if (list.includes("service"))
+         userClaims.push(UserClaims.Service);
+      if (list.includes("admin"))
+         userClaims.push(UserClaims.Admin);
+   }
 
    // Check if email and password exist in the request
    if (!email || !password) {
@@ -32,7 +41,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
    // Create a new user
    try {
       const usersService = new UsersService();
-      user = await usersService.create(email);
+      user = await usersService.create(email, userClaims);
    }
    catch (error) {
       authResponse.emailError = "A user already exists with this email, dumbass";
@@ -61,6 +70,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
    try {
       const token = generateToken(user.userId);
       authResponse.token = token;
+      authResponse.user = user;
       authResponse.valid = true;
       return {
          statusCode: 200,

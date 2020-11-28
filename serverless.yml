@@ -152,6 +152,32 @@ functions:
             parameters:
               paths:
                 paymentId: true
+  users-get:
+    handler: src/lambda/users/get/index.handler
+    events:
+      - http:
+          path: users
+          method: get
+  users-update:
+    handler: src/lambda/users/update/index.handler
+    events:
+      - http:
+          path: users/{userId}
+          method: patch
+          request:
+            parameters:
+              paths:
+                userId: true
+  users-delete:
+    handler: src/lambda/users/delete/index.handler
+    events:
+      - http:
+          path: users/{userId}
+          method: delete
+          request:
+            parameters:
+              paths:
+                userId: true
 
 plugins:
   - '@serverless/safeguards-plugin'
@@ -161,5 +187,7 @@ plugins:
 
 # Custom variables read from serverless-bundle
 custom:
+  serverless-offline:
+    httpPort: 4000
   bundle:
     sourcemaps: false

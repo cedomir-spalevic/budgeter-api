@@ -18,22 +18,23 @@ export default class BudgetsService {
    }
 
    /**
-    * Get budgets for a user
+    * Get all budgets for user
     */
-   public async get(): Promise<Budget[]> {
-      const response = await this.faunaDbClient.query(
+   private async getAllRefs(): Promise<ResultSet<Budget>> {
+      return await this.faunaDbClient.query<ResultSet<Budget>>(
          Query.Map(
             Query.Paginate(Query.Match(Query.Index(this.pluralIndex), [this.userId])),
             Query.Lambda(x => Query.Get(x))
          )
-      ) as ResultSet<any>;
-      return response.data.map(x => ({
-         budgetId: x.data.budgetId,
-         name: x.data.name,
-         startDate: x.data.startDate,
-         endDate: x.data.endDate,
-         completed: x.data.completed
-      }))
+      );
+   }
+
+   /**
+    * Get budgets for a user
+    */
+   public async get(): Promise<Budget[]> {
+      const result = await this.getAllRefs();
+      return result.data.map(x => x.data);
    }
 
    /**
@@ -48,7 +49,9 @@ export default class BudgetsService {
          name,
          startDate,
          endDate,
-         completed: false
+         completed: false,
+         createdOn: new Date().toISOString(),
+         modifiedOn: new Date().toISOString()
       }
       const request = {
          data: {
@@ -69,13 +72,22 @@ export default class BudgetsService {
     * @param updatedBudget 
     */
    public async update(budgetId: string, updatedBudget: any): Promise<void> {
-      const response = await this.faunaDbClient.query(Query.Get(
-         Query.Match(Query.Index(this.singularIndex), [this.userId, budgetId])
-      )) as Result<Budget>;
+      updatedBudget.modifiedOn = new Date().toISOString();
+      const result = await this.getRef(budgetId);
       await this.faunaDbClient.query(Query.Update(
-         Query.Ref(response.ref.collection, response.ref.id),
+         Query.Ref(result.ref.collection, result.ref.id),
          { data: { ...updatedBudget } }
       ));
+   }
+
+   /**
+    * Delete all budgets for this user
+    */
+   public async deleteAllBudgets(): Promise<void> {
+      const result = await this.getAllRefs();
+      await Promise.all(result.data.map(async x => await this.faunaDbClient.query(
+         Query.Delete(Query.Ref(x.ref.collection, x.ref.id))
+      )));
    }
 
    /**
@@ -83,11 +95,19 @@ export default class BudgetsService {
     * @param budgetId 
     */
    public async delete(budgetId: string): Promise<void> {
-      const result: any = await this.faunaDbClient.query(Query.Get(
-         Query.Match(Query.Index(this.singularIndex), [this.userId, budgetId])
-      ));
+      const result = await this.getRef(budgetId);
       await this.faunaDbClient.query(Query.Delete(
          Query.Ref(result.ref.collection, result.ref.id)
+      ));
+   }
+
+   /**
+    * Get a Budgets reference
+    * @param budgetId 
+    */
+   private async getRef(budgetId: string): Promise<Result<Budget>> {
+      return await this.faunaDbClient.query<Result<Budget>>(Query.Get(
+         Query.Match(Query.Index(this.singularIndex), [this.userId, budgetId])
       ));
    }
 }
