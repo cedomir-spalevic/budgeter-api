@@ -23,6 +23,8 @@ jobs:
         cat > .env << EOF
         JWT_KEY=${{ secrets.JWT_KEY }}
         FAUNADB_KEY=${{ secrets.FAUNADB_KEY }}
+        AWS_PLATFORM_APPLICATION_IOS=${{ secrets.AWS_PLATFORM_APPLICATION_IOS }}
+        AWS_PLATFORM_APPLICATION_ANDROID=${{ secrets.AWS_PLATFORM_APPLICATION_ANDROID }}
         EOF
     - run: npm ci
     - name: serverless deploy
