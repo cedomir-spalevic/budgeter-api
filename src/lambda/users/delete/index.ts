@@ -6,6 +6,7 @@ import { isAdminAuthorized } from "middleware/auth";
 import { User } from "models/data";
 import BudgetPaymentsService from "services/db/budgetPayments";
 import BudgetsService from "services/db/budgets";
+import DevicesService from "services/db/device";
 import PaymentsService from "services/db/payments";
 import UsersAuthService from "services/db/userAuth";
 import UsersService, { UserClaims } from "services/db/users";
@@ -30,6 +31,8 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
    }
 
    try {
+      const devicesService = new DevicesService();
+      await devicesService.deleteDevice(userId);
       const usersAuthService = new UsersAuthService();
       await usersAuthService.deleteUserAuth(userId);
       const paymentsService = new PaymentsService(userId);
