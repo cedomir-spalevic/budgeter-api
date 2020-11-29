@@ -5,7 +5,7 @@ import {
 import { isAuthorized } from "middleware/auth";
 import AWS from "aws-sdk";
 import { CreatePlatformEndpointInput } from "aws-sdk/clients/sns";
-import DevicesServce from "services/db/device";
+import DevicesService from "services/db/device";
 import { Device } from "models/auth";
 
 const sns = new AWS.SNS();
@@ -82,14 +82,16 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       const subscriptionArn = await subscribeToTopic(platformApplicationEndpointArn);
 
       // Create device object in DB
-      const devicesService = new DevicesServce();
-      const newDevice: Device = {
-         userId,
-         device,
-         platformApplicationEndpointArn,
-         subscriptionArn
+      const devicesService = new DevicesService(userId);
+      const containsDevice = await devicesService.containsDevice();
+      if (!containsDevice) {
+         const newDevice: Device = {
+            device,
+            platformApplicationEndpointArn,
+            subscriptionArn
+         }
+         await devicesService.create(newDevice);
       }
-      await devicesService.create(newDevice);
 
       return {
          statusCode: 200,

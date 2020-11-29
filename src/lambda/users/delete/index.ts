@@ -31,8 +31,8 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
    }
 
    try {
-      const devicesService = new DevicesService();
-      await devicesService.deleteDevice(userId);
+      const devicesService = new DevicesService(userId);
+      await devicesService.deleteDevice();
       const usersAuthService = new UsersAuthService();
       await usersAuthService.deleteUserAuth(userId);
       const paymentsService = new PaymentsService(userId);

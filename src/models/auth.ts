@@ -4,7 +4,7 @@ export interface Token {
 }
 
 export interface Device {
-   userId: string;
+   userId?: string;
    device: string;
    platformApplicationEndpointArn: string;
    subscriptionArn: string;
