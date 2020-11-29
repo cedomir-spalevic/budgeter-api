@@ -3,7 +3,7 @@ name: Deploy master branch
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
@@ -25,6 +25,7 @@ jobs:
         FAUNADB_KEY=${{ secrets.FAUNADB_KEY }}
         AWS_PLATFORM_APPLICATION_IOS=${{ secrets.AWS_PLATFORM_APPLICATION_IOS }}
         AWS_PLATFORM_APPLICATION_ANDROID=${{ secrets.AWS_PLATFORM_APPLICATION_ANDROID }}
+        AWS_SNS_TOPIC=${{ secrets.AWS_SNS_TOPIC }}
         EOF
     - run: npm ci
     - name: serverless deploy
