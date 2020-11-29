@@ -8,7 +8,7 @@ import { CreatePlatformEndpointInput } from "aws-sdk/clients/sns";
 import DevicesServce from "services/db/device";
 import { Device } from "models/auth";
 
-AWS.config.update({ region: "us-east-1" });
+AWS.config.update({ region: process.env.AWS_REGION });
 const sns = new AWS.SNS();
 
 const subscribeToTopic = (endpoint: string): Promise<string> => {
