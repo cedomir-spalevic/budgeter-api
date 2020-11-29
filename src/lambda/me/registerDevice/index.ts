@@ -9,6 +9,37 @@ import DevicesServce from "services/db/device";
 import { Device } from "models/auth";
 
 AWS.config.update({ region: "us-east-1" });
+const sns = new AWS.SNS();
+
+const subscribeToTopic = (endpoint: string): Promise<string> => {
+   return new Promise((resolve, reject) => {
+      const params: AWS.SNS.SubscribeInput = {
+         TopicArn: process.env.AWS_SNS_TOPIC,
+         Protocol: "application",
+         Endpoint: endpoint
+      };
+      sns.subscribe(params, (error: AWS.AWSError, data: AWS.SNS.SubscribeResponse) => {
+         if (error)
+            reject(error);
+         resolve(data.SubscriptionArn);
+      })
+   });
+}
+
+const createPlatformEndpoint = (device: string, token: string): Promise<string> => {
+   return new Promise((resolve, reject) => {
+      const platformApp = (device === "ios" ? process.env.AWS_PLATFORM_APPLICATION_IOS : process.env.AWS_PLATFORM_APPLICATION_ANDROID);
+      const params: CreatePlatformEndpointInput = {
+         PlatformApplicationArn: platformApp,
+         Token: token
+      }
+      sns.createPlatformEndpoint(params, async (error: AWS.AWSError, data: AWS.SNS.CreateEndpointResponse) => {
+         if (error)
+            reject(error);
+         resolve(data.EndpointArn);
+      });
+   })
+}
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    let userId: string;
@@ -45,23 +76,22 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
    }
 
    try {
-      const platformApp = (device === "ios" ? process.env.AWS_PLATFORM_APPLICATION_IOS : process.env.AWS_PLATFORM_APPLICATION_ANDROID);
-      const params: CreatePlatformEndpointInput = {
-         PlatformApplicationArn: platformApp,
-         Token: token
+      // Create platform endpoint in Amazon SNS
+      const platformApplicationEndpointArn = await createPlatformEndpoint(device, token);
+
+      // Subscribe platform endpoint to Budgeter topic
+      const subscriptionArn = await subscribeToTopic(platformApplicationEndpointArn);
+
+      // Create device object in DB
+      const devicesService = new DevicesServce();
+      const newDevice: Device = {
+         userId,
+         device,
+         platformApplicationEndpointArn,
+         subscriptionArn
       }
-      const sns = new AWS.SNS();
-      sns.createPlatformEndpoint(params, async (error: AWS.AWSError, data: AWS.SNS.CreateEndpointResponse) => {
-         if (error)
-            throw new Error();
-         const devicesService = new DevicesServce();
-         const newDevice: Device = {
-            userId,
-            device,
-            platformEndpoint: data.EndpointArn
-         }
-         await devicesService.create(newDevice);
-      });
+      await devicesService.create(newDevice);
+
       return {
          statusCode: 200,
          body: ""

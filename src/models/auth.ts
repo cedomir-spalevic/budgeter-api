@@ -6,5 +6,6 @@ export interface Token {
 export interface Device {
    userId: string;
    device: string;
-   platformEndpoint: string;
+   platformApplicationEndpointArn: string;
+   subscriptionArn: string;
 }
