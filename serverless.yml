@@ -11,6 +11,8 @@ provider:
   environment:
     FAUNADBKEY: ${env:FAUNADB_KEY}
     JWTKEY: ${env:JWT_KEY}
+    AWS_PLATFORM_APPLICATION_IOS: ${env:AWS_PLATFORM_APPLICATION_IOS}
+    AWS_PLATFORM_APPLICATION_ANDROID: ${env:AWS_PLATFORM_APPLICATION_ANDROID}
 
 # For serverless-bundle to remove dead code
 package:
