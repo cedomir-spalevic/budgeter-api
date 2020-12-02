@@ -3,42 +3,9 @@ import {
    APIGatewayProxyResult
 } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
-import AWS from "aws-sdk";
-import { CreatePlatformEndpointInput } from "aws-sdk/clients/sns";
 import DevicesService from "services/db/device";
 import { Device } from "models/auth";
-
-const sns = new AWS.SNS();
-
-const subscribeToTopic = (endpoint: string): Promise<string> => {
-   return new Promise((resolve, reject) => {
-      const params: AWS.SNS.SubscribeInput = {
-         TopicArn: process.env.AWS_SNS_TOPIC,
-         Protocol: "application",
-         Endpoint: endpoint
-      };
-      sns.subscribe(params, (error: AWS.AWSError, data: AWS.SNS.SubscribeResponse) => {
-         if (error)
-            reject(error);
-         resolve(data.SubscriptionArn);
-      })
-   });
-}
-
-const createPlatformEndpoint = (device: string, token: string): Promise<string> => {
-   return new Promise((resolve, reject) => {
-      const platformApp = (device === "ios" ? process.env.AWS_PLATFORM_APPLICATION_IOS : process.env.AWS_PLATFORM_APPLICATION_ANDROID);
-      const params: CreatePlatformEndpointInput = {
-         PlatformApplicationArn: platformApp,
-         Token: token
-      }
-      sns.createPlatformEndpoint(params, async (error: AWS.AWSError, data: AWS.SNS.CreateEndpointResponse) => {
-         if (error)
-            reject(error);
-         resolve(data.EndpointArn);
-      });
-   })
-}
+import { createPlatformEndpoint, subscribeToTopic } from "services/aws/sns";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    let userId: string;
@@ -75,6 +42,15 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
    }
 
    try {
+      // Don't create anything if the user already has a device
+      const devicesService = new DevicesService(userId);
+      const containsDevice = await devicesService.containsDevice();
+      if (containsDevice)
+         return {
+            statusCode: 200,
+            body: ""
+         }
+
       // Create platform endpoint in Amazon SNS
       const platformApplicationEndpointArn = await createPlatformEndpoint(device, token);
 
@@ -82,16 +58,12 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       const subscriptionArn = await subscribeToTopic(platformApplicationEndpointArn);
 
       // Create device object in DB
-      const devicesService = new DevicesService(userId);
-      const containsDevice = await devicesService.containsDevice();
-      if (!containsDevice) {
-         const newDevice: Device = {
-            device,
-            platformApplicationEndpointArn,
-            subscriptionArn
-         }
-         await devicesService.create(newDevice);
+      const newDevice: Device = {
+         device,
+         platformApplicationEndpointArn,
+         subscriptionArn
       }
+      await devicesService.create(newDevice);
 
       return {
          statusCode: 200,
