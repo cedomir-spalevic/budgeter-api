@@ -187,6 +187,11 @@ functions:
       - http:
           path: me/registerDevice
           method: post
+  batch-notify-payments:
+    transfer:
+    handler: src/lambda/batch/notifyPayments/index.handler
+    events:
+      - schedule: cron(1/5 0 * * ? *)
 
 plugins:
   - '@serverless/safeguards-plugin'
