@@ -191,7 +191,7 @@ functions:
     transfer:
     handler: src/lambda/batch/notifyPayments/index.handler
     events:
-      - schedule: cron(1/5 0 * * ? *)
+      - schedule: cron(0 15 * * ? *)
 
 plugins:
   - '@serverless/safeguards-plugin'
