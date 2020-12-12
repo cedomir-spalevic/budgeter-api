@@ -4,7 +4,7 @@ import {
 } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { PaymentResponse } from "models/responses";
-import PaymentsService from "services/db/payments";
+import PaymentsService from "services/external/db/payments";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    let userId: string;

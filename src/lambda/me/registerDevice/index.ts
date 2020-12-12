@@ -3,9 +3,9 @@ import {
    APIGatewayProxyResult
 } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
-import DevicesService from "services/db/device";
+import DevicesService from "services/external/db/device";
 import { Device } from "models/auth";
-import { createPlatformEndpoint, subscribeToTopic } from "services/aws/sns";
+import { createPlatformEndpoint, subscribeToTopic } from "services/external/aws/sns";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    let userId: string;

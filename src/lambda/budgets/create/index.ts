@@ -4,7 +4,7 @@ import {
 } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { BudgetResponse } from "models/responses";
-import BudgetsService from "services/db/budgets";
+import BudgetsService from "services/external/db/budgets";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    let userId: string;

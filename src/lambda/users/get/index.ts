@@ -3,7 +3,7 @@ import {
    APIGatewayProxyResult
 } from "aws-lambda";
 import { isAdminAuthorized } from "middleware/auth";
-import UsersService from "services/db/users";
+import UsersService from "services/external/db/users";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    let userId: string;

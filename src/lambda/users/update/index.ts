@@ -4,7 +4,7 @@ import {
 } from "aws-lambda";
 import { isAdminAuthorized } from "middleware/auth";
 import { User } from "models/data";
-import UsersService, { UserClaims } from "services/db/users";
+import UsersService, { UserClaims } from "services/external/db/users";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    try {

@@ -2,7 +2,7 @@ import {
    APIGatewayProxyEvent,
    APIGatewayProxyResult
 } from "aws-lambda";
-import { decodeJwtToken } from "services/security";
+import { decodeJwtToken } from "services/internal/security";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    let token = "";

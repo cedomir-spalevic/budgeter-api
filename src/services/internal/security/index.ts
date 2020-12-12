@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import jwt from "jwt-simple";
 import { Token } from "models/auth";
+import { ObjectId } from "mongodb";
 
 /**
  * Generate a SHA256 hash from the users password
@@ -12,7 +13,7 @@ export const generateHash = (password: string): string => crypto.createHash("sha
  * Generate a JWT
  * @param userId 
  */
-export const generateToken = (userId: string) => jwt.encode({ issuedAt: Math.floor(Date.now() / 1000), userId }, process.env.JWT_KEY, "HS256");
+export const generateToken = (userId: ObjectId) => jwt.encode({ issuedAt: Math.floor(Date.now() / 1000), userId }, process.env.JWT_KEY, "HS256");
 
 /**
  * Decode JWT

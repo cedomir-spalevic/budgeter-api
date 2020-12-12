@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
-import UsersService from "services/db/users";
-import { decodeJwtToken } from "services/security";
+import UsersService from "services/external/db/users";
+import { decodeJwtToken } from "services/internal/security";
 
 export const isAuthorized = (event: APIGatewayProxyEvent): Promise<string> => {
    return new Promise((resolve, reject) => {

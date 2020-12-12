@@ -3,8 +3,8 @@ import {
    APIGatewayProxyResult
 } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
-import BudgetPaymentsService from "services/db/budgetPayments";
-import BudgetsService from "services/db/budgets";
+import BudgetPaymentsService from "services/external/db/budgetPayments";
+import BudgetsService from "services/external/db/budgets";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    let userId: string;

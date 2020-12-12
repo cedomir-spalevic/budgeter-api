@@ -4,12 +4,12 @@ import {
 } from "aws-lambda";
 import { isAdminAuthorized } from "middleware/auth";
 import { User } from "models/data";
-import BudgetPaymentsService from "services/db/budgetPayments";
-import BudgetsService from "services/db/budgets";
-import DevicesService from "services/db/device";
-import PaymentsService from "services/db/payments";
-import UsersAuthService from "services/db/userAuth";
-import UsersService, { UserClaims } from "services/db/users";
+import BudgetPaymentsService from "services/external/db/budgetPayments";
+import BudgetsService from "services/external/db/budgets";
+import DevicesService from "services/external/db/device";
+import PaymentsService from "services/external/db/payments";
+import UsersAuthService from "services/external/db/userAuth";
+import UsersService, { UserClaims } from "services/external/db/users";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    try {

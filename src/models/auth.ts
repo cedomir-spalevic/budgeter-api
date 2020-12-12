@@ -9,3 +9,8 @@ export interface Device {
    platformApplicationEndpointArn: string;
    subscriptionArn: string;
 }
+
+export enum UserClaims {
+   Admin,
+   Service
+}

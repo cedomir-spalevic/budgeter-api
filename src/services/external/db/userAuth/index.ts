@@ -1,6 +1,6 @@
 import { query as Query, Client } from "faunadb";
 import { Result } from "models/db";
-import { generateHash } from "services/security";
+import { generateHash } from "services/internal/security";
 
 export default class UsersAuthService {
    private userIndex: string;

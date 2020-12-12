@@ -1,8 +1,9 @@
-import { User } from "./data";
+import { WithId } from "mongodb";
+import { User } from "./data-new";
 
 export interface AuthResponse {
    valid: boolean;
-   user?: User;
+   user?: WithId<User>;
    token?: string;
    emailError?: string;
    passwordError?: string;
