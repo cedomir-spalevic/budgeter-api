@@ -1,7 +1,7 @@
 import { UserClaims } from "models/auth";
-import { User } from "models/data-new";
+import { User } from "models/data";
 import { AlreadyExistsError, GeneralError } from "models/errors";
-import { AuthResponse } from "models/responses-new";
+import { AuthResponse } from "models/responses";
 import { WithId } from "mongodb";
 import UserAuthService from "services/external/mongodb/userAuth";
 import UsersService from "services/external/mongodb/users";

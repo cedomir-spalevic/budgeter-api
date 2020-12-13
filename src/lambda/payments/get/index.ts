@@ -3,33 +3,28 @@ import {
    APIGatewayProxyResult
 } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
-import PaymentsService from "services/external/db/payments";
+import { handleErrorResponse } from "middleware/errors";
+import { getPathParameter, getQueryStringParameters } from "middleware/url";
+import { processGetPayment, processGetPayments } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-   let userId: string;
    try {
-      userId = await isAuthorized(event);
-   }
-   catch (event) {
-      return {
-         statusCode: 401,
-         body: ""
-      };
-   }
-
-   // Get payments
-   try {
-      const paymentsService = new PaymentsService(userId);
-      const payments = await paymentsService.get();
+      const userId = await isAuthorized(event);
+      let response;
+      if (event.pathParameters === null) {
+         const queryStrings = getQueryStringParameters(event.queryStringParameters);
+         response = await processGetPayments(userId, queryStrings.limit, queryStrings.skip);
+      }
+      else {
+         const paymentId = getPathParameter("paymentId", event.pathParameters);
+         response = await processGetPayment(userId, paymentId);
+      }
       return {
          statusCode: 200,
-         body: JSON.stringify(payments)
+         body: JSON.stringify(response)
       }
    }
    catch (error) {
-      return {
-         statusCode: 400,
-         body: "Unable to get payment"
-      };
+      return handleErrorResponse(error);
    }
 }

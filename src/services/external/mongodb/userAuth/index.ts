@@ -1,4 +1,4 @@
-import { UserAuth } from "models/data-new";
+import { UserAuth } from "models/data";
 import { Collection, ObjectId } from "mongodb";
 import { generateHash } from "services/internal/security";
 import Client from "../client";

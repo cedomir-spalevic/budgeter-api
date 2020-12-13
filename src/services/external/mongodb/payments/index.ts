@@ -1,4 +1,4 @@
-import { Payment } from "models/data-new";
+import { Payment } from "models/data";
 import { Collection, ObjectId, WithId } from "mongodb";
 import Client from "../client";
 
@@ -38,27 +38,9 @@ class PaymentsService {
       return response.ops[0];
    }
 
-   public async update(updatedPayment: WithId<Payment>): Promise<void> {
-      const currentPayment = await this.getById(updatedPayment._id);
-      if (currentPayment === null)
-         return;
-      let wasModified = false;
-      if (updatedPayment.name !== currentPayment.name) {
-         currentPayment.name = updatedPayment.name;
-         wasModified = true;
-      }
-      if (currentPayment.dueDate !== updatedPayment.dueDate) {
-         currentPayment.dueDate = updatedPayment.dueDate;
-         wasModified = true;
-      }
-      if (currentPayment.amount !== updatedPayment.amount) {
-         currentPayment.amount = updatedPayment.amount;
-         wasModified = true;
-      }
-      if (wasModified) {
-         currentPayment.modifiedOn = new Date();
-         await this.collection.replaceOne({ _id: currentPayment._id }, currentPayment);
-      }
+   public async update(payment: WithId<Payment>): Promise<void> {
+      payment.modifiedOn = new Date();
+      await this.collection.replaceOne({ _id: payment._id }, payment);
    }
 
    public async deleteAll(): Promise<void> {
@@ -66,15 +48,15 @@ class PaymentsService {
    }
 
    public async delete(id: ObjectId): Promise<void> {
-      await this.collection.deleteOne({ _id: id });
+      await this.collection.deleteOne({ _id: id, userId: this.userId });
    }
 
    public async getById(id: ObjectId): Promise<WithId<Payment> | null> {
-      return await this.collection.findOne({ _id: id });
+      return await this.collection.findOne({ _id: id, userId: this.userId });
    }
 
    public async get(limit: number, skip: number): Promise<WithId<Payment>[]> {
-      const response = await this.collection.find<WithId<Payment>>({}, { limit, skip });
+      const response = await this.collection.find<WithId<Payment>>({ userId: this.userId }, { limit, skip });
       const items: WithId<Payment>[] = [];
       response.forEach(x => items.push(x));
       return items;

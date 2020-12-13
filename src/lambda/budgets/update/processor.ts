@@ -5,11 +5,10 @@ import BudgetsService from "services/external/mongodb/budgets";
 export const processUpdateBudget = async (userId: ObjectId, budgetId: ObjectId, name?: string, startDate?: Date, endDate?: Date, completed?: boolean) => {
    const budgetsService = await BudgetsService.getInstance(userId);
 
-   const exists = await budgetsService.exists(budgetId);
-   if (!exists)
+   const budget = await budgetsService.getById(budgetId);
+   if (budget === null)
       throw new NoBudgetFoundError();
 
-   const budget = await budgetsService.getById(budgetId);
    if (name)
       budget.name = name;
    if (startDate)
@@ -18,7 +17,7 @@ export const processUpdateBudget = async (userId: ObjectId, budgetId: ObjectId, 
       budget.endDate = endDate;
    if (completed !== undefined)
       budget.completed = completed;
+
    await budgetsService.update(budget);
+   return budget;
 }
-
-

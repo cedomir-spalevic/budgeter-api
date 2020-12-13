@@ -123,6 +123,13 @@ functions:
       - http:
           path: payments
           method: get
+      - http:
+          path: payments/{paymentId}
+          method: get
+          request: 
+            parameters:
+              paths:
+                paymentId: true
   payments-update:
     handler: src/lambda/payments/update/index.handler
     events:
@@ -149,6 +156,13 @@ functions:
       - http:
           path: users
           method: get
+      - http:
+          path: users/{userId}
+          method: get
+          request: 
+            parameters:
+              paths:
+                userId: true
   users-update:
     handler: src/lambda/users/update/index.handler
     events:

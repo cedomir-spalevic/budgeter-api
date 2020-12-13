@@ -3,70 +3,27 @@ import {
    APIGatewayProxyResult
 } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
-import { PaymentResponse } from "models/responses";
-import PaymentsService from "services/external/db/payments";
+import { handleErrorResponse } from "middleware/errors";
+import { getPathParameter } from "middleware/url";
+import { isDate, isNumber, isStr, isValidJSONBody } from "middleware/validators";
+import { processUpdatePayment } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-   let userId: string;
    try {
-      userId = await isAuthorized(event);
-   }
-   catch (event) {
-      return {
-         statusCode: 401,
-         body: ""
-      };
-   }
+      const userId = await isAuthorized(event);
+      const paymentId = getPathParameter("paymentId", event.pathParameters);
+      const form = isValidJSONBody(event.body);
+      const name = isStr(form, "name");
+      const amount = isNumber(form, "amount");
+      const dueDate = isDate(form, "dueDate");
 
-   const paymentId = event.pathParameters["paymentId"];
-   if (!paymentId) {
-      return {
-         statusCode: 400,
-         body: "Payment Id is invalid"
-      };
-   }
-
-   const paymentResponse: PaymentResponse = {
-      valid: false
-   };
-   let dueDate: number, hasError = false;
-
-   const requestFormBody = JSON.parse(event.body);
-   const name = requestFormBody["name"];
-   const amount = requestFormBody["amount"];
-   const postedDueDate = requestFormBody["dueDate"];
-   if (postedDueDate) {
-      dueDate = Date.parse(postedDueDate);
-      if (isNaN(dueDate)) {
-         paymentResponse.dueDateError = "Invalid due date";
-         hasError = true;
-      }
-   }
-
-   if (hasError) {
-      return {
-         statusCode: 400,
-         body: JSON.stringify(paymentResponse)
-      }
-   }
-
-   // Update payment
-   try {
-      const updatedPayment = { name, amount, dueDate };
-      const paymentsService = new PaymentsService(userId);
-      await paymentsService.update(paymentId, updatedPayment);
-      paymentResponse.valid = true;
-      paymentResponse.paymentId = paymentId;
+      const response = await processUpdatePayment(userId, paymentId, name, amount, dueDate);
       return {
          statusCode: 200,
-         body: JSON.stringify(paymentResponse)
+         body: JSON.stringify(response)
       }
    }
    catch (error) {
-      paymentResponse.totalError = "Unable to update payment"
-      return {
-         statusCode: 400,
-         body: JSON.stringify(paymentResponse)
-      };
+      return handleErrorResponse(error);
    }
 }

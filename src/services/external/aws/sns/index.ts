@@ -18,6 +18,32 @@ export const subscribeToTopic = (endpoint: string): Promise<string> => {
    });
 }
 
+export const unsubscribeFromTopic = (subscriptionArn: string): Promise<void> => {
+   return new Promise((resolve, reject) => {
+      const params: AWS.SNS.UnsubscribeInput = {
+         SubscriptionArn: subscriptionArn
+      }
+      sns.unsubscribe(params, (error: AWS.AWSError, data: any) => {
+         if (error)
+            reject(error);
+         resolve();
+      });
+   });
+}
+
+export const deletePlatformEndpoint = (endpointArn: string): Promise<void> => {
+   return new Promise(async (resolve, reject) => {
+      const params: AWS.SNS.DeleteEndpointInput = {
+         EndpointArn: endpointArn
+      };
+      sns.deleteEndpoint(params, (error: AWS.AWSError, data: any) => {
+         if (error)
+            reject(error);
+         resolve();
+      });
+   });
+}
+
 export const createPlatformEndpoint = (device: string, token: string): Promise<string> => {
    return new Promise((resolve, reject) => {
       const platformApp = (device === "ios" ? process.env.AWS_PLATFORM_APPLICATION_IOS : process.env.AWS_PLATFORM_APPLICATION_ANDROID);

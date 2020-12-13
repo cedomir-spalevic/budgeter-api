@@ -1,5 +1,4 @@
-import { String } from "aws-sdk/clients/acm";
-import { GeneralError, NoUserFoundError, UnauthorizedError } from "models/errors";
+import { GeneralError, NoUserEmailFoundError, UnauthorizedError } from "models/errors";
 import UserAuthService from "services/external/mongodb/userAuth";
 import UsersService from "services/external/mongodb/users";
 import { generateToken } from "services/internal/security";
@@ -20,7 +19,7 @@ export const processSignIn = async (email: string, password: string) => {
    // Look for a user with this email address
    const user = await usersService.findUserByEmail(email);
    if (!user)
-      throw new NoUserFoundError();
+      throw new NoUserEmailFoundError();
 
    // Next scan the users password
    const exists = await usersAuthService.exists(user._id, password);

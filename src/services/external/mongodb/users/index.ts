@@ -1,5 +1,5 @@
 import { UserClaims } from "models/auth";
-import { User } from "models/data-new";
+import { User } from "models/data";
 import { Collection, ObjectId, WithId } from "mongodb";
 import Client from "../client";
 

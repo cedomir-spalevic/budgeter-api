@@ -1,4 +1,4 @@
-import { Budget } from "models/data-new";
+import { Budget } from "models/data";
 import { Collection, ObjectId, WithId } from "mongodb";
 import Client from "../client";
 
@@ -40,27 +40,9 @@ class BudgetsService {
       return response.ops[0];
    }
 
-   public async update(updatedBudget: WithId<Budget>): Promise<void> {
-      const currentBudget = await this.getById(updatedBudget._id);
-      if (currentBudget === null)
-         return;
-      let wasModified = false;
-      if (updatedBudget.name !== currentBudget.name) {
-         currentBudget.name = updatedBudget.name;
-         wasModified = true;
-      }
-      if (updatedBudget.startDate !== updatedBudget.startDate) {
-         currentBudget.startDate = updatedBudget.startDate;
-         wasModified = true;
-      }
-      if (updatedBudget.endDate !== updatedBudget.endDate) {
-         currentBudget.endDate = updatedBudget.endDate;
-         wasModified = true;
-      }
-      if (wasModified) {
-         currentBudget.modifiedOn = new Date();
-         await this.collection.replaceOne({ _id: currentBudget._id }, currentBudget);
-      }
+   public async update(budget: WithId<Budget>): Promise<void> {
+      budget.modifiedOn = new Date();
+      await this.collection.replaceOne({ _id: budget._id }, budget);
    }
 
    public async deleteAll(): Promise<void> {
@@ -68,15 +50,22 @@ class BudgetsService {
    }
 
    public async delete(id: ObjectId): Promise<void> {
-      await this.collection.deleteOne({ _id: id });
+      await this.collection.deleteOne({ _id: id, userId: this.userId });
    }
 
    public async getById(id: ObjectId): Promise<WithId<Budget> | null> {
-      return await this.collection.findOne({ _id: id });
+      return await this.collection.findOne({ _id: id, userId: this.userId });
+   }
+
+   public async getBudgetsWithPayment(paymentId: ObjectId): Promise<WithId<Budget>[]> {
+      const response = await this.collection.find<WithId<Budget>>({ userId: this.userId, payments: { $elemMatch: { paymentId } } });
+      const items: WithId<Budget>[] = [];
+      response.forEach(x => items.push(x));
+      return items;
    }
 
    public async get(limit: number, skip: number): Promise<WithId<Budget>[]> {
-      const response = await this.collection.find<WithId<Budget>>({}, { limit, skip });
+      const response = await this.collection.find<WithId<Budget>>({ userId: this.userId }, { limit, skip });
       const items: WithId<Budget>[] = [];
       response.forEach(x => items.push(x));
       return items;
