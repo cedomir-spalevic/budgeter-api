@@ -1,6 +1,5 @@
 import { UserAuth } from "models/data-new";
 import { Collection, ObjectId } from "mongodb";
-import UsersAuthService from "services/external/db/userAuth";
 import { generateHash } from "services/internal/security";
 import Client from "../client";
 
@@ -8,18 +7,18 @@ import Client from "../client";
  * Service that communicates with the Auth collection
  */
 class UserAuthService {
-   _collection: Collection<UserAuth>;
+   protected collection: Collection<UserAuth>;
    static instance: UserAuthService;
 
    constructor() {
-      this._collection = undefined;
+      this.collection = undefined;
    }
 
    static async getInstance(): Promise<UserAuthService> {
       if (!UserAuthService.instance) {
          UserAuthService.instance = new UserAuthService();
          const client = await Client.getInstance();
-         UserAuthService.instance._collection = client.db("budgeter").collection<UserAuth>("auth");
+         UserAuthService.instance.collection = client.db("budgeter").collection<UserAuth>("auth");
       }
       return UserAuthService.instance;
    }
@@ -29,16 +28,16 @@ class UserAuthService {
          userId,
          hash: generateHash(password)
       };
-      await this._collection.insertOne(userAuth);
+      await this.collection.insertOne(userAuth);
    }
 
    public async delete(id: ObjectId): Promise<void> {
-      await this._collection.deleteOne({ _id: id });
+      await this.collection.deleteOne({ _id: id });
    }
 
    public async exists(userId: ObjectId, password: string): Promise<boolean> {
       const hash = generateHash(password);
-      const count = await this._collection.countDocuments({ userId, hash });
+      const count = await this.collection.countDocuments({ userId, hash });
       return count === 1;
    }
 }
