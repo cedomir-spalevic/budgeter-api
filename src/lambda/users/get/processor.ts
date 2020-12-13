@@ -1,12 +1,14 @@
 import { User } from "models/data";
 import { NoUserFoundError } from "models/errors";
+import { GetResponse } from "models/responses";
 import { ObjectId } from "mongodb";
 import UsersService from "services/external/mongodb/users";
 
-export const processGetUsers = async (limit: number, skip: number): Promise<User[]> => {
+export const processGetUsers = async (limit: number, skip: number): Promise<GetResponse<User>> => {
    const usersService = await UsersService.getInstance();
-
-   return await usersService.get(limit, skip);
+   const count = await usersService.count();
+   const values = await usersService.get(limit, skip);
+   return { count, values };
 }
 
 export const processGetUser = async (userId: ObjectId): Promise<User> => {

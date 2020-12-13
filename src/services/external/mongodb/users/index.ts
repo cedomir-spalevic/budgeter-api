@@ -59,6 +59,10 @@ class UsersService {
       response.forEach(x => items.push(x));
       return items;
    }
+
+   public async count(): Promise<number> {
+      return await this.collection.countDocuments();
+   }
 }
 
 export default {

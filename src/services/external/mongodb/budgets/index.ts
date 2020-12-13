@@ -105,6 +105,10 @@ class BudgetsService {
       const count = await this.collection.countDocuments({ _id: budgetId, userId: this.userId });
       return count === 1;
    }
+
+   public async count(): Promise<number> {
+      return await this.collection.countDocuments({ userId: this.userId });
+   }
 }
 
 export default {

@@ -5,3 +5,8 @@ export interface AuthResponse {
    token: string;
    user: WithId<User>;
 }
+
+export interface GetResponse<T> {
+   count: number;
+   values: T[];
+}
