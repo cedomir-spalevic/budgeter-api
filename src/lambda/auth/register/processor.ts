@@ -7,8 +7,8 @@ import UserAuthService from "services/external/mongodb/userAuth";
 import UsersService from "services/external/mongodb/users";
 import { generateToken } from "services/internal/security";
 
-export const processRegister = async (email: any, password: any, claims: UserClaims[]): Promise<AuthResponse> => {
-   // Check if email and password are in the request
+export const processRegister = async (email: string, password: string, claims: UserClaims[]): Promise<AuthResponse> => {
+   // Check if email and password are valid
    if (!email)
       throw new GeneralError("Email cannot be blank");
    if (!password)

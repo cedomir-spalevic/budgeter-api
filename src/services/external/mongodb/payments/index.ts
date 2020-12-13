@@ -1,6 +1,5 @@
 import { Payment } from "models/data-new";
 import { Collection, ObjectId, WithId } from "mongodb";
-import { convertDateToUTCDate, getUTCDateObj } from "services/internal/datetime";
 import Client from "../client";
 
 /**
@@ -26,12 +25,12 @@ class PaymentsService {
    }
 
    public async create(name: string, amount: number, dueDate: Date): Promise<WithId<Payment>> {
-      const currentDate = getUTCDateObj();
+      const currentDate = new Date();
       const payment: Payment = {
          userId: this.userId,
          name,
          amount,
-         dueDate: convertDateToUTCDate(dueDate),
+         dueDate: dueDate,
          createdOn: currentDate,
          modifiedOn: currentDate
       };
@@ -49,7 +48,7 @@ class PaymentsService {
          wasModified = true;
       }
       if (currentPayment.dueDate !== updatedPayment.dueDate) {
-         currentPayment.dueDate = convertDateToUTCDate(updatedPayment.dueDate);
+         currentPayment.dueDate = updatedPayment.dueDate;
          wasModified = true;
       }
       if (currentPayment.amount !== updatedPayment.amount) {
@@ -57,7 +56,7 @@ class PaymentsService {
          wasModified = true;
       }
       if (wasModified) {
-         currentPayment.modifiedOn = getUTCDateObj();
+         currentPayment.modifiedOn = new Date();
          await this.collection.replaceOne({ _id: currentPayment._id }, currentPayment);
       }
    }

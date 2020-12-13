@@ -24,6 +24,8 @@ export const isAuthorizedNew = async (event: APIGatewayProxyEvent): Promise<Obje
 
    token = token.replace("Bearer ", "");
    const decodedToken = decodeJwtTokenNew(token);
+   if (!decodedToken.userId || !ObjectId.isValid(decodedToken.userId))
+      throw new UnauthorizedError();
    const userId = new ObjectId(decodedToken.userId);
 
    const usersService = await UsersServiceNew.getInstance();

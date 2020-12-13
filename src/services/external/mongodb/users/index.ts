@@ -1,7 +1,6 @@
 import { UserClaims } from "models/auth";
 import { User } from "models/data-new";
 import { Collection, ObjectId, WithId } from "mongodb";
-import { getUTCDateObj } from "services/internal/datetime";
 import Client from "../client";
 
 /**
@@ -25,7 +24,7 @@ class UsersService {
    }
 
    public async create(email: string, claims?: UserClaims[]): Promise<WithId<User>> {
-      const currentDate = getUTCDateObj();
+      const currentDate = new Date();
       const user: User = {
          email,
          isAdmin: (claims && claims.includes(UserClaims.Admin)),
@@ -38,8 +37,7 @@ class UsersService {
    }
 
    public async update(user: WithId<User>): Promise<void> {
-      const currentDate = getUTCDateObj();
-      user.modifiedOn = currentDate;
+      user.modifiedOn = new Date();
       await this.collection.replaceOne({ _id: user._id }, user);
    }
 

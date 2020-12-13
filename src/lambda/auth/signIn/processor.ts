@@ -1,9 +1,10 @@
+import { String } from "aws-sdk/clients/acm";
 import { GeneralError, NoUserFoundError, UnauthorizedError } from "models/errors";
 import UserAuthService from "services/external/mongodb/userAuth";
 import UsersService from "services/external/mongodb/users";
 import { generateToken } from "services/internal/security";
 
-export const processSignIn = async (email: any, password: any) => {
+export const processSignIn = async (email: string, password: string) => {
    // Check if email and password are in the request
    if (!email)
       throw new GeneralError("Email cannot be blank");

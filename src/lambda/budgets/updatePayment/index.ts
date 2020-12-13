@@ -5,6 +5,7 @@ import {
 import { isAuthorizedNew } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import { getPathParameter } from "middleware/url";
+import { isBool, isValidJSONBody } from "middleware/validators";
 import { processUpdatePayment } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -12,8 +13,8 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       const userId = await isAuthorizedNew(event);
       const budgetId = getPathParameter("budgetId", event.pathParameters);
       const paymentId = getPathParameter("paymentId", event.pathParameters);
-      const form = JSON.parse(event.body);
-      const completed = form["completed"];
+      const form = isValidJSONBody(event.body);
+      const completed = isBool(form, "completed", true);
 
       await processUpdatePayment(userId, budgetId, paymentId, completed);
       return {

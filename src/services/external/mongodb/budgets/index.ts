@@ -1,6 +1,5 @@
 import { Budget } from "models/data-new";
 import { Collection, ObjectId, WithId } from "mongodb";
-import { convertDateToUTCDate, getUTCDateObj } from "services/internal/datetime";
 import Client from "../client";
 
 /**
@@ -26,12 +25,12 @@ class BudgetsService {
    }
 
    public async create(name: string, startDate: Date, endDate: Date): Promise<WithId<Budget>> {
-      const currentDate = getUTCDateObj();
+      const currentDate = new Date();
       const budget: Budget = {
          userId: this.userId,
          name,
-         startDate: convertDateToUTCDate(startDate),
-         endDate: convertDateToUTCDate(endDate),
+         startDate,
+         endDate,
          completed: false,
          createdOn: currentDate,
          modifiedOn: currentDate,
@@ -51,15 +50,15 @@ class BudgetsService {
          wasModified = true;
       }
       if (updatedBudget.startDate !== updatedBudget.startDate) {
-         currentBudget.startDate = convertDateToUTCDate(updatedBudget.startDate);
+         currentBudget.startDate = updatedBudget.startDate;
          wasModified = true;
       }
       if (updatedBudget.endDate !== updatedBudget.endDate) {
-         currentBudget.endDate = convertDateToUTCDate(updatedBudget.endDate);
+         currentBudget.endDate = updatedBudget.endDate;
          wasModified = true;
       }
       if (wasModified) {
-         currentBudget.modifiedOn = getUTCDateObj();
+         currentBudget.modifiedOn = new Date();
          await this.collection.replaceOne({ _id: currentBudget._id }, currentBudget);
       }
    }
