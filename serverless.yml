@@ -39,59 +39,6 @@ functions:
       - http:
           path: auth/verify
           method: post
-  budget-payments-complete:
-    handler: src/lambda/budgetPayments/complete/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments/{paymentId}/complete
-          method: get
-          request:
-            parameters:
-              paths:
-                budgetId: true
-                paymentId: true
-  budget-payments-create:
-    handler: src/lambda/budgetPayments/create/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments
-          method: post
-          request:
-            parameters:
-              paths:
-                budgetId: true
-  budget-payments-delete:
-    handler: src/lambda/budgetPayments/delete/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments/{paymentId}
-          method: delete
-          request:
-            parameters:
-              paths:
-                budgetId: true
-                paymentId: true
-  budget-payments-get-all:
-    handler: src/lambda/budgetPayments/getAll/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments
-          method: get
-          request:
-            parameters:
-              paths:
-                budgetId: true
-  budget-payments-uncomplete:
-    handler: src/lambda/budgetPayments/uncomplete/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments/{paymentId}/uncomplete
-          method: get
-          request:
-            parameters:
-              paths:
-                budgetId: true
-                paymentId: true
   budgets-create:
     handler: src/lambda/budgets/create/index.handler
     events:
@@ -131,6 +78,39 @@ functions:
             parameters:
               paths:
                 budgetId: true
+  
+  budgets-update-payment:
+    handler: src/lambda/budgets/updatePayment/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}/payments/{paymentId}
+          method: patch
+          request:
+            parameters:
+              paths:
+                budgetId: true
+                paymentId: true
+  budgets-add-payment:
+    handler: src/lambda/budgets/addPayment/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}/payments
+          method: post
+          request:
+            parameters:
+              paths:
+                budgetId: true
+  budgets-remove-payment:
+    handler: src/lambda/budgets/removePayment/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}/payments/{paymentId}
+          method: delete
+          request:
+            parameters:
+              paths:
+                budgetId: true
+                paymentId: true
   payments-create:
     handler: src/lambda/payments/create/index.handler
     events:

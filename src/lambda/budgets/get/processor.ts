@@ -10,8 +10,8 @@ export const processGetBudgets = async (userId: ObjectId, limit: number, skip: n
 export const processGetBudget = async (userId: ObjectId, budgetId: ObjectId): Promise<Budget> => {
    const budgetsService = await BudgetsService.getInstance(userId);
 
-   const budget = await budgetsService.exists(budgetId);
-   if (budget === null)
+   const exists = await budgetsService.exists(budgetId);
+   if (!exists)
       throw new NoBudgetFoundError();
 
    return await budgetsService.getById(budgetId);

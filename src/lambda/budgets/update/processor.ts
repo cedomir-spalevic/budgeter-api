@@ -1,55 +1,23 @@
-import { GeneralError } from "models/errors";
+import { NoBudgetFoundError } from "models/errors";
 import { ObjectId } from "mongodb";
+import BudgetsService from "services/external/mongodb/budgets";
 
 export const processUpdateBudget = async (userId: ObjectId, budgetId: ObjectId, name: any, startDate: any, endDate: any, completed: any) => {
-   // Check if name, start date and end date are valid
-   if (!name)
-      throw new GeneralError("Name cannot be blank");
-   if (!startDate)
-      throw new GeneralError("Start Date cannot be blank");
-   if (!endDate)
-      throw new GeneralError("End Date cannot be blank");
+   const budgetsService = await BudgetsService.getInstance(userId);
+
+   const exists = await budgetsService.exists(budgetId);
+   if (!exists)
+      throw new NoBudgetFoundError();
+
+   const budget = await budgetsService.getById(budgetId);
+   if (name)
+      budget.name = name;
+   if (startDate)
+      budget.startDate = startDate;
+   if (endDate)
+      budget.endDate = endDate;
+   budget.completed = completed;
+   await budgetsService.update(budget);
 }
 
 
-// if (postedStartDate) {
-//    startDate = Date.parse(postedStartDate);
-//    if (isNaN(startDate)) {
-//       budgetResponse.startDateError = "Invalid start date";
-//       hasError = true;
-//    }
-// }
-// if (postedEndDate) {
-//    endDate = Date.parse(postedEndDate);
-//    if (isNaN(endDate)) {
-//       budgetResponse.endDateError = "Invalid end date";
-//       hasError = true;
-//    }
-// }
-
-// if (hasError) {
-//    return {
-//       statusCode: 400,
-//       body: JSON.stringify(budgetResponse)
-//    }
-// }
-
-// // Update budget
-// try {
-//    const updatedBudget = { name, completed, startDate, endDate };
-//    const budgetsService = new BudgetsService(userId);
-//    await budgetsService.update(budgetId, updatedBudget);
-//    budgetResponse.valid = true;
-//    budgetResponse.budgetId = budgetId;
-//    return {
-//       statusCode: 201,
-//       body: JSON.stringify(budgetResponse)
-//    }
-// }
-// catch (error) {
-//    budgetResponse.totalError = "Unable to update budget";
-//    return {
-//       statusCode: 400,
-//       body: JSON.stringify(budgetResponse)
-//    };
-// }
