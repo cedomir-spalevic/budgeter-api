@@ -2,40 +2,29 @@ import {
    APIGatewayProxyEvent,
    APIGatewayProxyResult
 } from "aws-lambda";
-import { isAuthorized } from "middleware/auth";
-import BudgetsService from "services/external/db/budgets";
-import BudgetPaymentsService from "services/external/db/budgetPayments";
+import { isAuthorizedNew } from "middleware/auth";
+import { handleErrorResponse } from "middleware/errors";
+import { getPathParameter, getQueryStringParameters } from "middleware/url";
+import { processGetBudget, processGetBudgets } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-   let userId: string;
    try {
-      userId = await isAuthorized(event);
-   }
-   catch (event) {
-      return {
-         statusCode: 401,
-         body: ""
-      };
-   }
-
-   // Get budgets
-   try {
-      const budgetPaymentsService = new BudgetPaymentsService(userId);
-      const budgetsService = new BudgetsService(userId);
-      let budgets = await budgetsService.get();
-      budgets = await Promise.all((await budgets).map(async x => {
-         x.payments = await budgetPaymentsService.getAll(x.budgetId);
-         return x;
-      }));
+      const userId = await isAuthorizedNew(event);
+      let response;
+      if (event.pathParameters === null) {
+         const queryStrings = getQueryStringParameters(event.queryStringParameters);
+         response = await processGetBudgets(userId, queryStrings.limit, queryStrings.skip);
+      }
+      else {
+         const budgetId = getPathParameter("budgetId", event.pathParameters);
+         response = await processGetBudget(userId, budgetId);
+      }
       return {
          statusCode: 200,
-         body: JSON.stringify(budgets)
+         body: JSON.stringify(response)
       }
    }
    catch (error) {
-      return {
-         statusCode: 400,
-         body: "Unable to get budget"
-      };
+      return handleErrorResponse(error);
    }
 }

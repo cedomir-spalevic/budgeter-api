@@ -104,6 +104,13 @@ functions:
       - http:
           path: budgets
           method: get
+      - http:
+          path: budgets/{budgetId}
+          method: get
+          request: 
+            parameters:
+              paths:
+                budgetId: true
   budgets-update:
     handler: src/lambda/budgets/update/index.handler
     events:

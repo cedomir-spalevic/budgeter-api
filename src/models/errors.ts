@@ -11,6 +11,13 @@ export class GeneralError extends Error {
    }
 }
 
+export class NoBudgetFoundError extends Error {
+   constructor() {
+      super("No Budget found with the given Id");
+      this.stack = undefined;
+   }
+}
+
 export class NoUserFoundError extends Error {
    constructor() {
       super("No user found with the given email address");
@@ -28,5 +35,3 @@ export class UnauthorizedError extends Error {
 export class ExpiredTokenError extends UnauthorizedError { }
 
 export class InvalidTokenError extends UnauthorizedError { }
-
-export const transformErrorToResponse = (error: Error) => JSON.stringify({ message: error.message, stack: error.stack })

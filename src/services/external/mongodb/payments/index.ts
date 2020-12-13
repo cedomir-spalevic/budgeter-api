@@ -80,6 +80,11 @@ class PaymentsService {
       response.forEach(x => items.push(x));
       return items;
    }
+
+   public async exists(paymentId: ObjectId): Promise<boolean> {
+      const count = await this.collection.countDocuments({ _id: paymentId, userId: this.userId });
+      return count === 1;
+   }
 }
 
 export default {

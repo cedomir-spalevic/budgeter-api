@@ -112,6 +112,11 @@ class BudgetsService {
       budget.payments[paymentIndex].completed = completed;
       await this.collection.replaceOne({ _id: budgetId }, budget);
    }
+
+   public async exists(budgetId: ObjectId): Promise<boolean> {
+      const count = await this.collection.countDocuments({ _id: budgetId, userId: this.userId });
+      return count === 1;
+   }
 }
 
 export default {

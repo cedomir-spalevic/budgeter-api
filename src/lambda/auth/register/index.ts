@@ -2,8 +2,8 @@ import {
    APIGatewayProxyEvent,
    APIGatewayProxyResult
 } from "aws-lambda";
+import { handleErrorResponse } from "middleware/errors";
 import { UserClaims } from "models/auth";
-import { AlreadyExistsError, GeneralError, transformErrorToResponse } from "models/errors";
 import { processRegister } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -28,23 +28,6 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       }
    }
    catch (error) {
-      let statusCode: number;
-      let body: string;
-      if (error instanceof AlreadyExistsError) {
-         error.message = "A user already exists with this email address";
-         error.stack = undefined;
-         statusCode = 409;
-         body = transformErrorToResponse(error);
-      }
-      else if (error instanceof GeneralError) {
-         statusCode = 400;
-         body = transformErrorToResponse(error);
-      }
-      else {
-         statusCode = 500;
-         body = transformErrorToResponse(error);
-      }
-
-      return { statusCode, body };
+      return handleErrorResponse(error);
    }
 }

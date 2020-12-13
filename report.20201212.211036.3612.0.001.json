@@ -3,10 +3,10 @@
   "header": {
     "event": "Allocation failed - JavaScript heap out of memory",
     "trigger": "FatalError",
-    "filename": "report.20201212.174910.955.0.001.json",
-    "dumpEventTime": "2020-12-12T17:49:10Z",
-    "dumpEventTimeStamp": "1607816950859",
-    "processId": 955,
+    "filename": "report.20201212.211036.3612.0.001.json",
+    "dumpEventTime": "2020-12-12T21:10:36Z",
+    "dumpEventTimeStamp": "1607829036790",
+    "processId": 3612,
     "cwd": "/home/cedomir/Workspace/budgeter-api",
     "commandLine": [
       "/home/cedomir/.nvm/versions/node/v11.15.0/bin/node",
@@ -100,15 +100,15 @@
       "symbol": "v8::internal::Runtime_AllocateInNewSpace(int, v8::internal::Object**, v8::internal::Isolate*) [/home/cedomir/.nvm/versions/node/v11.15.0/bin/node]"
     },
     {
-      "pc": "0x000022f2a314fc5d",
+      "pc": "0x00002274a624fc5d",
       "symbol": ""
     }
   ],
   "javascriptHeap": {
-    "totalMemory": 2186432512,
-    "totalCommittedMemory": 2184326888,
-    "usedMemory": 2142089144,
-    "availableMemory": 32815904,
+    "totalMemory": 2185908224,
+    "totalCommittedMemory": 2183716872,
+    "usedMemory": 2141617744,
+    "availableMemory": 33117904,
     "memoryLimit": 2217857988,
     "heapSpaces": {
       "read_only_space": {
@@ -120,38 +120,38 @@
       },
       "new_space": {
         "memorySize": 2097152,
-        "committedMemory": 1326632,
+        "committedMemory": 1282472,
         "capacity": 1031168,
-        "used": 260696,
-        "available": 770472
+        "used": 216640,
+        "available": 814528
       },
       "old_space": {
-        "memorySize": 2096828416,
-        "committedMemory": 2096280112,
-        "capacity": 2058422880,
-        "used": 2058156536,
-        "available": 266344
+        "memorySize": 2096304128,
+        "committedMemory": 2095946048,
+        "capacity": 2057744504,
+        "used": 2057744504,
+        "available": 0
       },
       "code_space": {
         "memorySize": 3670016,
-        "committedMemory": 3474592,
-        "capacity": 2885632,
-        "used": 2885632,
+        "committedMemory": 3243200,
+        "capacity": 2870880,
+        "used": 2870880,
         "available": 0
       },
       "map_space": {
         "memorySize": 1060864,
-        "committedMemory": 951552,
-        "capacity": 587040,
-        "used": 587040,
+        "committedMemory": 951152,
+        "capacity": 586480,
+        "used": 586480,
         "available": 0
       },
       "large_object_space": {
         "memorySize": 82251776,
         "committedMemory": 82251776,
-        "capacity": 111462744,
+        "capacity": 111987032,
         "used": 80165720,
-        "available": 31297024
+        "available": 31821312
       },
       "new_large_object_space": {
         "memorySize": 0,
@@ -163,25 +163,25 @@
     }
   },
   "resourceUsage": {
-    "userCpuSeconds": 205.764,
-    "kernelCpuSeconds": 15.331,
-    "cpuConsumptionPercent": 10.0543,
-    "maxRss": 2273615872,
+    "userCpuSeconds": 142.54,
+    "kernelCpuSeconds": 9.30893,
+    "cpuConsumptionPercent": 10.4941,
+    "maxRss": 2272153600,
     "pageFaults": {
-      "IORequired": 9,
-      "IONotRequired": 2583088
+      "IORequired": 0,
+      "IONotRequired": 1666213
     },
     "fsActivity": {
-      "reads": 7688,
+      "reads": 0,
       "writes": 0
     }
   },
   "uvthreadResourceUsage": {
-    "userCpuSeconds": 106.308,
-    "kernelCpuSeconds": 5.33118,
-    "cpuConsumptionPercent": 5.07682,
+    "userCpuSeconds": 73.9362,
+    "kernelCpuSeconds": 3.58263,
+    "cpuConsumptionPercent": 5.35721,
     "fsActivity": {
-      "reads": 7688,
+      "reads": 0,
       "writes": 0
     }
   },
@@ -321,7 +321,7 @@
     "VSCODE_GIT_IPC_HANDLE": "/tmp/vscode-git-03e90bd3a9.sock",
     "TERM_PROGRAM": "vscode",
     "npm_package_dependencies_aws_sdk": "^2.799.0",
-    "npm_package_gitHead": "16845b7945c6d3136723f5401a04f0f3f4e83780",
+    "npm_package_gitHead": "f050d72f683d5f9b91ed31278dcbf7aa3e9f0fc4",
     "npm_config_fund": "true",
     "npm_config_fetch_retry_maxtimeout": "60000",
     "npm_config_loglevel": "notice",
