@@ -3,15 +3,16 @@ import {
    APIGatewayProxyResult
 } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
+import { isStr, isValidJSONBody } from "middleware/validators";
 import { UserClaims } from "models/auth";
 import { processRegister } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    try {
-      const form = JSON.parse(event.body);
-      const email = form["email"];
-      const password = form["password"];
-      const claims = form["claims"];
+      const form = isValidJSONBody(event.body);
+      const email = isStr(form, "email", true);
+      const password = isStr(form, "password", true);
+      const claims = isStr(form, "claims");
       const userClaims: UserClaims[] = [];
       if (claims) {
          const list = claims.split(",");

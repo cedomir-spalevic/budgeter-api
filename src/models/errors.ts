@@ -8,6 +8,7 @@ export class AlreadyExistsError extends Error {
 export class GeneralError extends Error {
    constructor(message: string) {
       super(message);
+      this.stack = undefined;
    }
 }
 
@@ -35,3 +36,10 @@ export class UnauthorizedError extends Error {
 export class ExpiredTokenError extends UnauthorizedError { }
 
 export class InvalidTokenError extends UnauthorizedError { }
+
+export class InvalidJSONBodyError extends GeneralError {
+   constructor() {
+      super("JSON body is not valid");
+      this.stack = undefined;
+   }
+}
