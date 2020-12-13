@@ -33,3 +33,12 @@ export interface BudgetPayment {
    paymentId: ObjectId;
    completed: boolean;
 }
+
+export interface Payment {
+   userId: ObjectId;
+   name: string;
+   amount: number;
+   dueDate: Date;
+   createdOn: Date;
+   modifiedOn: Date;
+}

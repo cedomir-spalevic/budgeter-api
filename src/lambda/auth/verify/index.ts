@@ -12,9 +12,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       if (authorizationHeader)
          token = authorizationHeader.replace("Bearer ", "");
 
-      const response = await processVerify(token);
+      processVerify(token);
       return {
-         statusCode: (response ? 200 : 401),
+         statusCode: 200,
          body: ""
       }
    }
