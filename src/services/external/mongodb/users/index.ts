@@ -55,8 +55,8 @@ class UsersService {
 
    public async get(limit: number, skip: number): Promise<WithId<User>[]> {
       const response = await this.collection.find<WithId<User>>({}, { limit, skip });
-      const items: WithId<User>[] = [];
-      response.forEach(x => items.push(x));
+      const items: WithId<User>[] = []
+      await response.forEach(x => items.push(x));
       return items;
    }
 

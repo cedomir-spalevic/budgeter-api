@@ -58,7 +58,7 @@ class PaymentsService {
    public async get(limit: number, skip: number): Promise<WithId<Payment>[]> {
       const response = await this.collection.find<WithId<Payment>>({ userId: this.userId }, { limit, skip });
       const items: WithId<Payment>[] = [];
-      response.forEach(x => items.push(x));
+      await response.forEach(x => items.push(x));
       return items;
    }
 

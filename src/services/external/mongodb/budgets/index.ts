@@ -67,7 +67,7 @@ class BudgetsService {
    public async get(limit: number, skip: number): Promise<WithId<Budget>[]> {
       const response = await this.collection.find<WithId<Budget>>({ userId: this.userId }, { limit, skip });
       const items: WithId<Budget>[] = [];
-      response.forEach(x => items.push(x));
+      await response.forEach(x => items.push(x));
       return items;
    }
 
