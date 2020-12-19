@@ -14,14 +14,14 @@ export const getQueryStringParameters = (params: Params | null): QueryStringPara
    if (params !== null) {
       if (params["limit"]) {
          let l = Number(params["limit"]);
-         if (!l)
-            throw new GeneralError("Limit must be a digit greater than 0");
+         if (l < 0)
+            throw new GeneralError("Limit must be a digit 0 or greater");
          limit = l;
       }
       if (params["skip"]) {
          let s = Number(params["skip"]);
-         if (!s)
-            throw new GeneralError("Skip must be a digit greater than 0");
+         if (s < 0)
+            throw new GeneralError("Skip must be a digit 0 or greater");
          skip = s;
       }
    }
