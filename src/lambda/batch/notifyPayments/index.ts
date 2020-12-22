@@ -2,14 +2,14 @@ import {
    APIGatewayProxyEvent,
    APIGatewayProxyResult
 } from "aws-lambda";
-import { publishMessage } from "services/external/aws/sns";
+import { processPaymentNotifications } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    try {
-      const response = await publishMessage("Hey, your payment is due today");
+      await processPaymentNotifications();
       return {
          statusCode: 200,
-         body: JSON.stringify(response)
+         body: ""
       }
    }
    catch (error) {

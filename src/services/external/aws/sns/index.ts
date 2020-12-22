@@ -59,7 +59,30 @@ export const createPlatformEndpoint = (device: string, token: string): Promise<s
    })
 }
 
-export const publishMessage = (message: string): Promise<any> => {
+export const publishToEndpoint = (endpointArn: string, message: string): Promise<any> => {
+   return new Promise((resolve, reject) => {
+      const msgAttr: MessageAttributeValue = {
+         DataType: "Number",
+         StringValue: "90"
+      }
+      const params: AWS.SNS.PublishInput = {
+         TargetArn: endpointArn,
+         Message: message,
+         MessageAttributes: {
+            "AWS.SNS.MOBILE.APNS.TTL": msgAttr,
+            "AWS.SNS.MOBILE.APNS_SANDBOX.TTL": msgAttr,
+            "AWS.SNS.MOBILE.FCM.TTL": msgAttr
+         }
+      }
+      sns.publish(params, (err: AWS.AWSError, data: AWS.SNS.PublishResponse) => {
+         if (err)
+            reject(err);
+         resolve(data);
+      })
+   })
+}
+
+export const publishToTopic = (message: string): Promise<any> => {
    return new Promise((resolve, reject) => {
       const msgAttr: MessageAttributeValue = {
          DataType: "Number",
