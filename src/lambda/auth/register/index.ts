@@ -2,86 +2,33 @@ import {
    APIGatewayProxyEvent,
    APIGatewayProxyResult
 } from "aws-lambda";
-import { User } from "models/data";
-import { AuthResponse } from "models/responses";
-import { generateToken } from "services/security";
-import UsersService, { UserClaims } from "services/db/users";
-import UsersAuthService from "services/db/userAuth";
+import { handleErrorResponse } from "middleware/errors";
+import { isStr, isValidJSONBody } from "middleware/validators";
+import { UserClaims } from "models/auth";
+import { processRegister } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-   const requestFormBody = JSON.parse(event.body);
-   let email: string = requestFormBody["email"];
-   const password = requestFormBody["password"];
-   const userClaims: UserClaims[] = [];
-   if (requestFormBody["claims"]) {
-      const claims = requestFormBody["claims"] as string;
-      const list = claims.split(",");
-      if (list.includes("service"))
-         userClaims.push(UserClaims.Service);
-      if (list.includes("admin"))
-         userClaims.push(UserClaims.Admin);
-   }
-
-   // Check if email and password exist in the request
-   if (!email || !password) {
-      return {
-         statusCode: 400,
-         body: "Email and password must be sent in the body"
-      };
-   }
-
-   // Set email to all lowercase
-   email = email.toLowerCase();
-
-   let user: User;
-   const authResponse: AuthResponse = {
-      valid: false
-   }
-
-   // Create a new user
    try {
-      const usersService = new UsersService();
-      user = await usersService.create(email, userClaims);
-   }
-   catch (error) {
-      authResponse.emailError = "A user already exists with this email, dumbass";
-      return {
-         statusCode: 400,
-         body: JSON.stringify(authResponse)
-      };
-   }
+      const form = isValidJSONBody(event.body);
+      const email = isStr(form, "email", true);
+      const password = isStr(form, "password", true);
+      const claims = isStr(form, "claims");
+      const userClaims: UserClaims[] = [];
+      if (claims) {
+         const list = claims.split(",");
+         if (list.includes("service"))
+            userClaims.push(UserClaims.Service);
+         if (list.includes("admin"))
+            userClaims.push(UserClaims.Admin);
+      }
 
-   // Next create auth hash
-   try {
-      const usersAuthService = new UsersAuthService();
-      const userExists = await usersAuthService.create(user.userId, password);
-      if (!userExists)
-         throw new Error();
-   }
-   catch (error) {
-      authResponse.emailError = "A user already exists with this email";
+      const response = await processRegister(email, password, userClaims);
       return {
-         statusCode: 400,
-         body: JSON.stringify(authResponse)
-      };
-   }
-
-   // Finally, generate JWT token
-   try {
-      const token = generateToken(user.userId);
-      authResponse.token = token;
-      authResponse.user = user;
-      authResponse.valid = true;
-      return {
-         statusCode: 200,
-         body: JSON.stringify(authResponse)
+         statusCode: 201,
+         body: JSON.stringify(response)
       }
    }
    catch (error) {
-      authResponse.totalError = "Unable to sign up";
-      return {
-         statusCode: 400,
-         body: JSON.stringify(authResponse)
-      };
+      return handleErrorResponse(error);
    }
 }

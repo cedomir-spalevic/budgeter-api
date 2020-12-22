@@ -3,70 +3,25 @@ import {
    APIGatewayProxyResult
 } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
-import { PaymentResponse } from "models/responses";
-import PaymentsService from "services/db/payments";
+import { handleErrorResponse } from "middleware/errors";
+import { isDate, isNumber, isStr, isValidJSONBody } from "middleware/validators";
+import { processCreatePayment } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-   let userId: string;
    try {
-      userId = await isAuthorized(event);
-   }
-   catch (event) {
-      return {
-         statusCode: 401,
-         body: ""
-      };
-   }
+      const userId = await isAuthorized(event);
+      const form = isValidJSONBody(event.body);
+      const name = isStr(form, "name", true);
+      const amount = isNumber(form, "amount", true);
+      const dueDate = isDate(form, "dueDate", true);
 
-   const paymentResponse: PaymentResponse = {
-      valid: false
-   };
-   let dueDate: number, hasError = false;
-
-   const requestFormBody = JSON.parse(event.body);
-   const name = requestFormBody["name"];
-   const amount = requestFormBody["amount"];
-   const postedDueDate = requestFormBody["dueDate"];
-
-   if (!name) {
-      paymentResponse.nameError = "Name is required";
-      hasError = true;
-   }
-   if (!amount) {
-      paymentResponse.amountError = "Amount is required";
-      hasError = true;
-   }
-   if (postedDueDate) {
-      dueDate = Date.parse(postedDueDate);
-      if (isNaN(dueDate)) {
-         paymentResponse.dueDateError = "Invalid due date";
-         hasError = true;
-      }
-   }
-
-   if (hasError) {
-      return {
-         statusCode: 400,
-         body: JSON.stringify(paymentResponse)
-      }
-   }
-
-   // Create payment
-   try {
-      const paymentsService = new PaymentsService(userId);
-      const payment = await paymentsService.create(name, amount, dueDate);
-      paymentResponse.valid = true;
-      paymentResponse.paymentId = payment.paymentId;
+      const response = await processCreatePayment(userId, name, amount, dueDate);
       return {
          statusCode: 201,
-         body: JSON.stringify(paymentResponse)
+         body: JSON.stringify(response)
       }
    }
    catch (error) {
-      paymentResponse.totalError = "Unable to create payment"
-      return {
-         statusCode: 400,
-         body: JSON.stringify(paymentResponse)
-      };
+      return handleErrorResponse(error);
    }
 }

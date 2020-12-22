@@ -1,38 +1,44 @@
+import { ObjectId } from "mongodb";
+
 export interface User {
-   userId: string;
    email: string;
    isService: boolean;
    isAdmin: boolean;
-   createdOn?: string; // In ISO String
-   modifiedOn?: string; // In ISO String
+   createdOn?: Date;
+   modifiedOn?: Date;
+   device?: {
+      os: string;
+      platformApplicationEndpointArn: string;
+      subscriptionArn: string;
+   }
 }
 
-export interface BudgetPayment {
-   budgetPaymentId?: string;
-   budgetId: string;
-   paymentId: string;
-   completed: boolean;
-   createdOn?: string; // In ISO String
-   modifiedOn?: string; // In ISO String
+export interface UserAuth {
+   userId: ObjectId;
+   hash: string;
 }
 
 export interface Budget {
-   budgetId?: string;
+   userId: ObjectId;
    name: string;
-   startDate: number;
-   endDate: number;
+   startDate: Date;
+   endDate: Date;
    completed: boolean;
-   payments?: BudgetPayment[];
-   createdOn?: string; // In ISO String
-   modifiedOn?: string; // In ISO String
+   createdOn: Date;
+   modifiedOn: Date;
+   payments: BudgetPayment[];
+}
+
+export interface BudgetPayment {
+   paymentId: ObjectId;
+   completed: boolean;
 }
 
 export interface Payment {
-   paymentId?: string;
+   userId: ObjectId;
    name: string;
    amount: number;
-   dueDate: number;
-   budgets?: string[];
-   createdOn?: string; // In ISO String
-   modifiedOn?: string; // In ISO String
+   dueDate: Date;
+   createdOn: Date;
+   modifiedOn: Date;
 }

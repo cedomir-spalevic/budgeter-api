@@ -3,44 +3,22 @@ import {
    APIGatewayProxyResult
 } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
-import PaymentsService from "services/db/payments";
-import BudgetPaymentsService from "services/db/budgetPayments";
+import { getPathParameter } from "middleware/url";
+import { handleErrorResponse } from "middleware/errors";
+import { processDeletePayment } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-   let userId: string;
    try {
-      userId = await isAuthorized(event);
-   }
-   catch (event) {
-      return {
-         statusCode: 401,
-         body: ""
-      };
-   }
+      const userId = await isAuthorized(event);
+      const paymentId = getPathParameter("paymentId", event.pathParameters);
 
-   const paymentId = event.pathParameters["paymentId"];
-   if (!paymentId) {
-      return {
-         statusCode: 400,
-         body: "Payment Id is invalid"
-      };
-   }
-
-   // Delete payment
-   try {
-      const paymentsService = new PaymentsService(userId);
-      await paymentsService.delete(paymentId);
-      const budgetPaymentsService = new BudgetPaymentsService(userId);
-      await budgetPaymentsService.removePaymentFromBudgets(paymentId);
+      await processDeletePayment(userId, paymentId);
       return {
          statusCode: 200,
          body: ""
       }
    }
    catch (error) {
-      return {
-         statusCode: 400,
-         body: "Unable to delete payment"
-      };
+      return handleErrorResponse(error);
    }
 }

@@ -3,49 +3,34 @@ import {
    APIGatewayProxyResult
 } from "aws-lambda";
 import { isAdminAuthorized } from "middleware/auth";
-import { User } from "models/data";
-import UsersService, { UserClaims } from "services/db/users";
+import { handleErrorResponse } from "middleware/errors";
+import { getPathParameter } from "middleware/url";
+import { isStr, isValidJSONBody } from "middleware/validators";
+import { UserClaims } from "models/auth";
+import { processUpdateUser } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    try {
       await isAdminAuthorized(event);
-   }
-   catch (event) {
-      return {
-         statusCode: 401,
-         body: ""
-      };
-   }
-
-   const userId = event.pathParameters["userId"];
-   if (!userId) {
-      return {
-         statusCode: 400,
-         body: "User Id is invalid"
-      };
-   }
-
-   const requestFormBody = JSON.parse(event.body);
-   const claims = requestFormBody["claims"] as string;
-
-   try {
+      const userId = getPathParameter("userId", event.pathParameters);
+      const form = isValidJSONBody(event.body);
+      const claims = isStr(form, "claims");
       const userClaims: UserClaims[] = [];
-      const list = claims.split(",");
-      if (list.includes("service"))
-         userClaims.push(UserClaims.Service);
-      if (list.includes("admin"))
-         userClaims.push(UserClaims.Admin);
-      const usersService = new UsersService();
-      await usersService.update(userId, userClaims);
+      if (claims) {
+         const list = claims.split(",");
+         if (list.includes("service"))
+            userClaims.push(UserClaims.Service);
+         if (list.includes("admin"))
+            userClaims.push(UserClaims.Admin);
+      }
+
+      const response = await processUpdateUser(userId, userClaims);
       return {
-         statusCode: 201,
-         body: ""
+         statusCode: 200,
+         body: JSON.stringify(response)
       }
    }
    catch (error) {
-      return {
-         statusCode: 400,
-         body: "Unable to update User"
-      }
+      return handleErrorResponse(error);
    }
 }

@@ -14,6 +14,7 @@ provider:
     AWS_PLATFORM_APPLICATION_IOS: ${env:AWS_PLATFORM_APPLICATION_IOS}
     AWS_PLATFORM_APPLICATION_ANDROID: ${env:AWS_PLATFORM_APPLICATION_ANDROID}
     AWS_SNS_TOPIC: ${env:AWS_SNS_TOPIC}
+    MONGO_CONNECTION_STRING: ${env:MONGO_CONNECTION_STRING}
 
 # For serverless-bundle to remove dead code
 package:
@@ -38,59 +39,6 @@ functions:
       - http:
           path: auth/verify
           method: post
-  budget-payments-complete:
-    handler: src/lambda/budgetPayments/complete/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments/{paymentId}/complete
-          method: get
-          request:
-            parameters:
-              paths:
-                budgetId: true
-                paymentId: true
-  budget-payments-create:
-    handler: src/lambda/budgetPayments/create/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments
-          method: post
-          request:
-            parameters:
-              paths:
-                budgetId: true
-  budget-payments-delete:
-    handler: src/lambda/budgetPayments/delete/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments/{paymentId}
-          method: delete
-          request:
-            parameters:
-              paths:
-                budgetId: true
-                paymentId: true
-  budget-payments-get-all:
-    handler: src/lambda/budgetPayments/getAll/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments
-          method: get
-          request:
-            parameters:
-              paths:
-                budgetId: true
-  budget-payments-uncomplete:
-    handler: src/lambda/budgetPayments/uncomplete/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments/{paymentId}/uncomplete
-          method: get
-          request:
-            parameters:
-              paths:
-                budgetId: true
-                paymentId: true
   budgets-create:
     handler: src/lambda/budgets/create/index.handler
     events:
@@ -103,6 +51,13 @@ functions:
       - http:
           path: budgets
           method: get
+      - http:
+          path: budgets/{budgetId}
+          method: get
+          request: 
+            parameters:
+              paths:
+                budgetId: true
   budgets-update:
     handler: src/lambda/budgets/update/index.handler
     events:
@@ -123,6 +78,39 @@ functions:
             parameters:
               paths:
                 budgetId: true
+  
+  budgets-update-payment:
+    handler: src/lambda/budgets/updatePayment/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}/payments/{paymentId}
+          method: patch
+          request:
+            parameters:
+              paths:
+                budgetId: true
+                paymentId: true
+  budgets-add-payment:
+    handler: src/lambda/budgets/addPayment/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}/payments
+          method: post
+          request:
+            parameters:
+              paths:
+                budgetId: true
+  budgets-remove-payment:
+    handler: src/lambda/budgets/removePayment/index.handler
+    events:
+      - http:
+          path: budgets/{budgetId}/payments/{paymentId}
+          method: delete
+          request:
+            parameters:
+              paths:
+                budgetId: true
+                paymentId: true
   payments-create:
     handler: src/lambda/payments/create/index.handler
     events:
@@ -135,6 +123,13 @@ functions:
       - http:
           path: payments
           method: get
+      - http:
+          path: payments/{paymentId}
+          method: get
+          request: 
+            parameters:
+              paths:
+                paymentId: true
   payments-update:
     handler: src/lambda/payments/update/index.handler
     events:
@@ -161,6 +156,13 @@ functions:
       - http:
           path: users
           method: get
+      - http:
+          path: users/{userId}
+          method: get
+          request: 
+            parameters:
+              paths:
+                userId: true
   users-update:
     handler: src/lambda/users/update/index.handler
     events:
@@ -177,6 +179,16 @@ functions:
       - http:
           path: users/{userId}
           method: delete
+          request:
+            parameters:
+              paths:
+                userId: true
+  users-change-password:
+    handler: src/lambda/users/changePassword/index.handler
+    events:
+      - http:
+          path: users/{userId}/changePassword
+          method: post
           request:
             parameters:
               paths:

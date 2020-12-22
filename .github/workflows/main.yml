@@ -22,7 +22,7 @@ jobs:
       run: |
         cat > .env << EOF
         JWT_KEY=${{ secrets.JWT_KEY }}
-        FAUNADB_KEY=${{ secrets.FAUNADB_KEY }}
+        MONGO_CONNECTION_STRING=${{ secrets.MONGO_CONNECTION_STRING }}
         AWS_PLATFORM_APPLICATION_IOS=${{ secrets.AWS_PLATFORM_APPLICATION_IOS }}
         AWS_PLATFORM_APPLICATION_ANDROID=${{ secrets.AWS_PLATFORM_APPLICATION_ANDROID }}
         AWS_SNS_TOPIC=${{ secrets.AWS_SNS_TOPIC }}

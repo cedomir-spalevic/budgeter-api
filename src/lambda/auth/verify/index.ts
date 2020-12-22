@@ -2,26 +2,23 @@ import {
    APIGatewayProxyEvent,
    APIGatewayProxyResult
 } from "aws-lambda";
-import { decodeJwtToken } from "services/security";
+import { handleErrorResponse } from "middleware/errors";
+import { processVerify } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-   let token = "";
-   const authorizationHeader = event.headers["Authorization"]
-   if (authorizationHeader)
-      token = authorizationHeader.replace("Bearer ", "");
-
-   // Verify the token is valid
    try {
-      const valid = decodeJwtToken(token);
+      let token = "";
+      const authorizationHeader = event.headers["Authorization"]
+      if (authorizationHeader)
+         token = authorizationHeader.replace("Bearer ", "");
+
+      processVerify(token);
       return {
-         statusCode: (valid ? 200 : 401),
+         statusCode: 200,
          body: ""
       }
    }
    catch (error) {
-      return {
-         statusCode: 401,
-         body: ""
-      }
+      return handleErrorResponse(error);
    }
 }
