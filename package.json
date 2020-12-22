@@ -22,7 +22,8 @@
       "faunadb": "^3.0.1",
       "jwt-simple": "^0.5.6",
       "mongodb": "^3.6.3",
-      "uuid": "^8.3.0"
+      "uuid": "^8.3.0",
+      "serverless": "2.1"
    },
    "devDependencies": {
       "@serverless/safeguards-plugin": "^1.0.1",

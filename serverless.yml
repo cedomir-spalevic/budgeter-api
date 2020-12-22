@@ -183,6 +183,16 @@ functions:
             parameters:
               paths:
                 userId: true
+  users-change-password:
+    handler: src/lambda/users/changePassword/index.handler
+    events:
+      - http:
+          path: users/{userId}/changePassword
+          method: post
+          request:
+            parameters:
+              paths:
+                userId: true
   me-register-device:
     handler: src/lambda/me/registerDevice/index.handler
     events:

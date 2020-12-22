@@ -40,6 +40,11 @@ class UserAuthService {
       const count = await this.collection.countDocuments({ userId, hash });
       return count === 1;
    }
+
+   public async update(userId: ObjectId, password: string): Promise<void> {
+      const hash = generateHash(password);
+      await this.collection.replaceOne({ userId: userId }, { userId, hash });
+   }
 }
 
 export default {
