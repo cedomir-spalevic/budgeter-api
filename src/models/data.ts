@@ -4,6 +4,7 @@ export interface User {
    email: string;
    isService: boolean;
    isAdmin: boolean;
+   isEmailVerified: boolean;
    createdOn?: Date;
    modifiedOn?: Date;
    device?: {

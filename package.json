@@ -4,6 +4,7 @@
    "description": "Budgeter API",
    "scripts": {
       "dev": "serverless offline start",
+      "login": "serverless login",
       "deploy": "serverless deploy"
    },
    "repository": {
