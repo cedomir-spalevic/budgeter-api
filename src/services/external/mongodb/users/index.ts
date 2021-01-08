@@ -30,7 +30,8 @@ class UsersService {
          isAdmin: (claims && claims.includes(UserClaims.Admin)),
          isService: (claims && claims.includes(UserClaims.Service)),
          createdOn: currentDate,
-         modifiedOn: currentDate
+         modifiedOn: currentDate,
+         isEmailVerified: false
       };
       const response = await this.collection.insertOne(user);
       return response.ops[0];

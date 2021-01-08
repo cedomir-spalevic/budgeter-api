@@ -30,8 +30,5 @@ export const processSignIn = async (email: string, password: string) => {
    const token = generateToken(user._id);
 
    // If all goes well, return the access token and the user
-   return {
-      token,
-      user
-   }
+   return { token }
 }
