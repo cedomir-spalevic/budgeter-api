@@ -1,6 +1,8 @@
 import { ObjectId } from "mongodb";
 
 export interface User {
+   firstName: string;
+   lastName: string;
    email: string;
    isService: boolean;
    isAdmin: boolean;
@@ -17,6 +19,12 @@ export interface User {
 export interface UserAuth {
    userId: ObjectId;
    hash: string;
+}
+
+export interface ConfirmationCode {
+   userId: ObjectId;
+   key: string;
+   code: number;
 }
 
 export interface Budget {

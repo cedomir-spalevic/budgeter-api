@@ -6,7 +6,6 @@ frameworkVersion: '2.1'
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: prod
 
   environment:
     JWT_KEY: ${env:JWT_KEY}
@@ -26,6 +25,28 @@ functions:
       - http:
           path: auth/login
           method: post
+  auth-verify:
+    handler: src/lambda/auth/verify/index.handler
+    events:
+      - http:
+          path: auth/verify
+          method: post
+  auth-register:
+    handler: src/lambda/auth/register/index.handler
+    events:
+      - http:
+          path: auth/register
+          method: post
+  auth-register-confirmation:
+    handler: src/lambda/auth/registerConfirmation/index.handler
+    events:
+      - http:
+          path: auth/register/confirm/{key}
+          method: post
+          request:
+            parameters:
+              paths:
+                key: true
 
 plugins:
   - '@serverless/safeguards-plugin'

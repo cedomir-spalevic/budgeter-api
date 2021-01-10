@@ -1,24 +1,27 @@
-import { UserClaims } from "models/auth";
 import { User } from "models/data";
 import { AlreadyExistsError, GeneralError } from "models/errors";
-import { AuthResponse } from "models/responses";
+import { ConfirmationResponse } from "models/responses";
 import { WithId } from "mongodb";
+import { sendVerificationEmail } from "services/external/aws/ses";
 import UserAuthService from "services/external/mongodb/userAuth";
 import UsersService from "services/external/mongodb/users";
-import { generateToken } from "services/internal/security";
+import ConfirmationCodesService from "services/external/mongodb/confirmationCodes";
+import { generateConfirmationCode, generateRandomHash } from "services/internal/security";
+import { RegisterBody } from ".";
 
-export const processRegister = async (email: string, password: string, claims: UserClaims[]): Promise<AuthResponse> => {
+export const processRegister = async (registerBody: RegisterBody): Promise<ConfirmationResponse> => {
    // Check if email and password are valid
-   if (!email)
+   if (!registerBody.email)
       throw new GeneralError("Email cannot be blank");
-   if (!password)
+   if (!registerBody.password)
       throw new GeneralError("Password cannot be blank");
 
    // Set email to all lowercase
-   email = email.toLowerCase();
+   const email = registerBody.email.toLowerCase();
 
    const usersService = await UsersService.getInstance();
    const usersAuthService = await UserAuthService.getInstance();
+   const confirmationCodesService = await ConfirmationCodesService.getInstance();
 
    // Check if a user already exists with this email
    const existingUser = await usersService.findUserByEmail(email);
@@ -26,11 +29,11 @@ export const processRegister = async (email: string, password: string, claims: U
       throw new AlreadyExistsError();
 
    // Create a new user
-   let user: WithId<User> = await usersService.create(email, claims);
+   let user: WithId<User> = await usersService.create(registerBody.firstName, registerBody.lastName, email, registerBody.userClaims);
 
    // Create user auth
    try {
-      await usersAuthService.create(user._id, password);
+      await usersAuthService.create(user._id, registerBody.password);
    }
    catch (error) {
       // If this fails, we'll try to delete the user record
@@ -38,12 +41,16 @@ export const processRegister = async (email: string, password: string, claims: U
       throw error;
    }
 
-   // Lastly, generate token for new user
-   const token = generateToken(user._id);
+   // Generate confirmation code and key
+   const confirmationCode = generateConfirmationCode();
+   const key = generateRandomHash();
+
+   // Create confirmation code record
+   await confirmationCodesService.create(user._id, key, confirmationCode);
+
+   // Send email verification with the confirmation code
+   await sendVerificationEmail(email, confirmationCode.toString());
 
    // If all goes well, we'll be here
-   return {
-      token,
-      user
-   }
+   return { key }
 }

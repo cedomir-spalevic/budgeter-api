@@ -6,7 +6,7 @@ import { processSignIn } from "./processor";
 import { handleErrorResponse } from "middleware/errors";
 import { isStr, isValidJSONBody } from "middleware/validators";
 
-interface LoginBody {
+export interface LoginBody {
    email: string;
    password: string;
 }
@@ -21,7 +21,7 @@ const validator = (event: APIGatewayProxyEvent): LoginBody => {
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    try {
       const loginBody = validator(event);
-      const response = await processSignIn(loginBody.email, loginBody.password);
+      const response = await processSignIn(loginBody);
       return { statusCode: 200, body: JSON.stringify(response) }
    }
    catch (error) {

@@ -1,17 +1,19 @@
 import { GeneralError, NoUserEmailFoundError, UnauthorizedError } from "models/errors";
+import { AuthResponse } from "models/responses";
 import UserAuthService from "services/external/mongodb/userAuth";
 import UsersService from "services/external/mongodb/users";
 import { generateToken } from "services/internal/security";
+import { LoginBody } from ".";
 
-export const processSignIn = async (email: string, password: string) => {
+export const processSignIn = async (loginBody: LoginBody): Promise<AuthResponse> => {
    // Check if email and password are in the request
-   if (!email)
+   if (!loginBody.email)
       throw new GeneralError("Email cannot be blank");
-   if (!password)
+   if (!loginBody.password)
       throw new GeneralError("Password cannot be blank");
 
    // Set email to all lowercase
-   email = email.toLowerCase();
+   const email = loginBody.email.toLowerCase();
 
    const usersService = await UsersService.getInstance();
    const usersAuthService = await UserAuthService.getInstance();
@@ -22,7 +24,7 @@ export const processSignIn = async (email: string, password: string) => {
       throw new NoUserEmailFoundError();
 
    // Next scan the users password
-   const exists = await usersAuthService.exists(user._id, password);
+   const exists = await usersAuthService.exists(user._id, loginBody.password);
    if (!exists)
       throw new UnauthorizedError();
 

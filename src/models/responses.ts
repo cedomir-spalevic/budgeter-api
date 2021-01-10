@@ -1,9 +1,9 @@
-import { WithId } from "mongodb";
-import { User } from "./data";
+export interface ConfirmationResponse {
+   key: string;
+}
 
 export interface AuthResponse {
    token: string;
-   user: WithId<User>;
 }
 
 export interface GetResponse<T> {
