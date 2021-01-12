@@ -36,6 +36,12 @@ export class NotFoundError extends BudgeterError {
    }
 }
 
+export class UserEmailNotVerifiedError extends BudgeterError {
+   constructor() {
+      super("User has not verified their email", 406);
+   }
+}
+
 export class NoBudgetFoundError extends NotFoundError {
    constructor() {
       super("No Budget found with the given Id");

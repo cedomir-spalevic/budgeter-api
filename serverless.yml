@@ -37,11 +37,17 @@ functions:
       - http:
           path: auth/register
           method: post
-  auth-register-confirmation:
-    handler: src/lambda/auth/registerConfirmation/index.handler
+  auth-challenge:
+    handler: src/lambda/auth/challenge/index.handler
     events:
       - http:
-          path: auth/register/confirm/{key}
+          path: auth/challenge
+          method: post
+  auth-challenge-confirmation:
+    handler: src/lambda/auth/challengeConfirmation/index.handler
+    events:
+      - http:
+          path: auth/challenge/{key}
           method: post
           request:
             parameters:

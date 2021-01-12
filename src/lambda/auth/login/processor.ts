@@ -1,4 +1,4 @@
-import { GeneralError, NoUserEmailFoundError, UnauthorizedError } from "models/errors";
+import { GeneralError, NoUserEmailFoundError, UnauthorizedError, UserEmailNotVerifiedError } from "models/errors";
 import { AuthResponse } from "models/responses";
 import UserAuthService from "services/external/mongodb/userAuth";
 import UsersService from "services/external/mongodb/users";
@@ -22,6 +22,8 @@ export const processSignIn = async (loginBody: LoginBody): Promise<AuthResponse>
    const user = await usersService.findUserByEmail(email);
    if (!user)
       throw new NoUserEmailFoundError();
+   if (!user.isEmailVerified)
+      throw new UserEmailNotVerifiedError();
 
    // Next scan the users password
    const exists = await usersAuthService.exists(user._id, loginBody.password);
