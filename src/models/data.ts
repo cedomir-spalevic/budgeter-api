@@ -6,6 +6,7 @@ export interface User {
    email: string;
    isService: boolean;
    isAdmin: boolean;
+   forceLogout: boolean;
    isEmailVerified: boolean;
    createdOn?: Date;
    modifiedOn?: Date;
@@ -21,10 +22,15 @@ export interface UserAuth {
    hash: string;
 }
 
-export interface ConfirmationCode {
+export type OneTimeCodeType = "emailVerification" | "passwordReset";
+
+export interface OneTimeCode {
    userId: ObjectId;
    key: string;
+   type: OneTimeCodeType;
    code: number;
+   completed: boolean;
+   createdOn: Date;
 }
 
 export interface Budget {

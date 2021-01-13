@@ -34,6 +34,13 @@ export const isStr = (form: Form, name: string, required: boolean = false): stri
    return form[name];
 }
 
+export const isOneOfStr = (form: Form, name: string, oneOfValues: string[], required: boolean = false): string => {
+   const value = isStr(form, name, required);
+   if (oneOfValues.indexOf(value) === -1)
+      throw new GeneralError(`${name} must have a value of ${oneOfValues.map(x => `'${x}'`).join(" or ")}`);
+   return value;
+}
+
 export const isId = (form: Form, name: string, required: boolean = false): ObjectId => {
    const id = isStr(form, name, required);
    if (required) {
@@ -85,4 +92,9 @@ export const isValidJSONBody = (value: string): Form => {
    if (!body)
       throw new InvalidJSONBodyError();
    return body;
+}
+
+export const isValidEmail = (email: string): boolean => {
+   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+   return re.test(email.toLowerCase());
 }

@@ -53,6 +53,22 @@ functions:
             parameters:
               paths:
                 key: true
+  me-get:
+    handler: src/lambda/me/get/index.handler
+    events:
+      - http:
+          path: me
+          method: get
+  me-reset-password:
+    handler: src/lambda/me/passwordReset/index.handler
+    events:
+      - http:
+          path: me/resetPassword/{key}
+          method: post
+          request:
+            parameters:
+              paths:
+                key: true
 
 plugins:
   - '@serverless/safeguards-plugin'

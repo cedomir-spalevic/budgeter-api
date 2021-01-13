@@ -22,13 +22,20 @@ export const processSignIn = async (loginBody: LoginBody): Promise<AuthResponse>
    const user = await usersService.findUserByEmail(email);
    if (!user)
       throw new NoUserEmailFoundError();
-   if (!user.isEmailVerified)
-      throw new UserEmailNotVerifiedError();
 
    // Next scan the users password
    const exists = await usersAuthService.exists(user._id, loginBody.password);
    if (!exists)
       throw new UnauthorizedError();
+
+   if (!user.isEmailVerified)
+      throw new UserEmailNotVerifiedError();
+
+   // If the user was forced to logout, then update record
+   if (user.forceLogout) {
+      user.forceLogout = false
+      await usersService.update(user);
+   }
 
    // Lastly, generate token for new user
    const token = generateToken(user._id);

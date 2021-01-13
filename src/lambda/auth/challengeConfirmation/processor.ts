@@ -1,28 +1,31 @@
 import { UnauthorizedError } from "models/errors";
 import { AuthResponse } from "models/responses";
 import UsersService from "services/external/mongodb/users";
-import ConfirmationCodesService from "services/external/mongodb/confirmationCodes";
+import OneTimeCodeService from "services/external/mongodb/otc";
 import { generateToken } from "services/internal/security";
 import { RegisterConfirmationBody } from ".";
 
 export const processRegisterConfirmation = async (registerConfirmationBody: RegisterConfirmationBody): Promise<AuthResponse> => {
    const usersService = await UsersService.getInstance();
-   const confirmationCodesService = await ConfirmationCodesService.getInstance();
+   const oneTimeCodeService = await OneTimeCodeService.getInstance();
 
-   const confirmationCode = await confirmationCodesService.find(registerConfirmationBody.key, registerConfirmationBody.code);
-   if (!confirmationCode)
+   const otc = await oneTimeCodeService.find({ key: registerConfirmationBody.key, code: registerConfirmationBody.code });
+   if (!otc)
       throw new UnauthorizedError();
 
-   // Delete confirmation code record
-   await confirmationCodesService.delete(confirmationCode._id);
-
-   // Update user
-   const user = await usersService.getById(confirmationCode.userId);
-   user.isEmailVerified = true;
-   await usersService.update(user);
-
+   if (otc.type === "passwordReset") {
+      // If the type is passwordReset, then completed
+      await oneTimeCodeService.complete(otc);
+   }
+   else if (otc.type === "emailVerification") {
+      // If one time code was for email verification, delete record and update users isEmailVerified field to true
+      await oneTimeCodeService.delete(otc._id);
+      const user = await usersService.getById(otc.userId);
+      user.isEmailVerified = true;
+      await usersService.update(user);
+   }
    // Generate token
-   const token = generateToken(user._id);
+   const token = generateToken(otc.userId);
 
    return { token }
 }

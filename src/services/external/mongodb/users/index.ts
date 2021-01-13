@@ -31,6 +31,7 @@ class UsersService {
          email,
          isAdmin: (claims && claims.includes(UserClaims.Admin)),
          isService: (claims && claims.includes(UserClaims.Service)),
+         forceLogout: false,
          createdOn: currentDate,
          modifiedOn: currentDate,
          isEmailVerified: false

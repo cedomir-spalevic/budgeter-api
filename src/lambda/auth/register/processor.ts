@@ -2,12 +2,13 @@ import { User } from "models/data";
 import { AlreadyExistsError, GeneralError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
 import { WithId } from "mongodb";
-import { sendVerificationEmail } from "services/external/aws/ses";
+import { sendEmail } from "services/external/aws/ses";
 import UserAuthService from "services/external/mongodb/userAuth";
 import UsersService from "services/external/mongodb/users";
-import ConfirmationCodesService from "services/external/mongodb/confirmationCodes";
+import OneTimeCodeService from "services/external/mongodb/otc";
 import { generateConfirmationCode, generateRandomHash } from "services/internal/security";
 import { RegisterBody } from ".";
+import { newAccountConfirmationTemplate } from "views/new-account-confirmation";
 
 export const processRegister = async (registerBody: RegisterBody): Promise<ConfirmationResponse> => {
    // Check if email and password are valid
@@ -21,7 +22,7 @@ export const processRegister = async (registerBody: RegisterBody): Promise<Confi
 
    const usersService = await UsersService.getInstance();
    const usersAuthService = await UserAuthService.getInstance();
-   const confirmationCodesService = await ConfirmationCodesService.getInstance();
+   const oneTimeCodeService = await OneTimeCodeService.getInstance();
 
    // Check if a user already exists with this email
    const existingUser = await usersService.findUserByEmail(email);
@@ -45,11 +46,12 @@ export const processRegister = async (registerBody: RegisterBody): Promise<Confi
    const confirmationCode = generateConfirmationCode();
    const key = generateRandomHash();
 
-   // Create confirmation code record
-   await confirmationCodesService.create(user._id, key, confirmationCode);
+   // Create one time code
+   await oneTimeCodeService.create(user._id, key, confirmationCode, "emailVerification");
 
    // Send email verification with the confirmation code
-   await sendVerificationEmail(email, confirmationCode.toString());
+   const html = newAccountConfirmationTemplate(confirmationCode.toString());
+   await sendEmail(email, "Budgeter - verify your email", html);
 
    // If all goes well, we'll be here
    return { key }
