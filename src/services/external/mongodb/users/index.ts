@@ -23,14 +23,18 @@ class UsersService {
       return UsersService.instance;
    }
 
-   public async create(email: string, claims?: UserClaims[]): Promise<WithId<User>> {
+   public async create(firstName: string, lastName: string, email: string, claims?: UserClaims[]): Promise<WithId<User>> {
       const currentDate = new Date();
       const user: User = {
+         firstName,
+         lastName,
          email,
          isAdmin: (claims && claims.includes(UserClaims.Admin)),
          isService: (claims && claims.includes(UserClaims.Service)),
+         forceLogout: false,
          createdOn: currentDate,
-         modifiedOn: currentDate
+         modifiedOn: currentDate,
+         isEmailVerified: false
       };
       const response = await this.collection.insertOne(user);
       return response.ops[0];

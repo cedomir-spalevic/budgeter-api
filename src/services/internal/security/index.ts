@@ -5,6 +5,16 @@ import { ExpiredTokenError, InvalidTokenError } from "models/errors";
 import { ObjectId } from "mongodb";
 
 /**
+ * Generates a 6 digit confirmation code
+ */
+export const generateConfirmationCode = (): number => Math.floor(100000 + Math.random() * 900000);
+
+/**
+ * Generates a random hash
+ */
+export const generateRandomHash = (): string => crypto.randomBytes(16).toString("hex");
+
+/**
  * Generate a SHA256 hash from the users password
  * @param password 
  */

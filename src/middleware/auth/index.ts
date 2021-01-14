@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { UnauthorizedError } from "models/errors";
+import { ForceLogoutError, UnauthorizedError } from "models/errors";
 import { ObjectId } from "mongodb";
 import { decodeJwtToken } from "services/internal/security";
 import UsersService from "services/external/mongodb/users";
@@ -17,8 +17,10 @@ export const isAuthorized = async (event: APIGatewayProxyEvent): Promise<ObjectI
 
    const usersService = await UsersService.getInstance();
    const user = await usersService.getById(userId);
-   if (user === null)
+   if (user === null || !user.isEmailVerified)
       throw new UnauthorizedError();
+   if (user.forceLogout)
+      throw new ForceLogoutError();
 
    return userId;
 }
@@ -36,8 +38,10 @@ export const isAdminAuthorized = async (event: APIGatewayProxyEvent): Promise<Ob
 
    const usersService = await UsersService.getInstance();
    const user = await usersService.getById(userId);
-   if (user === null || !user.isAdmin)
+   if (user === null || !user.isEmailVerified || !user.isAdmin)
       throw new UnauthorizedError();
+   if (user.forceLogout)
+      throw new ForceLogoutError();
 
    return userId;
 }

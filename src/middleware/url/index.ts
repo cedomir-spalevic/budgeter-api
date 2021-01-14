@@ -28,6 +28,12 @@ export const getQueryStringParameters = (params: Params | null): QueryStringPara
    return { limit, skip };
 }
 
+export const getPathParameterId = (name: string, params: Params | null): string => {
+   if (params === null)
+      throw new GeneralError("Invalid Id");
+   return params[name];
+}
+
 export const getPathParameter = (name: string, params: Params | null): ObjectId => {
    if (params === null)
       throw new GeneralError("Invalid Id");

@@ -6,10 +6,8 @@ frameworkVersion: '2.1'
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: prod
 
   environment:
-    FAUNADB_KEY: ${env:FAUNADB_KEY}
     JWT_KEY: ${env:JWT_KEY}
     AWS_PLATFORM_APPLICATION_IOS: ${env:AWS_PLATFORM_APPLICATION_IOS}
     AWS_PLATFORM_APPLICATION_ANDROID: ${env:AWS_PLATFORM_APPLICATION_ANDROID}
@@ -21,17 +19,11 @@ package:
   individually: true
 
 functions:
-  auth-register:
-    handler: src/lambda/auth/register/index.handler
+  auth-login:
+    handler: src/lambda/auth/login/index.handler
     events:
       - http:
-          path: auth/register
-          method: post
-  auth-signin:
-    handler: src/lambda/auth/signIn/index.handler
-    events:
-      - http:
-          path: auth/signin
+          path: auth/login
           method: post
   auth-verify:
     handler: src/lambda/auth/verify/index.handler
@@ -39,171 +31,44 @@ functions:
       - http:
           path: auth/verify
           method: post
-  budgets-create:
-    handler: src/lambda/budgets/create/index.handler
+  auth-register:
+    handler: src/lambda/auth/register/index.handler
     events:
       - http:
-          path: budgets
+          path: auth/register
           method: post
-  budgets-get:
-    handler: src/lambda/budgets/get/index.handler
+  auth-challenge:
+    handler: src/lambda/auth/challenge/index.handler
     events:
       - http:
-          path: budgets
-          method: get
-      - http:
-          path: budgets/{budgetId}
-          method: get
-          request: 
-            parameters:
-              paths:
-                budgetId: true
-  budgets-update:
-    handler: src/lambda/budgets/update/index.handler
+          path: auth/challenge
+          method: post
+  auth-challenge-confirmation:
+    handler: src/lambda/auth/challengeConfirmation/index.handler
     events:
       - http:
-          path: budgets/{budgetId}
-          method: patch
-          request:
-            parameters:
-              paths:
-                budgetId: true
-  budgets-delete:
-    handler: src/lambda/budgets/delete/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}
-          method: delete
-          request:
-            parameters:
-              paths:
-                budgetId: true
-  
-  budgets-update-payment:
-    handler: src/lambda/budgets/updatePayment/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments/{paymentId}
-          method: patch
-          request:
-            parameters:
-              paths:
-                budgetId: true
-                paymentId: true
-  budgets-add-payment:
-    handler: src/lambda/budgets/addPayment/index.handler
-    events:
-      - http:
-          path: budgets/{budgetId}/payments
+          path: auth/challenge/{key}
           method: post
           request:
             parameters:
               paths:
-                budgetId: true
-  budgets-remove-payment:
-    handler: src/lambda/budgets/removePayment/index.handler
+                key: true
+  me-get:
+    handler: src/lambda/me/get/index.handler
     events:
       - http:
-          path: budgets/{budgetId}/payments/{paymentId}
-          method: delete
-          request:
-            parameters:
-              paths:
-                budgetId: true
-                paymentId: true
-  payments-create:
-    handler: src/lambda/payments/create/index.handler
-    events:
-      - http:
-          path: payments
-          method: post
-  payments-get:
-    handler: src/lambda/payments/get/index.handler
-    events:
-      - http:
-          path: payments
+          path: me
           method: get
-      - http:
-          path: payments/{paymentId}
-          method: get
-          request: 
-            parameters:
-              paths:
-                paymentId: true
-  payments-update:
-    handler: src/lambda/payments/update/index.handler
+  me-reset-password:
+    handler: src/lambda/me/passwordReset/index.handler
     events:
       - http:
-          path: payments/{paymentId}
-          method: patch
-          request:
-            parameters:
-              paths:
-                paymentId: true
-  payments-delete:
-    handler: src/lambda/payments/delete/index.handler
-    events:
-      - http:
-          path: payments/{paymentId}
-          method: delete
-          request:
-            parameters:
-              paths:
-                paymentId: true
-  users-get:
-    handler: src/lambda/users/get/index.handler
-    events:
-      - http:
-          path: users
-          method: get
-      - http:
-          path: users/{userId}
-          method: get
-          request: 
-            parameters:
-              paths:
-                userId: true
-  users-update:
-    handler: src/lambda/users/update/index.handler
-    events:
-      - http:
-          path: users/{userId}
-          method: patch
-          request:
-            parameters:
-              paths:
-                userId: true
-  users-delete:
-    handler: src/lambda/users/delete/index.handler
-    events:
-      - http:
-          path: users/{userId}
-          method: delete
-          request:
-            parameters:
-              paths:
-                userId: true
-  users-change-password:
-    handler: src/lambda/users/changePassword/index.handler
-    events:
-      - http:
-          path: users/{userId}/changePassword
+          path: me/resetPassword/{key}
           method: post
           request:
             parameters:
               paths:
-                userId: true
-  me-register-device:
-    handler: src/lambda/me/registerDevice/index.handler
-    events:
-      - http:
-          path: me/registerDevice
-          method: post
-  batch-notify-payments:
-    transfer:
-    handler: src/lambda/batch/notifyPayments/index.handler
-    events:
-      - schedule: cron(0 15 * * ? *)
+                key: true
 
 plugins:
   - '@serverless/safeguards-plugin'

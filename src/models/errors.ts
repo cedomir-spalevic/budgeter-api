@@ -36,6 +36,18 @@ export class NotFoundError extends BudgeterError {
    }
 }
 
+export class ForceLogoutError extends BudgeterError {
+   constructor() {
+      super("Must resign in", 406);
+   }
+}
+
+export class UserEmailNotVerifiedError extends BudgeterError {
+   constructor() {
+      super("User has not verified their email", 406);
+   }
+}
+
 export class NoBudgetFoundError extends NotFoundError {
    constructor() {
       super("No Budget found with the given Id");

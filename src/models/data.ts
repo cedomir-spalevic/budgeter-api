@@ -1,9 +1,13 @@
 import { ObjectId } from "mongodb";
 
 export interface User {
+   firstName: string;
+   lastName: string;
    email: string;
    isService: boolean;
    isAdmin: boolean;
+   forceLogout: boolean;
+   isEmailVerified: boolean;
    createdOn?: Date;
    modifiedOn?: Date;
    device?: {
@@ -16,6 +20,17 @@ export interface User {
 export interface UserAuth {
    userId: ObjectId;
    hash: string;
+}
+
+export type OneTimeCodeType = "emailVerification" | "passwordReset";
+
+export interface OneTimeCode {
+   userId: ObjectId;
+   key: string;
+   type: OneTimeCodeType;
+   code: number;
+   completed: boolean;
+   createdOn: Date;
 }
 
 export interface Budget {
