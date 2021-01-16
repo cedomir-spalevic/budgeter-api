@@ -1,45 +1,80 @@
-import { GeneralError, NoUserEmailFoundError, UnauthorizedError, UserEmailNotVerifiedError } from "models/errors";
-import { AuthResponse } from "models/responses";
-import UserAuthService from "services/external/mongodb/userAuth";
-import UsersService from "services/external/mongodb/users";
-import { generateToken } from "services/internal/security";
+import {
+   GeneralError,
+   NoUserEmailFoundError,
+   UnauthorizedError
+} from "models/errors";
+import { AuthResponse, ConfirmationResponse } from "models/responses";
+import BudgeterMongoClient from "services/external/mongodb/client";
+import { generateAccessToken } from "services/internal/security/accessToken";
+import { generateRefreshToken } from "services/internal/security/refreshToken";
+import { generateHash } from "services/internal/security/hash";
 import { LoginBody } from ".";
+import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
+import { newAccountConfirmationTemplate } from "views/new-account-confirmation";
+import { sendEmail } from "services/external/aws/ses";
 
-export const processSignIn = async (loginBody: LoginBody): Promise<AuthResponse> => {
+export const processSignIn = async (loginBody: LoginBody): Promise<{ status: number, response: AuthResponse | ConfirmationResponse }> => {
    // Check if email and password are in the request
    if (!loginBody.email)
       throw new GeneralError("Email cannot be blank");
    if (!loginBody.password)
       throw new GeneralError("Password cannot be blank");
 
+   // Get Mongo Client
+   const budgeterClient = await BudgeterMongoClient.getInstance();
+   const usersService = budgeterClient.getUsersCollection();
+   const usersAuthService = budgeterClient.getUsersAuthCollection();
+   const refreshTokenService = budgeterClient.getRefreshTokenCollection();
+   const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
+
    // Set email to all lowercase
    const email = loginBody.email.toLowerCase();
 
-   const usersService = await UsersService.getInstance();
-   const usersAuthService = await UserAuthService.getInstance();
-
    // Look for a user with this email address
-   const user = await usersService.findUserByEmail(email);
+   const user = await usersService.find({ email });
    if (!user)
       throw new NoUserEmailFoundError();
 
    // Next scan the users password
-   const exists = await usersAuthService.exists(user._id, loginBody.password);
-   if (!exists)
+   const count = await usersAuthService.count({ userId: user._id, hash: generateHash(loginBody.password) });
+   if (count < 1)
       throw new UnauthorizedError();
 
-   if (!user.isEmailVerified)
-      throw new UserEmailNotVerifiedError();
+   // If the users email is not verified, force them to verify
+   if (!user.isEmailVerified) {
 
-   // If the user was forced to logout, then update record
-   if (user.forceLogout) {
-      user.forceLogout = false
-      await usersService.update(user);
+      // Create OTC
+      const result = generateOneTimeCode(user._id, "emailVerification");
+      await oneTimeCodeService.create(result.code);
+
+      // Send email verification with the confirmation code
+      const html = newAccountConfirmationTemplate(result.code.code.toString());
+      await sendEmail(email, "Budgeter - verify your email", html);
+
+      // Return Key identifier
+      return {
+         status: 202,
+         response: {
+            expires: result.expires,
+            key: result.code.key
+         }
+      }
    }
 
-   // Lastly, generate token for new user
-   const token = generateToken(user._id);
+   // Generate Access Token and Refresh Token
+   const refreshToken = generateRefreshToken(user._id);
+   const accessToken = generateAccessToken(user._id.toHexString(), refreshToken.token);
 
-   // If all goes well, return the access token and the user
-   return { token }
+   // Save Refresh Token in DB
+   await refreshTokenService.create(refreshToken);
+
+   // Return auth response
+   return {
+      status: 200,
+      response: {
+         accessToken: accessToken.token,
+         expires: accessToken.expires,
+         refreshToken: refreshToken.token
+      }
+   }
 }

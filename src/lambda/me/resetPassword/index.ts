@@ -2,27 +2,29 @@ import {
    APIGatewayProxyEvent,
    APIGatewayProxyResult
 } from "aws-lambda";
-import { processSignIn } from "./processor";
 import { handleErrorResponse } from "middleware/errors";
+import { getPathParameterId } from "middleware/url";
 import { isStr, isValidJSONBody } from "middleware/validators";
+import { processPasswordReset } from "./processor";
 
-export interface LoginBody {
-   email: string;
+export interface PasswordResetBody {
+   key: string;
    password: string;
 }
 
-const validator = (event: APIGatewayProxyEvent): LoginBody => {
+const validator = (event: APIGatewayProxyEvent): PasswordResetBody => {
+   const key = getPathParameterId("key", event.pathParameters);
    const form = isValidJSONBody(event.body);
-   const email = isStr(form, "email", true);
    const password = isStr(form, "password", true);
-   return { email, password }
+
+   return { key, password }
 }
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    try {
-      const loginBody = validator(event);
-      const response = await processSignIn(loginBody);
-      return { statusCode: response.status, body: JSON.stringify(response.response) }
+      const registerBody = validator(event);
+      const response = await processPasswordReset(registerBody);
+      return { statusCode: 200, body: JSON.stringify(response) }
    }
    catch (error) {
       return handleErrorResponse(error);

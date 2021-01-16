@@ -1,14 +1,13 @@
-import { User } from "models/data";
 import { AlreadyExistsError, GeneralError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
-import { WithId } from "mongodb";
 import { sendEmail } from "services/external/aws/ses";
-import UserAuthService from "services/external/mongodb/userAuth";
-import UsersService from "services/external/mongodb/users";
-import OneTimeCodeService from "services/external/mongodb/otc";
-import { generateConfirmationCode, generateRandomHash } from "services/internal/security";
 import { RegisterBody } from ".";
 import { newAccountConfirmationTemplate } from "views/new-account-confirmation";
+import BudgeterMongoClient from "services/external/mongodb/client";
+import { User } from "models/data/user";
+import { UserAuth } from "models/data/userAuth";
+import { generateHash } from "services/internal/security/hash";
+import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
 
 export const processRegister = async (registerBody: RegisterBody): Promise<ConfirmationResponse> => {
    // Check if email and password are valid
@@ -17,24 +16,38 @@ export const processRegister = async (registerBody: RegisterBody): Promise<Confi
    if (!registerBody.password)
       throw new GeneralError("Password cannot be blank");
 
+   // Get Mongo Client
+   const budgeterClient = await BudgeterMongoClient.getInstance();
+   const usersAuthService = budgeterClient.getUsersAuthCollection();
+   const usersService = budgeterClient.getUsersCollection();
+   const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
+
    // Set email to all lowercase
    const email = registerBody.email.toLowerCase();
 
-   const usersService = await UsersService.getInstance();
-   const usersAuthService = await UserAuthService.getInstance();
-   const oneTimeCodeService = await OneTimeCodeService.getInstance();
-
    // Check if a user already exists with this email
-   const existingUser = await usersService.findUserByEmail(email);
+   const existingUser = await usersService.find({ email });
    if (existingUser)
       throw new AlreadyExistsError();
 
    // Create a new user
-   let user: WithId<User> = await usersService.create(registerBody.firstName, registerBody.lastName, email, registerBody.userClaims);
+   const newUser: Partial<User> = {
+      firstName: registerBody.firstName,
+      lastName: registerBody.lastName,
+      email: email,
+      isAdmin: false,
+      isService: false,
+      isEmailVerified: false
+   }
+   const user = await usersService.create(newUser);
 
    // Create user auth
    try {
-      await usersAuthService.create(user._id, registerBody.password);
+      const userAuth: Partial<UserAuth> = {
+         userId: user._id,
+         hash: generateHash(registerBody.password)
+      }
+      await usersAuthService.create(userAuth);
    }
    catch (error) {
       // If this fails, we'll try to delete the user record
@@ -42,17 +55,17 @@ export const processRegister = async (registerBody: RegisterBody): Promise<Confi
       throw error;
    }
 
-   // Generate confirmation code and key
-   const confirmationCode = generateConfirmationCode();
-   const key = generateRandomHash();
-
-   // Create one time code
-   await oneTimeCodeService.create(user._id, key, confirmationCode, "emailVerification");
+   // Create OTC
+   const result = generateOneTimeCode(user._id, "emailVerification");
+   await oneTimeCodeService.create(result.code);
 
    // Send email verification with the confirmation code
-   const html = newAccountConfirmationTemplate(confirmationCode.toString());
+   const html = newAccountConfirmationTemplate(result.code.code.toString());
    await sendEmail(email, "Budgeter - verify your email", html);
 
-   // If all goes well, we'll be here
-   return { key }
+   // Return Key identifier
+   return {
+      expires: result.expires,
+      key: result.code.key
+   }
 }

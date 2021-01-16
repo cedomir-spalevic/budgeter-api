@@ -4,7 +4,6 @@ import {
 } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
 import { isStr, isValidJSONBody } from "middleware/validators";
-import { UserClaims } from "models/auth";
 import { processRegister } from "./processor";
 
 export interface RegisterBody {
@@ -12,7 +11,6 @@ export interface RegisterBody {
    lastName: string;
    email: string;
    password: string;
-   userClaims: UserClaims[];
 }
 
 const validator = (event: APIGatewayProxyEvent): RegisterBody => {
@@ -21,17 +19,8 @@ const validator = (event: APIGatewayProxyEvent): RegisterBody => {
    const lastName = isStr(form, "lastName", true);
    const email = isStr(form, "email", true);
    const password = isStr(form, "password", true);
-   const claims = isStr(form, "claims");
-   const userClaims: UserClaims[] = [];
-   if (claims) {
-      const list = claims.split(",");
-      if (list.includes("service"))
-         userClaims.push(UserClaims.Service);
-      if (list.includes("admin"))
-         userClaims.push(UserClaims.Admin);
-   }
 
-   return { firstName, lastName, email, password, userClaims }
+   return { firstName, lastName, email, password }
 }
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -39,7 +28,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       const registerBody = validator(event);
       const response = await processRegister(registerBody);
       return {
-         statusCode: 200,
+         statusCode: 201,
          body: JSON.stringify(response)
       }
    }

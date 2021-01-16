@@ -1,9 +1,11 @@
 import { ObjectId } from "mongodb";
-import UsersService from "services/external/mongodb/users";
+import BudgeterMongoClient from "services/external/mongodb/client";
 
 export const processGetMe = async (userId: ObjectId): Promise<any> => {
-   const usersService = await UsersService.getInstance();
-   const user = await usersService.getById(userId);
+   // Get Mongo Client
+   const budgeterClient = await BudgeterMongoClient.getInstance();
+   const usersService = budgeterClient.getUsersCollection();
+   const user = await usersService.getById(userId.toHexString());
    return {
       firstName: user.firstName,
       lastName: user.lastName,

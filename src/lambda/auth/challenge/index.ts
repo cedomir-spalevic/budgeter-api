@@ -4,7 +4,7 @@ import {
 } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
 import { isOneOfStr, isStr, isValidJSONBody } from "middleware/validators";
-import { OneTimeCodeType } from "models/data";
+import { OneTimeCodeType } from "models/data/oneTimeCode";
 import { processChallenge } from "./processor";
 
 export interface ChallengeBody {

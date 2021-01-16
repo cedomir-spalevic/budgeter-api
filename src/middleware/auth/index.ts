@@ -1,8 +1,7 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { ForceLogoutError, UnauthorizedError } from "models/errors";
+import { UnauthorizedError } from "models/errors";
 import { ObjectId } from "mongodb";
-import { decodeJwtToken } from "services/internal/security";
-import UsersService from "services/external/mongodb/users";
+import { decodeAccessToken } from "services/internal/security/accessToken";
 
 export const isAuthorized = async (event: APIGatewayProxyEvent): Promise<ObjectId> => {
    let token = event.headers["Authorization"];
@@ -10,19 +9,10 @@ export const isAuthorized = async (event: APIGatewayProxyEvent): Promise<ObjectI
       throw new UnauthorizedError();
 
    token = token.replace("Bearer ", "");
-   const decodedToken = decodeJwtToken(token);
+   const decodedToken = decodeAccessToken(token);
    if (!decodedToken.userId || !ObjectId.isValid(decodedToken.userId))
       throw new UnauthorizedError();
-   const userId = new ObjectId(decodedToken.userId);
-
-   const usersService = await UsersService.getInstance();
-   const user = await usersService.getById(userId);
-   if (user === null || !user.isEmailVerified)
-      throw new UnauthorizedError();
-   if (user.forceLogout)
-      throw new ForceLogoutError();
-
-   return userId;
+   return new ObjectId(decodedToken.userId);
 }
 
 export const isAdminAuthorized = async (event: APIGatewayProxyEvent): Promise<ObjectId> => {
@@ -31,17 +21,8 @@ export const isAdminAuthorized = async (event: APIGatewayProxyEvent): Promise<Ob
       throw new UnauthorizedError();
 
    token = token.replace("Bearer ", "");
-   const decodedToken = decodeJwtToken(token);
+   const decodedToken = decodeAccessToken(token);
    if (!decodedToken.userId || !ObjectId.isValid(decodedToken.userId))
       throw new UnauthorizedError();
-   const userId = new ObjectId(decodedToken.userId);
-
-   const usersService = await UsersService.getInstance();
-   const user = await usersService.getById(userId);
-   if (user === null || !user.isEmailVerified || !user.isAdmin)
-      throw new UnauthorizedError();
-   if (user.forceLogout)
-      throw new ForceLogoutError();
-
-   return userId;
+   return new ObjectId(decodedToken.userId);
 }

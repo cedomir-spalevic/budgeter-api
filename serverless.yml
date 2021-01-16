@@ -25,11 +25,11 @@ functions:
       - http:
           path: auth/login
           method: post
-  auth-verify:
-    handler: src/lambda/auth/verify/index.handler
+  auth-refresh:
+    handler: src/lambda/auth/refresh/index.handler
     events:
       - http:
-          path: auth/verify
+          path: auth/refresh
           method: post
   auth-register:
     handler: src/lambda/auth/register/index.handler
@@ -60,7 +60,7 @@ functions:
           path: me
           method: get
   me-reset-password:
-    handler: src/lambda/me/passwordReset/index.handler
+    handler: src/lambda/me/resetPassword/index.handler
     events:
       - http:
           path: me/resetPassword/{key}
