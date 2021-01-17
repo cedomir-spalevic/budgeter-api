@@ -1,0 +1,1 @@
+export type Recurrence = "daily" | "weekly" | "biweekly" | "monthly" | "yearly";

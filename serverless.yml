@@ -69,6 +69,43 @@ functions:
             parameters:
               paths:
                 key: true
+  incomes-create:
+    handler: src/lambda/incomes/create/index.handler
+    events:
+      - http:
+          path: incomes
+          method: post
+  incomes-delete:
+    handler: src/lambda/incomes/delete/index.handler
+    events:
+      - http:
+          path: incomes/{incomeId}
+          method: delete
+          request: 
+            parameters:
+              paths:
+                incomeId: true
+  incomes-get:
+    handler: src/lambda/incomes/get/index.handler
+    events:
+      - http:
+          path: incomes/{incomeId}
+          method: get
+          request:
+            parameters:
+              paths:
+                incomeId: true
+  incomes-update:
+    handler: src/lambda/incomes/update/index.handler
+    events:
+      - http:
+        path: incomes/{incomeId}
+        method: patch
+        request:
+          parameters:
+            paths:
+              incomeId: true
+  
 
 plugins:
   - '@serverless/safeguards-plugin'

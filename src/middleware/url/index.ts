@@ -1,16 +1,17 @@
 import { GeneralError } from "models/errors";
 import { ObjectId } from "mongodb";
 
-interface QueryStringParameters {
+export interface QueryStringParameters {
    limit: number;
    skip: number;
+   search?: string;
 }
 interface Params {
    [name: string]: string;
 }
 
 export const getQueryStringParameters = (params: Params | null): QueryStringParameters => {
-   let limit = 5, skip = 0;
+   let limit = 5, skip = 0, search = undefined;
    if (params !== null) {
       if (params["limit"]) {
          let l = Number(params["limit"]);
@@ -24,8 +25,13 @@ export const getQueryStringParameters = (params: Params | null): QueryStringPara
             throw new GeneralError("Skip must be a digit 0 or greater");
          skip = s;
       }
+      if (params["search"]) {
+         let s = params["search"];
+         if (s)
+            search = s;
+      }
    }
-   return { limit, skip };
+   return { limit, skip, search };
 }
 
 export const getPathParameterId = (name: string, params: Params | null): string => {
