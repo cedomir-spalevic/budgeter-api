@@ -1,7 +1,7 @@
-import { Income } from "models/data/income";
+import { Income, PublicIncome } from "models/data/income";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
-export const processCreateIncome = async (income: Partial<Income>): Promise<any> => {
+export const processCreateIncome = async (income: Partial<Income>): Promise<PublicIncome> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();

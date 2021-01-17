@@ -1,5 +1,6 @@
 import { Income } from "models/data/income";
 import { OneTimeCode } from "models/data/oneTimeCode";
+import { Payment } from "models/data/payment";
 import { RefreshToken } from "models/data/refreshToken";
 import { User } from "models/data/user";
 import { UserAuth } from "models/data/userAuth";
@@ -37,6 +38,8 @@ class BudgeterMongoClient {
    public getUsersCollection = () => new BudgeterEntityCollection<User>(this._db.collection<User>("users"));
 
    public getIncomesCollection = () => new BudgeterEntityCollection<Income>(this._db.collection<Income>("incomes"));
+
+   public getPaymentsCollection = () => new BudgeterEntityCollection<Payment>(this._db.collection<Payment>("payments"));
 }
 
 export default {

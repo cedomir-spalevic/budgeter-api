@@ -13,3 +13,15 @@ export interface User extends IEntity {
       subscriptionArn: string;
    }
 }
+
+export interface PublicUser {
+   firstName: string;
+   lastName: string;
+   email: string;
+   emailVerified: boolean;
+   createdOn: Date;
+   modifiedOn: Date;
+   device: {
+      os: string | null;
+   }
+}

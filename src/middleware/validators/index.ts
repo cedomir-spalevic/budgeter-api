@@ -36,8 +36,14 @@ export const isStr = (form: Form, name: string, required: boolean = false): stri
 
 export const isOneOfStr = (form: Form, name: string, oneOfValues: string[], required: boolean = false): string => {
    const value = isStr(form, name, required);
-   if (oneOfValues.indexOf(value) === -1)
-      throw new GeneralError(`${name} must have a value of ${oneOfValues.map(x => `'${x}'`).join(" or ")}`);
+   if (required) {
+      if (oneOfValues.indexOf(value) === -1)
+         throw new GeneralError(`${name} must have a value of ${oneOfValues.map(x => `'${x}'`).join(" or ")}`);
+   }
+   else {
+      if (value && oneOfValues.indexOf(value) === -1)
+         throw new GeneralError(`${name} must have a value of ${oneOfValues.map(x => `'${x}'`).join(" or ")}`);
+   }
    return value;
 }
 
@@ -68,6 +74,8 @@ export const isDate = (form: Form, name: string, required: boolean = false): Dat
       if (form[name] && !isISOStr(date))
          throw new GeneralError(`${name} must be in ISO format`);
    }
+   if (!form[name])
+      return undefined;
    return new Date(date);
 }
 

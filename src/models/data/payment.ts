@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { IEntity } from "./ientity";
 import { Recurrence } from "./recurrence";
 
-export interface Income extends IEntity {
+export interface Payment extends IEntity {
    userId: ObjectId;
    title: string;
    amount: number;
@@ -10,7 +10,7 @@ export interface Income extends IEntity {
    recurrence: Recurrence;
 }
 
-export interface PublicIncome {
+export interface PublicPayment {
    id: string;
    title: string
    amount: number;

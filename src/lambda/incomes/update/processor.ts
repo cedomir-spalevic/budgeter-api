@@ -1,8 +1,8 @@
-import { Income } from "models/data/income";
+import { Income, PublicIncome } from "models/data/income";
 import { NotFoundError } from "models/errors";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
-export const processUpdateIncome = async (updatedIncome: Partial<Income>): Promise<any> => {
+export const processUpdateIncome = async (updatedIncome: Partial<Income>): Promise<PublicIncome> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
@@ -13,13 +13,13 @@ export const processUpdateIncome = async (updatedIncome: Partial<Income>): Promi
       throw new NotFoundError("No Income found with the given Id");
 
    // Check differences
-   if (income.title !== updatedIncome.title)
+   if (updatedIncome.title && income.title !== updatedIncome.title)
       income.title = updatedIncome.title;
-   if (income.amount !== updatedIncome.amount)
+   if (updatedIncome.amount && income.amount !== updatedIncome.amount)
       income.amount = updatedIncome.amount;
-   if (income.occurrenceDate !== updatedIncome.occurrenceDate)
+   if (updatedIncome.occurrenceDate && income.occurrenceDate !== updatedIncome.occurrenceDate)
       income.occurrenceDate = updatedIncome.occurrenceDate;
-   if (income.recurrence !== updatedIncome.recurrence)
+   if (updatedIncome.recurrence && income.recurrence !== updatedIncome.recurrence)
       income.recurrence = updatedIncome.recurrence;
 
    // Update Income

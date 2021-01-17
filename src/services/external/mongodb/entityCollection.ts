@@ -31,10 +31,7 @@ export class BudgeterEntityCollection<T extends IEntity> {
    }
 
    public async findMany(query: FilterQuery<T>, options?: FindOneOptions<WithId<T> extends T ? T : WithId<T>>): Promise<WithId<T>[]> {
-      const response = await this.collection.find<WithId<T>>(query, options);
-      const items: WithId<T>[] = []
-      await response.forEach(x => items.push(x));
-      return items;
+      return await this.collection.find<WithId<T>>(query, options).toArray()
    }
 
    public async update(entity: T): Promise<WithId<T>> {

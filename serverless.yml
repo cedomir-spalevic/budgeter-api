@@ -89,6 +89,9 @@ functions:
     handler: src/lambda/incomes/get/index.handler
     events:
       - http:
+          path: incomes
+          method: get
+      - http:
           path: incomes/{incomeId}
           method: get
           request:
@@ -99,12 +102,51 @@ functions:
     handler: src/lambda/incomes/update/index.handler
     events:
       - http:
-        path: incomes/{incomeId}
-        method: patch
-        request:
-          parameters:
-            paths:
-              incomeId: true
+          path: incomes/{incomeId}
+          method: patch
+          request:
+            parameters:
+              paths:
+                incomeId: true
+  payments-create:
+    handler: src/lambda/payments/create/index.handler
+    events:
+      - http:
+          path: payments
+          method: post
+  payments-delete:
+    handler: src/lambda/payments/delete/index.handler
+    events:
+      - http:
+          path: payments/{paymentId}
+          method: delete
+          request: 
+            parameters:
+              paths:
+                paymentId: true
+  payments-get:
+    handler: src/lambda/payments/get/index.handler
+    events:
+      - http:
+          path: payments
+          method: get
+      - http:
+          path: payments/{paymentId}
+          method: get
+          request:
+            parameters:
+              paths:
+                paymentId: true
+  payments-update:
+    handler: src/lambda/payments/update/index.handler
+    events:
+      - http:
+          path: payments/{paymentId}
+          method: patch
+          request:
+            parameters:
+              paths:
+                paymentId: true
   
 
 plugins:
