@@ -6,7 +6,9 @@ export interface Income extends IEntity {
    userId: ObjectId;
    title: string;
    amount: number;
-   occurrenceDate: Date;
+   initialDay: number;
+   initialMonth: number;
+   initialYear: number;
    recurrence: Recurrence;
 }
 
@@ -14,7 +16,9 @@ export interface PublicIncome {
    id: string;
    title: string
    amount: number;
-   occurrenceDate: Date;
+   initialDay: number;
+   initialMonth: number;
+   initialYear: number;
    recurrence: Recurrence;
    createdOn: Date;
    modifiedOn: Date;

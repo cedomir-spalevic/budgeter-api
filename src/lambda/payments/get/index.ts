@@ -4,20 +4,21 @@ import {
 } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
-import { getPathParameter, getQueryStringParameters, QueryStringParameters } from "middleware/url";
+import { getPathParameter, getListQueryStringParameters } from "middleware/url";
+import { GetListQueryStringParameters } from "models/requests";
 import { ObjectId } from "mongodb";
 import { processGetMany, processGetSingle } from "./processor";
 
 export interface GetPaymentsBody {
    userId: ObjectId;
-   queryStrings?: QueryStringParameters,
+   queryStrings?: GetListQueryStringParameters,
    pathParameters?: { paymentId: ObjectId }
 }
 
 const validator = async (event: APIGatewayProxyEvent): Promise<GetPaymentsBody> => {
    const userId = await isAuthorized(event);
    if (event.pathParameters === null) {
-      const queryStrings = getQueryStringParameters(event.queryStringParameters);
+      const queryStrings = getListQueryStringParameters(event.queryStringParameters);
       return {
          userId,
          queryStrings

@@ -13,7 +13,9 @@ export const processCreateIncome = async (income: Partial<Income>): Promise<Publ
       id: income._id.toHexString(),
       title: income.title,
       amount: income.amount,
-      occurrenceDate: income.occurrenceDate,
+      initialDay: income.initialDay,
+      initialMonth: income.initialMonth,
+      initialYear: income.initialYear,
       recurrence: income.recurrence,
       createdOn: income.createdOn,
       modifiedOn: income.modifiedOn

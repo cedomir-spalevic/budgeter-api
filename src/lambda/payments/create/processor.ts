@@ -13,7 +13,9 @@ export const processCreatePayment = async (payment: Partial<Payment>): Promise<P
       id: payment._id.toHexString(),
       title: payment.title,
       amount: payment.amount,
-      occurrenceDate: payment.occurrenceDate,
+      initialDay: payment.initialDay,
+      initialMonth: payment.initialMonth,
+      initialYear: payment.initialYear,
       recurrence: payment.recurrence,
       createdOn: payment.createdOn,
       modifiedOn: payment.modifiedOn

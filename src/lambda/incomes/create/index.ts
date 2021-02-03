@@ -14,14 +14,18 @@ const validator = async (event: APIGatewayProxyEvent): Promise<Partial<Income>> 
    const form = isValidJSONBody(event.body);
    const title = isStr(form, "title", true);
    const amount = isNumber(form, "amount", true);
-   const occurrenceDate = isDate(form, "occurrenceDate", true);
+   const initialDay = isNumber(form, "initialDay", true);
+   const initialMonth = isNumber(form, "initialMonth", true);
+   const initialYear = isNumber(form, "initialYear", true);
    const recurrence = isOneOfStr(form, "recurrence", recurrenceTypes, true) as Recurrence;
 
    return {
       userId,
       title,
       amount,
-      occurrenceDate,
+      initialDay,
+      initialMonth,
+      initialYear,
       recurrence
    }
 }

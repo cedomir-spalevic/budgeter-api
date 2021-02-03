@@ -16,7 +16,9 @@ const validator = async (event: APIGatewayProxyEvent): Promise<Partial<Payment>>
    const form = isValidJSONBody(event.body);
    const title = isStr(form, "title", true);
    const amount = isNumber(form, "amount", true);
-   const occurrenceDate = isDate(form, "occurrenceDate", true);
+   const initialDay = isNumber(form, "initialDay", true);
+   const initialMonth = isNumber(form, "initialMonth", true);
+   const initialYear = isNumber(form, "initialYear", true);
    const recurrence = isOneOfStr(form, "recurrence", ["daily", "weekly", "biweekly", "monthly", "yearly"], true) as Recurrence;
 
    return {
@@ -24,7 +26,9 @@ const validator = async (event: APIGatewayProxyEvent): Promise<Partial<Payment>>
       userId,
       title,
       amount,
-      occurrenceDate,
+      initialDay,
+      initialMonth,
+      initialYear,
       recurrence
    }
 }

@@ -17,8 +17,12 @@ export const processUpdatePayment = async (updatedPayment: Partial<Payment>): Pr
       payment.title = updatedPayment.title;
    if (payment.amount !== updatedPayment.amount)
       payment.amount = updatedPayment.amount;
-   if (payment.occurrenceDate !== updatedPayment.occurrenceDate)
-      payment.occurrenceDate = updatedPayment.occurrenceDate;
+   if (payment.initialDay !== updatedPayment.initialDay)
+      payment.initialDay = updatedPayment.initialDay;
+   if (payment.initialMonth !== updatedPayment.initialMonth)
+      payment.initialMonth = updatedPayment.initialMonth;
+   if (payment.initialYear !== updatedPayment.initialYear)
+      payment.initialYear = updatedPayment.initialYear;
    if (payment.recurrence !== updatedPayment.recurrence)
       payment.recurrence = updatedPayment.recurrence;
 
@@ -29,7 +33,9 @@ export const processUpdatePayment = async (updatedPayment: Partial<Payment>): Pr
       id: payment._id.toHexString(),
       title: payment.title,
       amount: payment.amount,
-      occurrenceDate: payment.occurrenceDate,
+      initialDay: payment.initialDay,
+      initialMonth: payment.initialMonth,
+      initialYear: payment.initialYear,
       recurrence: payment.recurrence,
       createdOn: payment.createdOn,
       modifiedOn: payment.modifiedOn

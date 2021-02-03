@@ -1,16 +1,32 @@
 import { GeneralError } from "models/errors";
+import { GetBudgetQueryStringParameters, GetListQueryStringParameters } from "models/requests";
 import { ObjectId } from "mongodb";
 
-export interface QueryStringParameters {
-   limit: number;
-   skip: number;
-   search?: string;
-}
 interface Params {
    [name: string]: string;
 }
 
-export const getQueryStringParameters = (params: Params | null): QueryStringParameters => {
+export const getBudgetQueryStringParameters = (params: Params | null): GetBudgetQueryStringParameters => {
+   let date = new Date();
+   let month = date.getUTCMonth(), year = date.getUTCFullYear()
+   if (params !== null) {
+      if (params["month"]) {
+         let m = Number(params["month"]);
+         if (m < 1 || m > 12)
+            throw new GeneralError("Month must be between 1 and 12");
+         month = m;
+      }
+      if (params["year"]) {
+         let y = Number(params["year"]);
+         if (y < 0 || params["year"].length !== 4)
+            throw new GeneralError("Year must be valid");
+         year = y;
+      }
+   }
+   return { month, year };
+}
+
+export const getListQueryStringParameters = (params: Params | null): GetListQueryStringParameters => {
    let limit = 5, skip = 0, search = undefined;
    if (params !== null) {
       if (params["limit"]) {

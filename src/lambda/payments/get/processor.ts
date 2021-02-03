@@ -1,11 +1,11 @@
-import { QueryStringParameters } from "middleware/url";
 import { Payment, PublicPayment } from "models/data/payment";
 import { NotFoundError } from "models/errors";
+import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
 import { FilterQuery, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
-export const processGetMany = async (userId: ObjectId, queryStringParameters: QueryStringParameters): Promise<GetResponse<PublicPayment>> => {
+export const processGetMany = async (userId: ObjectId, queryStringParameters: GetListQueryStringParameters): Promise<GetResponse<PublicPayment>> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
@@ -33,7 +33,9 @@ export const processGetMany = async (userId: ObjectId, queryStringParameters: Qu
          id: x._id.toHexString(),
          title: x.title,
          amount: x.amount,
-         occurrenceDate: x.occurrenceDate,
+         initialDay: x.initialDay,
+         initialMonth: x.initialMonth,
+         initialYear: x.initialYear,
          recurrence: x.recurrence,
          createdOn: x.createdOn,
          modifiedOn: x.modifiedOn
@@ -54,7 +56,9 @@ export const processGetSingle = async (userId: ObjectId, paymentId: ObjectId): P
       id: payment._id.toHexString(),
       title: payment.title,
       amount: payment.amount,
-      occurrenceDate: payment.occurrenceDate,
+      initialDay: payment.initialDay,
+      initialMonth: payment.initialMonth,
+      initialYear: payment.initialYear,
       recurrence: payment.recurrence,
       createdOn: payment.createdOn,
       modifiedOn: payment.modifiedOn

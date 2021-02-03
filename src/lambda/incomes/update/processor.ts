@@ -17,8 +17,12 @@ export const processUpdateIncome = async (updatedIncome: Partial<Income>): Promi
       income.title = updatedIncome.title;
    if (updatedIncome.amount && income.amount !== updatedIncome.amount)
       income.amount = updatedIncome.amount;
-   if (updatedIncome.occurrenceDate && income.occurrenceDate !== updatedIncome.occurrenceDate)
-      income.occurrenceDate = updatedIncome.occurrenceDate;
+   if (income.initialDay !== updatedIncome.initialDay)
+      income.initialDay = updatedIncome.initialDay;
+   if (income.initialMonth !== updatedIncome.initialMonth)
+      income.initialMonth = updatedIncome.initialMonth;
+   if (income.initialYear !== updatedIncome.initialYear)
+      income.initialYear = updatedIncome.initialYear;
    if (updatedIncome.recurrence && income.recurrence !== updatedIncome.recurrence)
       income.recurrence = updatedIncome.recurrence;
 
@@ -29,7 +33,9 @@ export const processUpdateIncome = async (updatedIncome: Partial<Income>): Promi
       id: income._id.toHexString(),
       title: income.title,
       amount: income.amount,
-      occurrenceDate: income.occurrenceDate,
+      initialDay: income.initialDay,
+      initialMonth: income.initialMonth,
+      initialYear: income.initialYear,
       recurrence: income.recurrence,
       createdOn: income.createdOn,
       modifiedOn: income.modifiedOn

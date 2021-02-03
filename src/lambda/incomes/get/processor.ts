@@ -1,11 +1,11 @@
-import { QueryStringParameters } from "middleware/url";
 import { Income, PublicIncome } from "models/data/income";
 import { NotFoundError } from "models/errors";
+import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
 import { FilterQuery, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
-export const processGetMany = async (userId: ObjectId, queryStringParameters: QueryStringParameters): Promise<GetResponse<PublicIncome>> => {
+export const processGetMany = async (userId: ObjectId, queryStringParameters: GetListQueryStringParameters): Promise<GetResponse<PublicIncome>> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
@@ -33,7 +33,9 @@ export const processGetMany = async (userId: ObjectId, queryStringParameters: Qu
          id: x._id.toHexString(),
          title: x.title,
          amount: x.amount,
-         occurrenceDate: x.occurrenceDate,
+         initialDay: x.initialDay,
+         initialMonth: x.initialMonth,
+         initialYear: x.initialYear,
          recurrence: x.recurrence,
          createdOn: x.createdOn,
          modifiedOn: x.modifiedOn
@@ -54,7 +56,9 @@ export const processGetSingle = async (userId: ObjectId, incomeId: ObjectId): Pr
       id: income._id.toHexString(),
       title: income.title,
       amount: income.amount,
-      occurrenceDate: income.occurrenceDate,
+      initialDay: income.initialDay,
+      initialMonth: income.initialMonth,
+      initialYear: income.initialYear,
       recurrence: income.recurrence,
       createdOn: income.createdOn,
       modifiedOn: income.modifiedOn
