@@ -23,3 +23,11 @@ export interface PublicPayment {
    createdOn: Date;
    modifiedOn: Date;
 }
+
+export interface BudgetPayment {
+   id: string;
+   title: string;
+   amount: number;
+   dueToday: boolean;
+   totalAmount: number;
+}

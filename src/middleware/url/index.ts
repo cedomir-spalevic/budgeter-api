@@ -7,9 +7,14 @@ interface Params {
 }
 
 export const getBudgetQueryStringParameters = (params: Params | null): GetBudgetQueryStringParameters => {
-   let date = new Date();
-   let month = date.getUTCMonth(), year = date.getUTCFullYear()
+   let day, month, year;
    if (params !== null) {
+      if (params["day"]) {
+         let d = Number(params["day"]);
+         if (d < 1 || d > 12)
+            throw new GeneralError("Day must be between 1 and 32");
+         day = d;
+      }
       if (params["month"]) {
          let m = Number(params["month"]);
          if (m < 1 || m > 12)
@@ -23,7 +28,7 @@ export const getBudgetQueryStringParameters = (params: Params | null): GetBudget
          year = y;
       }
    }
-   return { month, year };
+   return { day, month, year };
 }
 
 export const getListQueryStringParameters = (params: Params | null): GetListQueryStringParameters => {

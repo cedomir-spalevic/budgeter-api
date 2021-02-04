@@ -5,6 +5,7 @@ export interface GetListQueryStringParameters {
 }
 
 export interface GetBudgetQueryStringParameters {
+   day: number;
    month: number;
    year: number;
 }

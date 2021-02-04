@@ -26,10 +26,10 @@ const validator = async (event: APIGatewayProxyEvent): Promise<GetBudgetsBody> =
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    try {
       const getBudgetsBody = await validator(event);
-      await getBudget(getBudgetsBody);
+      const response = await getBudget(getBudgetsBody);
       return {
          statusCode: 200,
-         body: ""
+         body: JSON.stringify(response)
       }
    }
    catch (error) {

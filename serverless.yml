@@ -147,7 +147,12 @@ functions:
             parameters:
               paths:
                 paymentId: true
-  
+  budgets-get:
+    handler: src/lambda/budgets/get/index.handler
+    events:
+      - http:
+          path: budgets
+          method: get  
 
 plugins:
   - '@serverless/safeguards-plugin'
