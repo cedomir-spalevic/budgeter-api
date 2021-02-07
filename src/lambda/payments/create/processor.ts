@@ -14,6 +14,7 @@ export const processCreatePayment = async (payment: Partial<Payment>): Promise<P
       title: payment.title,
       amount: payment.amount,
       initialDay: payment.initialDay,
+      initialDate: payment.initialDate,
       initialMonth: payment.initialMonth,
       initialYear: payment.initialYear,
       recurrence: payment.recurrence,

@@ -19,6 +19,8 @@ export const processUpdatePayment = async (updatedPayment: Partial<Payment>): Pr
       payment.amount = updatedPayment.amount;
    if (payment.initialDay !== updatedPayment.initialDay)
       payment.initialDay = updatedPayment.initialDay;
+   if (payment.initialDate !== updatedPayment.initialDate)
+      payment.initialDate = updatedPayment.initialDate;
    if (payment.initialMonth !== updatedPayment.initialMonth)
       payment.initialMonth = updatedPayment.initialMonth;
    if (payment.initialYear !== updatedPayment.initialYear)
@@ -33,6 +35,7 @@ export const processUpdatePayment = async (updatedPayment: Partial<Payment>): Pr
       id: payment._id.toHexString(),
       title: payment.title,
       amount: payment.amount,
+      initialDate: payment.initialDate,
       initialDay: payment.initialDay,
       initialMonth: payment.initialMonth,
       initialYear: payment.initialYear,

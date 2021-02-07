@@ -6,7 +6,7 @@ import { getWeeklyOccurrenceLength, getBiweeklyOccurrenceLength } from "services
 import { BudgetPayment } from "models/data/payment";
 
 const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
-   const day = request.queryStrings.day;
+   const date = request.queryStrings.date;
    const month = request.queryStrings.month;
    const year = request.queryStrings.year;
    const userId = request.userId;
@@ -26,55 +26,44 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
    });
 
    const budgetIncomes: BudgetIncome[] = [];
-   response.forEach(x => {
-      if (x.recurrence === "oneTime" || x.recurrence === "monthly" || x.recurrence === "yearly") {
-         budgetIncomes.push({
-            id: x._id.toHexString(),
-            title: x.title,
-            amount: x.amount,
-            dueToday: x.initialDay === day,
-            totalAmount: x.amount
-         })
+   response.forEach(income => {
+      let dueToday: boolean, totalAmount: number;
+      if (income.recurrence === "oneTime" || income.recurrence === "monthly" || income.recurrence === "yearly") {
+         dueToday = income.initialDate === date;
+         totalAmount = income.amount;
       }
-      else if (x.recurrence === "daily") {
-         budgetIncomes.push({
-            id: x._id.toHexString(),
-            title: x.title,
-            amount: x.amount,
-            dueToday: true,
-            totalAmount: x.amount * (new Date(year, month, 0).getDate())
-         })
+      else if (income.recurrence === "daily") {
+         dueToday = true;
+         totalAmount = income.amount * (new Date(year, month, 0).getDate());
       }
-      else if (x.recurrence === "weekly") {
-         const today = new Date(year, month, day);
-         const initialDate = new Date(x.initialYear, x.initialMonth, x.initialDay);
-         const daysInMonth = getWeeklyOccurrenceLength(initialDate.getDay(), month, year);
-         budgetIncomes.push({
-            id: x._id.toHexString(),
-            title: x.title,
-            amount: x.amount,
-            dueToday: initialDate.getDay() === today.getDay(),
-            totalAmount: x.amount * daysInMonth
-         })
+      else if (income.recurrence === "weekly") {
+         dueToday = income.initialDay === new Date(year, month, date).getDay();
+         totalAmount = income.amount * getWeeklyOccurrenceLength(income.initialDay, month, year);
       }
-      else if (x.recurrence === "biweekly") {
-         const today = new Date(year, month, day);
-         const initialDate = new Date(x.initialYear, x.initialMonth, x.initialDay);
-         const daysInMonth = getBiweeklyOccurrenceLength(initialDate.getDay(), month, year);
-         budgetIncomes.push({
-            id: x._id.toHexString(),
-            title: x.title,
-            amount: x.amount,
-            dueToday: initialDate.getDay() === today.getDay(),
-            totalAmount: x.amount * daysInMonth
-         })
+      else {
+         dueToday = income.initialDay === new Date(year, month, date).getDay();
+         totalAmount = income.amount * getBiweeklyOccurrenceLength(income.initialDay, month, year);
       }
+      budgetIncomes.push({
+         id: income._id.toHexString(),
+         title: income.title,
+         amount: income.amount,
+         initialDay: income.initialDay,
+         initialDate: income.initialDate,
+         initialMonth: income.initialMonth,
+         initialYear: income.initialYear,
+         recurrence: income.recurrence,
+         createdOn: income.createdOn,
+         modifiedOn: income.modifiedOn,
+         dueToday: dueToday,
+         totalAmount: totalAmount
+      })
    })
    return budgetIncomes;
 }
 
 const getPayments = async (request: GetBudgetsBody): Promise<BudgetPayment[]> => {
-   const day = request.queryStrings.day;
+   const date = request.queryStrings.date;
    const month = request.queryStrings.month;
    const year = request.queryStrings.year;
    const userId = request.userId;
@@ -94,49 +83,38 @@ const getPayments = async (request: GetBudgetsBody): Promise<BudgetPayment[]> =>
    });
 
    const budgetPayments: BudgetPayment[] = [];
-   response.forEach(x => {
-      if (x.recurrence === "oneTime" || x.recurrence === "monthly" || x.recurrence === "yearly") {
-         budgetPayments.push({
-            id: x._id.toHexString(),
-            title: x.title,
-            amount: x.amount,
-            dueToday: x.initialDay === day,
-            totalAmount: x.amount
-         })
+   response.forEach(payment => {
+      let dueToday: boolean, totalAmount: number;
+      if (payment.recurrence === "oneTime" || payment.recurrence === "monthly" || payment.recurrence === "yearly") {
+         dueToday = payment.initialDate === date;
+         totalAmount = payment.amount;
       }
-      else if (x.recurrence === "daily") {
-         budgetPayments.push({
-            id: x._id.toHexString(),
-            title: x.title,
-            amount: x.amount,
-            dueToday: true,
-            totalAmount: x.amount * (new Date(year, month, 0).getDate())
-         })
+      else if (payment.recurrence === "daily") {
+         dueToday = true;
+         totalAmount = payment.amount * (new Date(year, month, 0).getDate());
       }
-      else if (x.recurrence === "weekly") {
-         const today = new Date(year, month, day);
-         const initialDate = new Date(x.initialYear, x.initialMonth, x.initialDay);
-         const daysInMonth = getWeeklyOccurrenceLength(initialDate.getDay(), month, year);
-         budgetPayments.push({
-            id: x._id.toHexString(),
-            title: x.title,
-            amount: x.amount,
-            dueToday: initialDate.getDay() === today.getDay(),
-            totalAmount: x.amount * daysInMonth
-         })
+      else if (payment.recurrence === "weekly") {
+         dueToday = payment.initialDay === new Date(year, month, date).getDay();
+         totalAmount = payment.amount * getWeeklyOccurrenceLength(payment.initialDay, month, year);
       }
-      else if (x.recurrence === "biweekly") {
-         const today = new Date(year, month, day);
-         const initialDate = new Date(x.initialYear, x.initialMonth, x.initialDay);
-         const daysInMonth = getBiweeklyOccurrenceLength(initialDate.getDay(), month, year);
-         budgetPayments.push({
-            id: x._id.toHexString(),
-            title: x.title,
-            amount: x.amount,
-            dueToday: initialDate.getDay() === today.getDay(),
-            totalAmount: x.amount * daysInMonth
-         })
+      else {
+         dueToday = payment.initialDay === new Date(year, month, date).getDay();
+         totalAmount = payment.amount * getBiweeklyOccurrenceLength(payment.initialDay, month, year);
       }
+      budgetPayments.push({
+         id: payment._id.toHexString(),
+         title: payment.title,
+         amount: payment.amount,
+         initialDay: payment.initialDay,
+         initialDate: payment.initialDate,
+         initialMonth: payment.initialMonth,
+         initialYear: payment.initialYear,
+         recurrence: payment.recurrence,
+         createdOn: payment.createdOn,
+         modifiedOn: payment.modifiedOn,
+         dueToday: dueToday,
+         totalAmount: totalAmount
+      })
    })
    return budgetPayments;
 }

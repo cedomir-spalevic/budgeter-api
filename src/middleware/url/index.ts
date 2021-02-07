@@ -7,18 +7,18 @@ interface Params {
 }
 
 export const getBudgetQueryStringParameters = (params: Params | null): GetBudgetQueryStringParameters => {
-   let day, month, year;
+   let date, month, year;
    if (params !== null) {
-      if (params["day"]) {
-         let d = Number(params["day"]);
+      if (params["date"]) {
+         let d = Number(params["date"]);
          if (d < 1 || d > 12)
-            throw new GeneralError("Day must be between 1 and 32");
-         day = d;
+            throw new GeneralError("Date must be between 1 and 31");
+         date = d;
       }
       if (params["month"]) {
          let m = Number(params["month"]);
          if (m < 1 || m > 12)
-            throw new GeneralError("Month must be between 1 and 12");
+            throw new GeneralError("Month must be between 0 and 11");
          month = m;
       }
       if (params["year"]) {
@@ -28,7 +28,7 @@ export const getBudgetQueryStringParameters = (params: Params | null): GetBudget
          year = y;
       }
    }
-   return { day, month, year };
+   return { date, month, year };
 }
 
 export const getListQueryStringParameters = (params: Params | null): GetListQueryStringParameters => {

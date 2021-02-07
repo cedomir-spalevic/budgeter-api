@@ -26,10 +26,7 @@ export interface PublicPayment {
    modifiedOn: Date;
 }
 
-export interface BudgetPayment {
-   id: string;
-   title: string;
-   amount: number;
+export interface BudgetPayment extends PublicPayment {
    dueToday: boolean;
    totalAmount: number;
 }

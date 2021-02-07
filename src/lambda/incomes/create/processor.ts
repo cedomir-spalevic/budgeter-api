@@ -14,6 +14,7 @@ export const processCreateIncome = async (income: Partial<Income>): Promise<Publ
       title: income.title,
       amount: income.amount,
       initialDay: income.initialDay,
+      initialDate: income.initialDate,
       initialMonth: income.initialMonth,
       initialYear: income.initialYear,
       recurrence: income.recurrence,
