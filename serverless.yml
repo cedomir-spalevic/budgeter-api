@@ -59,6 +59,12 @@ functions:
       - http:
           path: me
           method: get
+  me-update:
+    handler: src/lambda/me/update/index.handler
+    events:
+      - http:
+          path: me
+          method: patch
   me-register-device:
     handler: src/lambda/me/registerDevice/index.handler
     events:
