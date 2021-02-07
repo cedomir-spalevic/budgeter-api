@@ -11,6 +11,10 @@ export interface User extends IEntity {
       os: string;
       platformApplicationEndpointArn: string;
       subscriptionArn: string;
+   },
+   notificationPreferences: {
+      incomeNotifications: boolean;
+      paymentNotifications: boolean;
    }
 }
 
@@ -23,5 +27,9 @@ export interface PublicUser {
    modifiedOn: Date;
    device: {
       os: string | null;
+   },
+   notificationPreferences: {
+      incomeNotifications: boolean;
+      paymentNotifications: boolean;
    }
 }

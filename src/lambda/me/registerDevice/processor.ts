@@ -1,28 +1,30 @@
-// import { NoUserFoundError } from "models/errors";
-// import { ObjectId } from "mongodb";
-// import { createPlatformEndpoint, subscribeToTopic } from "services/external/aws/sns";
-// import UsersService from "services/external/mongodb/users";
+import { NoUserFoundError } from "models/errors";
+import { createPlatformEndpoint, subscribeToTopic } from "services/external/aws/sns";
+import BudgeterMongoClient from "services/external/mongodb/client";
+import { RegisterDeviceBody } from ".";
 
-// export const processRegisterDevice = async (userId: ObjectId, device: string, token: string) => {
-//    const usersService = await UsersService.getInstance();
-//    const user = await usersService.getById(userId);
-//    if (user === null)
-//       throw new NoUserFoundError();
+export const processRegisterDevice = async (request: RegisterDeviceBody) => {
+   const budgeterClient = await BudgeterMongoClient.getInstance();
+   const usersService = budgeterClient.getUsersCollection();
 
-//    // If a device is already registered, do nothing
-//    if (user.device)
-//       return;
+   const user = await usersService.getById(request.userId.toHexString())
+   if (user === null)
+      throw new NoUserFoundError();
 
-//    // Create platform endpoint in Amazon SNS
-//    const platformApplicationEndpointArn = await createPlatformEndpoint(device, token);
+   // If a device is already registered, do nothing
+   if (user.device)
+      return;
 
-//    // Subscribe platform endpoint to Budgeter topic
-//    const subscriptionArn = await subscribeToTopic(platformApplicationEndpointArn);
+   // Create platform endpoint in Amazon SNS
+   const platformApplicationEndpointArn = await createPlatformEndpoint(request.device, request.token);
 
-//    user.device = {
-//       os: device,
-//       platformApplicationEndpointArn,
-//       subscriptionArn
-//    }
-//    await usersService.update(user);
-// }
+   // Subscribe platform endpoint to Budgeter topic
+   const subscriptionArn = await subscribeToTopic(platformApplicationEndpointArn);
+
+   user.device = {
+      os: request.device,
+      platformApplicationEndpointArn,
+      subscriptionArn
+   }
+   await usersService.update(user);
+}

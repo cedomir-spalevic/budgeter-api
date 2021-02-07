@@ -59,6 +59,12 @@ functions:
       - http:
           path: me
           method: get
+  me-register-device:
+    handler: src/lambda/me/registerDevice/index.handler
+    events:
+      - http:
+          path: me/registerDevice
+          method: post
   me-reset-password:
     handler: src/lambda/me/resetPassword/index.handler
     events:
@@ -152,7 +158,23 @@ functions:
     events:
       - http:
           path: budgets
-          method: get  
+          method: get
+  batch-clear-tokens:
+    transfer:
+    handler: src/lambda/batch/clearTokens/index.handler
+    events:
+      - schedule: cron(0 15 * * ? *)
+  batch-income-notifications:
+    transfer:
+    handler: src/lambda/batch/incomeNotifications/index.handler
+    events:
+      - schedule: cron(0 15 * * ? *)
+  batch-payment-notifications:
+    transfer:
+    handler: src/lambda/batch/paymentNotifications/index.handler
+    events:
+      - schedule: cron(0 15 * * ? *)
+
 
 plugins:
   - '@serverless/safeguards-plugin'

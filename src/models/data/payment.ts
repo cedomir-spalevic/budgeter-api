@@ -6,7 +6,8 @@ export interface Payment extends IEntity {
    userId: ObjectId;
    title: string;
    amount: number;
-   initialDay: number;
+   initialDay: number; // Day of week
+   initialDate: number; // Day of month
    initialMonth: number;
    initialYear: number;
    recurrence: Recurrence;
@@ -16,7 +17,8 @@ export interface PublicPayment {
    id: string;
    title: string
    amount: number;
-   initialDay: number;
+   initialDay: number; // Day of week
+   initialDate: number; // Day of month
    initialMonth: number;
    initialYear: number;
    recurrence: Recurrence;

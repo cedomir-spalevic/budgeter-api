@@ -37,7 +37,11 @@ export const processRegister = async (registerBody: RegisterBody): Promise<Confi
       email: email,
       isAdmin: false,
       isService: false,
-      isEmailVerified: false
+      isEmailVerified: false,
+      notificationPreferences: {
+         incomeNotifications: false,
+         paymentNotifications: false
+      }
    }
    const user = await usersService.create(newUser);
 

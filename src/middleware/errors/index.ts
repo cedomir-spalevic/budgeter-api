@@ -12,6 +12,8 @@ export const handleErrorResponse = (error: Error) => {
       body = transformErrorToResponse(error);
    }
    else {
+      console.log("500 error received");
+      console.log(error);
       statusCode = 500;
       body = transformErrorToResponse(error);
    }
