@@ -25,6 +25,7 @@ const validator = async (event: APIGatewayProxyEvent): Promise<Partial<Income>> 
       title,
       amount,
       initialDay,
+      initialDate,
       initialMonth,
       initialYear,
       recurrence
