@@ -27,6 +27,7 @@ functions:
           method: post
   auth-refresh:
     handler: src/lambda/auth/refresh/index.handler
+    memorySize: 2048
     events:
       - http:
           path: auth/refresh
