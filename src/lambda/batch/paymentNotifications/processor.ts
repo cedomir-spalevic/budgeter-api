@@ -20,23 +20,27 @@ export const processPaymentNotifications = async () => {
          { "notificationPreferences.paymentNotifications": true }
       ]
    })
+   console.log(usersToNotify)
 
    // Determine their payments for today and send notification
    await Promise.all(usersToNotify.map(async (user) => {
       // Get user inccomes
       const payments = await paymentsService.findMany({
-         "$or": [
-            { initialMonth: month, initialYear: year, initialDate: date, userId: user._id, recurrence: "oneTime" },
-            { userId: user._id, recurrence: "daily" },
-            { initialDay: day, userId: user._id, recurrence: "weekly" },
-            { initialDay: day, userId: user._id, recurrence: "biweekly" },
-            { initialDate: date, userId: user._id, recurrence: "monthly" },
-            { initialMonth: month, initialDate: date, recurrence: "yearly" }
+         "$and": [
+            { userId: user._id },
+            {
+               "$or": [
+                  { initialMonth: month, initialYear: year, initialDate: date, recurrence: "oneTime" },
+                  { recurrence: "daily" },
+                  { initialDay: day, recurrence: "weekly" },
+                  { initialDay: day, recurrence: "biweekly" },
+                  { initialDate: date, recurrence: "monthly" },
+                  { initialMonth: month, initialDate: date, recurrence: "yearly" }
+               ]
+            }
          ]
       })
-      payments.forEach(x => {
-         // Send notification
-         publishToEndpoint(user.device.platformApplicationEndpointArn, `${x.title} due today for ${numberFormat.format(x.amount)}`)
-      })
+
+      await Promise.all(payments.map(x => publishToEndpoint(user.device.platformApplicationEndpointArn, `${x.title} due today for ${numberFormat.format(x.amount)}`)))
    }))
 }

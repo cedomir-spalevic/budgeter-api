@@ -25,19 +25,21 @@ export const processIncomeNotifications = async () => {
    await Promise.all(usersToNotify.map(async (user) => {
       // Get user inccomes
       const incomes = await incomesService.findMany({
-         "$or": [
-            { initialMonth: month, initialYear: year, initialDate: date, userId: user._id, recurrence: "oneTime" },
-            { userId: user._id, recurrence: "daily" },
-            { initialDay: day, userId: user._id, recurrence: "weekly" },
-            { initialDay: day, userId: user._id, recurrence: "biweekly" },
-            { initialDate: date, userId: user._id, recurrence: "monthly" },
-            { initialMonth: month, initialDate: date, recurrence: "yearly" }
+         "$and": [
+            { userId: user._id },
+            {
+               "$or": [
+                  { initialMonth: month, initialYear: year, initialDate: date, recurrence: "oneTime" },
+                  { recurrence: "daily" },
+                  { initialDay: day, recurrence: "weekly" },
+                  { initialDay: day, recurrence: "biweekly" },
+                  { initialDate: date, recurrence: "monthly" },
+                  { initialMonth: month, initialDate: date, recurrence: "yearly" }
+               ]
+            }
          ]
       })
 
-      incomes.forEach(x => {
-         // Send notification
-         publishToEndpoint(user.device.platformApplicationEndpointArn, `${x.title} expected today for ${numberFormat.format(x.amount)}`)
-      })
+      await Promise.all(incomes.map(x => publishToEndpoint(user.device.platformApplicationEndpointArn, `${x.title} expected today for ${numberFormat.format(x.amount)}`)))
    }))
 }
