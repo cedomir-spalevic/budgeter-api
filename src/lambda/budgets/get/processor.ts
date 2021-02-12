@@ -20,7 +20,7 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
          { userId: userId, recurrence: "daily" },
          { userId: userId, recurrence: "weekly" },
          { userId: userId, recurrence: "biweekly" },
-         { initialMonth: month, userId: userId, recurrence: "monthly" },
+         { userId: userId, recurrence: "monthly" },
          { initialMonth: month, recurrence: "yearly" }
       ]
    });
@@ -77,10 +77,11 @@ const getPayments = async (request: GetBudgetsBody): Promise<BudgetPayment[]> =>
          { userId: userId, recurrence: "daily" },
          { userId: userId, recurrence: "weekly" },
          { userId: userId, recurrence: "biweekly" },
-         { initialMonth: month, userId: userId, recurrence: "monthly" },
+         { userId: userId, recurrence: "monthly" },
          { initialMonth: month, recurrence: "yearly" }
       ]
    });
+   console.log(response)
 
    const budgetPayments: BudgetPayment[] = [];
    response.forEach(payment => {
