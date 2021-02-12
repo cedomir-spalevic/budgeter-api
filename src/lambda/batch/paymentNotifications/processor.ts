@@ -17,7 +17,7 @@ export const processPaymentNotifications = async () => {
    const usersToNotify = await usersService.findMany({
       "$and": [
          { device: { $exists: true } },
-         //{ notificationPreferences: { paymentNotifications: true } }
+         { "notificationPreferences.paymentNotifications": true }
       ]
    })
 

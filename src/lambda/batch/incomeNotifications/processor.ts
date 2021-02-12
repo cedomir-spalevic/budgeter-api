@@ -17,7 +17,7 @@ export const processIncomeNotifications = async () => {
    const usersToNotify = await usersService.findMany({
       "$and": [
          { device: { $exists: true } },
-         //{ notificationPreferences: { incomeNotifications: true } } // TODO:
+         { "notificationPreferences.incomeNotifications": true }
       ]
    })
 
@@ -34,6 +34,7 @@ export const processIncomeNotifications = async () => {
             { initialMonth: month, initialDate: date, recurrence: "yearly" }
          ]
       })
+
       incomes.forEach(x => {
          // Send notification
          publishToEndpoint(user.device.platformApplicationEndpointArn, `${x.title} expected today for ${numberFormat.format(x.amount)}`)
