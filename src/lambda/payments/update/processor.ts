@@ -13,19 +13,19 @@ export const processUpdatePayment = async (updatedPayment: Partial<Payment>): Pr
       throw new NotFoundError("No Payment found with the given Id");
 
    // Check differences
-   if (payment.title !== updatedPayment.title)
+   if (updatedPayment.title !== undefined && payment.title !== updatedPayment.title)
       payment.title = updatedPayment.title;
-   if (payment.amount !== updatedPayment.amount)
+   if (updatedPayment.amount !== undefined && payment.amount !== updatedPayment.amount)
       payment.amount = updatedPayment.amount;
-   if (payment.initialDay && payment.initialDay !== updatedPayment.initialDay)
+   if (updatedPayment.initialDay !== undefined && payment.initialDay !== updatedPayment.initialDay)
       payment.initialDay = updatedPayment.initialDay;
-   if (payment.initialDate && payment.initialDate !== updatedPayment.initialDate)
+   if (updatedPayment.initialDate !== undefined && payment.initialDate !== updatedPayment.initialDate)
       payment.initialDate = updatedPayment.initialDate;
-   if (payment.initialMonth && payment.initialMonth !== updatedPayment.initialMonth)
+   if (updatedPayment.initialMonth !== undefined && payment.initialMonth !== updatedPayment.initialMonth)
       payment.initialMonth = updatedPayment.initialMonth;
-   if (payment.initialYear && payment.initialYear !== updatedPayment.initialYear)
+   if (updatedPayment.initialYear !== undefined && payment.initialYear !== updatedPayment.initialYear)
       payment.initialYear = updatedPayment.initialYear;
-   if (payment.recurrence && payment.recurrence !== updatedPayment.recurrence)
+   if (updatedPayment.recurrence !== undefined && payment.recurrence !== updatedPayment.recurrence)
       payment.recurrence = updatedPayment.recurrence;
 
    // Update Payment

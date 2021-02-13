@@ -13,19 +13,19 @@ export const processUpdateIncome = async (updatedIncome: Partial<Income>): Promi
       throw new NotFoundError("No Income found with the given Id");
 
    // Check differences
-   if (updatedIncome.title && income.title !== updatedIncome.title)
+   if (updatedIncome.title !== undefined && income.title !== updatedIncome.title)
       income.title = updatedIncome.title;
-   if (updatedIncome.amount && income.amount !== updatedIncome.amount)
+   if (updatedIncome.amount !== undefined && income.amount !== updatedIncome.amount)
       income.amount = updatedIncome.amount;
-   if (updatedIncome.initialDay && income.initialDay !== updatedIncome.initialDay)
+   if (updatedIncome.initialDay !== undefined && income.initialDay !== updatedIncome.initialDay)
       income.initialDay = updatedIncome.initialDay;
-   if (updatedIncome.initialDate && income.initialDate && income.initialDate !== updatedIncome.initialDate)
+   if (updatedIncome.initialDate !== undefined && income.initialDate !== updatedIncome.initialDate)
       income.initialDate = updatedIncome.initialDate;
-   if (updatedIncome.initialMonth && income.initialMonth !== updatedIncome.initialMonth)
+   if (updatedIncome.initialMonth !== undefined && income.initialMonth !== updatedIncome.initialMonth)
       income.initialMonth = updatedIncome.initialMonth;
-   if (updatedIncome.initialYear && income.initialYear !== updatedIncome.initialYear)
+   if (updatedIncome.initialYear !== undefined && income.initialYear !== updatedIncome.initialYear)
       income.initialYear = updatedIncome.initialYear;
-   if (updatedIncome.recurrence && updatedIncome.recurrence && income.recurrence !== updatedIncome.recurrence)
+   if (updatedIncome.recurrence !== undefined && income.recurrence !== updatedIncome.recurrence)
       income.recurrence = updatedIncome.recurrence;
 
    // Update Income
