@@ -17,15 +17,15 @@ export const processUpdatePayment = async (updatedPayment: Partial<Payment>): Pr
       payment.title = updatedPayment.title;
    if (payment.amount !== updatedPayment.amount)
       payment.amount = updatedPayment.amount;
-   if (payment.initialDay !== updatedPayment.initialDay)
+   if (payment.initialDay && payment.initialDay !== updatedPayment.initialDay)
       payment.initialDay = updatedPayment.initialDay;
-   if (payment.initialDate !== updatedPayment.initialDate)
+   if (payment.initialDate && payment.initialDate !== updatedPayment.initialDate)
       payment.initialDate = updatedPayment.initialDate;
-   if (payment.initialMonth !== updatedPayment.initialMonth)
+   if (payment.initialMonth && payment.initialMonth !== updatedPayment.initialMonth)
       payment.initialMonth = updatedPayment.initialMonth;
-   if (payment.initialYear !== updatedPayment.initialYear)
+   if (payment.initialYear && payment.initialYear !== updatedPayment.initialYear)
       payment.initialYear = updatedPayment.initialYear;
-   if (payment.recurrence !== updatedPayment.recurrence)
+   if (payment.recurrence && payment.recurrence !== updatedPayment.recurrence)
       payment.recurrence = updatedPayment.recurrence;
 
    // Update Payment

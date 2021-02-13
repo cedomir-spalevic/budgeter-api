@@ -14,12 +14,13 @@ const validator = async (event: APIGatewayProxyEvent): Promise<Partial<Payment>>
    const userId = await isAuthorized(event);
    const paymentId = getPathParameter("paymentId", event.pathParameters);
    const form = isValidJSONBody(event.body);
-   const title = isStr(form, "title", true);
-   const amount = isNumber(form, "amount", true);
-   const initialDay = isNumber(form, "initialDay", true);
-   const initialMonth = isNumber(form, "initialMonth", true);
-   const initialYear = isNumber(form, "initialYear", true);
-   const recurrence = isOneOfStr(form, "recurrence", recurrenceTypes, true) as Recurrence;
+   const title = isStr(form, "title");
+   const amount = isNumber(form, "amount");
+   const initialDay = isNumber(form, "initialDay");
+   const initialDate = isNumber(form, "initialDate");
+   const initialMonth = isNumber(form, "initialMonth");
+   const initialYear = isNumber(form, "initialYear");
+   const recurrence = isOneOfStr(form, "recurrence", recurrenceTypes) as Recurrence;
 
    return {
       _id: paymentId,
@@ -27,6 +28,7 @@ const validator = async (event: APIGatewayProxyEvent): Promise<Partial<Payment>>
       title,
       amount,
       initialDay,
+      initialDate,
       initialMonth,
       initialYear,
       recurrence

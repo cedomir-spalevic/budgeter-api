@@ -17,15 +17,15 @@ export const processUpdateIncome = async (updatedIncome: Partial<Income>): Promi
       income.title = updatedIncome.title;
    if (updatedIncome.amount && income.amount !== updatedIncome.amount)
       income.amount = updatedIncome.amount;
-   if (income.initialDay !== updatedIncome.initialDay)
+   if (updatedIncome.initialDay && income.initialDay !== updatedIncome.initialDay)
       income.initialDay = updatedIncome.initialDay;
-   if (income.initialDate !== updatedIncome.initialDate)
+   if (updatedIncome.initialDate && income.initialDate && income.initialDate !== updatedIncome.initialDate)
       income.initialDate = updatedIncome.initialDate;
-   if (income.initialMonth !== updatedIncome.initialMonth)
+   if (updatedIncome.initialMonth && income.initialMonth !== updatedIncome.initialMonth)
       income.initialMonth = updatedIncome.initialMonth;
-   if (income.initialYear !== updatedIncome.initialYear)
+   if (updatedIncome.initialYear && income.initialYear !== updatedIncome.initialYear)
       income.initialYear = updatedIncome.initialYear;
-   if (updatedIncome.recurrence && income.recurrence !== updatedIncome.recurrence)
+   if (updatedIncome.recurrence && updatedIncome.recurrence && income.recurrence !== updatedIncome.recurrence)
       income.recurrence = updatedIncome.recurrence;
 
    // Update Income

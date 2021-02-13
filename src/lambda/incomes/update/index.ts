@@ -16,10 +16,11 @@ const validator = async (event: APIGatewayProxyEvent): Promise<Partial<Income>> 
    const form = isValidJSONBody(event.body);
    const title = isStr(form, "title");
    const amount = isNumber(form, "amount");
-   const initialDay = isNumber(form, "initialDay", true);
-   const initialMonth = isNumber(form, "initialMonth", true);
-   const initialYear = isNumber(form, "initialYear", true);
-   const recurrence = isOneOfStr(form, "recurrence", recurrenceTypes, true) as Recurrence;
+   const initialDay = isNumber(form, "initialDay");
+   const initialDate = isNumber(form, "initialDate");
+   const initialMonth = isNumber(form, "initialMonth");
+   const initialYear = isNumber(form, "initialYear");
+   const recurrence = isOneOfStr(form, "recurrence", recurrenceTypes) as Recurrence;
 
    return {
       _id: incomeId,
@@ -27,6 +28,7 @@ const validator = async (event: APIGatewayProxyEvent): Promise<Partial<Income>> 
       title,
       amount,
       initialDay,
+      initialDate,
       initialMonth,
       initialYear,
       recurrence
