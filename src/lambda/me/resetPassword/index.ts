@@ -24,7 +24,13 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
    try {
       const registerBody = validator(event);
       const response = await processPasswordReset(registerBody);
-      return { statusCode: 200, body: JSON.stringify(response) }
+      return {
+         statusCode: 200,
+         body: JSON.stringify(response),
+         headers: {
+            "Access-Control-Allow-Origin": "*"
+         }
+      }
    }
    catch (error) {
       return handleErrorResponse(error);

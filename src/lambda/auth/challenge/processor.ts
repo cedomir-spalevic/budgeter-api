@@ -6,7 +6,7 @@ import { emailConfirmationCodeTemplate } from "views/email-confirmation-code";
 import { passwordResetTemplate } from "views/password-reset";
 import { isValidEmail } from "middleware/validators";
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { generateOneTimeCode, generateRandomKey } from "services/internal/security/oneTimeCode";
+import { generateOneTimeCode, generateRandomOneTimeCode } from "services/internal/security/oneTimeCode";
 
 export const processChallenge = async (challengeBody: ChallengeBody): Promise<ConfirmationResponse> => {
    if (!challengeBody.email)
@@ -25,7 +25,7 @@ export const processChallenge = async (challengeBody: ChallengeBody): Promise<Co
       const validEmail = isValidEmail(email);
       if (!validEmail)
          throw new GeneralError("Email is not valid");
-      const randomKey = generateRandomKey();
+      const randomKey = generateRandomOneTimeCode();
       return {
          expires: randomKey.expires,
          key: randomKey.key

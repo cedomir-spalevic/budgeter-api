@@ -9,3 +9,11 @@ export interface GetBudgetQueryStringParameters {
    month: number;
    year: number;
 }
+
+export interface AdminUserRequest {
+   firstName: string;
+   lastName: string;
+   email?: string;
+   isAdmin: boolean;
+   password: string;
+}

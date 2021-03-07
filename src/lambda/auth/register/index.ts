@@ -29,7 +29,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       const response = await processRegister(registerBody);
       return {
          statusCode: 201,
-         body: JSON.stringify(response)
+         body: JSON.stringify(response),
+         headers: {
+            "Access-Control-Allow-Origin": "*"
+         }
       }
    }
    catch (error) {

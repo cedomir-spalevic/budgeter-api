@@ -4,7 +4,6 @@ export interface User extends IEntity {
    firstName: string;
    lastName: string;
    email: string;
-   isService: boolean;
    isAdmin: boolean;
    isEmailVerified: boolean;
    device?: {
@@ -32,4 +31,15 @@ export interface PublicUser {
       incomeNotifications: boolean;
       paymentNotifications: boolean;
    }
+}
+
+export interface AdminPublicUser {
+   id: string;
+   isAdmin: boolean;
+   firstName: string;
+   lastName: string;
+   email: string;
+   emailVerified: boolean;
+   createdOn: Date;
+   modifiedOn: Date;
 }

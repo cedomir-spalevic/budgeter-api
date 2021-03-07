@@ -45,7 +45,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
          response = await processGetSingle(getIncomesBody.userId, getIncomesBody.pathParameters.incomeId)
       return {
          statusCode: 200,
-         body: JSON.stringify(response)
+         body: JSON.stringify(response),
+         headers: {
+            "Access-Control-Allow-Origin": "*"
+         }
       }
    }
    catch (error) {

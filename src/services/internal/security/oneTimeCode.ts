@@ -23,6 +23,6 @@ export const generateOneTimeCode = (userId: ObjectId, type: OneTimeCodeType): { 
 }
 
 /**
- * Generate a random key
+ * Generate a random one time code
  */
-export const generateRandomKey = (): { expires: number, key: string } => ({ expires: (1000 * 60 * 5), key: uuid() })
+export const generateRandomOneTimeCode = (): { expires: number, key: string } => ({ expires: (1000 * 60 * 5), key: uuid() })

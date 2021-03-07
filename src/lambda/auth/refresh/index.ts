@@ -20,7 +20,13 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
    try {
       const refreshBody = validator(event);
       const response = await processRefresh(refreshBody);
-      return { statusCode: 200, body: JSON.stringify(response) }
+      return {
+         statusCode: 200,
+         body: JSON.stringify(response),
+         headers: {
+            "Access-Control-Allow-Origin": "*"
+         }
+      }
    }
    catch (error) {
       return handleErrorResponse(error);

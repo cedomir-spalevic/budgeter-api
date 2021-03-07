@@ -25,7 +25,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
       await processDeleteIncome(deleteIncomeBody);
       return {
          statusCode: 200,
-         body: ""
+         body: "",
+         headers: {
+            "Access-Control-Allow-Origin": "*"
+         }
       }
    }
    catch (error) {

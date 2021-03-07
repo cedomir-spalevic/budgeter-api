@@ -25,7 +25,6 @@ functions:
       - http:
           path: auth/login
           method: post
-          cors: true
   auth-refresh:
     handler: src/lambda/auth/refresh/index.handler
     memorySize: 2048
@@ -33,28 +32,24 @@ functions:
       - http:
           path: auth/refresh
           method: post
-          cors: true
   auth-register:
     handler: src/lambda/auth/register/index.handler
     events:
       - http:
           path: auth/register
           method: post
-          cors: true
   auth-challenge:
     handler: src/lambda/auth/challenge/index.handler
     events:
       - http:
           path: auth/challenge
           method: post
-          cors: true
   auth-challenge-confirmation:
     handler: src/lambda/auth/challengeConfirmation/index.handler
     events:
       - http:
           path: auth/challenge/{key}
           method: post
-          cors: true
           request:
             parameters:
               paths:
@@ -65,28 +60,24 @@ functions:
       - http:
           path: me
           method: get
-          cors: true
   me-update:
     handler: src/lambda/me/update/index.handler
     events:
       - http:
           path: me
           method: patch
-          cors: true
   me-register-device:
     handler: src/lambda/me/registerDevice/index.handler
     events:
       - http:
           path: me/registerDevice
           method: post
-          cors: true
   me-reset-password:
     handler: src/lambda/me/resetPassword/index.handler
     events:
       - http:
           path: me/resetPassword/{key}
           method: post
-          cors: true
           request:
             parameters:
               paths:
@@ -97,14 +88,12 @@ functions:
       - http:
           path: incomes
           method: post
-          cors: true
   incomes-delete:
     handler: src/lambda/incomes/delete/index.handler
     events:
       - http:
           path: incomes/{incomeId}
           method: delete
-          cors: true
           request: 
             parameters:
               paths:
@@ -115,11 +104,9 @@ functions:
       - http:
           path: incomes
           method: get
-          cors: true
       - http:
           path: incomes/{incomeId}
           method: get
-          cors: true
           request:
             parameters:
               paths:
@@ -130,7 +117,6 @@ functions:
       - http:
           path: incomes/{incomeId}
           method: patch
-          cors: true
           request:
             parameters:
               paths:
@@ -141,14 +127,12 @@ functions:
       - http:
           path: payments
           method: post
-          cors: true
   payments-delete:
     handler: src/lambda/payments/delete/index.handler
     events:
       - http:
           path: payments/{paymentId}
           method: delete
-          cors: true
           request: 
             parameters:
               paths:
@@ -159,11 +143,9 @@ functions:
       - http:
           path: payments
           method: get
-          cors: true
       - http:
           path: payments/{paymentId}
           method: get
-          cors: true
           request:
             parameters:
               paths:
@@ -174,18 +156,77 @@ functions:
       - http:
           path: payments/{paymentId}
           method: patch
-          cors: true
           request:
             parameters:
               paths:
                 paymentId: true
+  users-create:
+    handler: src/lambda/users/create/index.handler
+    events:
+      - http:
+          path: users
+          method: post
+  users-delete:
+    handler: src/lambda/users/delete/index.handler
+    events:
+      - http:
+          path: users/{userId}
+          method: delete
+          request: 
+            parameters:
+              paths:
+                userId: true
+  users-get:
+    handler: src/lambda/users/get/index.handler
+    events:
+      - http:
+          path: users
+          method: get
+      - http:
+          path: users/{userId}
+          method: get
+          request:
+            parameters:
+              paths:
+                userId: true
+  users-update:
+    handler: src/lambda/users/update/index.handler
+    events:
+      - http:
+          path: users/{userId}
+          method: patch
+          request:
+            parameters:
+              paths:
+                userId: true
   budgets-get:
     handler: src/lambda/budgets/get/index.handler
     events:
       - http:
           path: budgets
           method: get
-          cors: true
+  api-keys-get:
+    handler: src/lambda/apiKeys/get/index.handler
+    events:
+      - http:
+          path: apiKeys
+          method: get
+  api-keys-delete:
+    handler: src/lambda/apiKeys/delete/index.handler
+    events:
+      - http:
+          path: apiKeys/{apiKeyId}
+          method: delete
+          request: 
+            parameters:
+              paths:
+                apiKeyId: true
+  api-keys-create:
+    handler: src/lambda/apiKeys/create/index.handler
+    events:
+      - http:
+          path: apiKeys
+          method: post
   batch-clear-tokens:
     transfer:
     handler: src/lambda/batch/clearTokens/index.handler

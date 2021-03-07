@@ -36,7 +36,6 @@ export const processRegister = async (registerBody: RegisterBody): Promise<Confi
       lastName: registerBody.lastName,
       email: email,
       isAdmin: false,
-      isService: false,
       isEmailVerified: false,
       notificationPreferences: {
          incomeNotifications: false,

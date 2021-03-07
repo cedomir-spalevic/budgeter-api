@@ -22,7 +22,13 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
    try {
       const loginBody = validator(event);
       const response = await processSignIn(loginBody);
-      return { statusCode: response.status, body: JSON.stringify(response.response) }
+      return {
+         statusCode: response.status,
+         body: JSON.stringify(response.response),
+         headers: {
+            "Access-Control-Allow-Origin": "*"
+         }
+      }
    }
    catch (error) {
       return handleErrorResponse(error);
