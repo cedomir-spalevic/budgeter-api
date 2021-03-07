@@ -2,6 +2,8 @@ import { APIGatewayProxyEvent } from "aws-lambda";
 import { UnauthorizedError } from "models/errors";
 import { ObjectId } from "mongodb";
 import { decodeAccessToken } from "services/internal/security/accessToken";
+import BudgeterMongoClient from "services/external/mongodb/client";
+import { generateHash } from "services/internal/security/hash";
 
 export const isAuthorized = async (event: APIGatewayProxyEvent): Promise<ObjectId> => {
    let token = event.headers["Authorization"];
@@ -25,4 +27,19 @@ export const isAdminAuthorized = async (event: APIGatewayProxyEvent): Promise<Ob
    if (!decodedToken.userId || !ObjectId.isValid(decodedToken.userId))
       throw new UnauthorizedError();
    return new ObjectId(decodedToken.userId);
+}
+
+export const isAPIKeyAuthorized = async (event: APIGatewayProxyEvent): Promise<void> => {
+   let apiKey = event.headers["Authorization"];
+   if (!apiKey)
+      throw new UnauthorizedError();
+
+   apiKey = apiKey.replace("Bearer ", "");
+
+   const budgeterClient = await BudgeterMongoClient.getInstance();
+   const apiKeyService = budgeterClient.getAPIKeyCollection();
+
+   const key = await apiKeyService.find({ key: generateHash(apiKey) });
+   if (!key)
+      throw new UnauthorizedError();
 }

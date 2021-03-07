@@ -1,3 +1,4 @@
+import { APIKey } from "models/data/apiKey";
 import { Income } from "models/data/income";
 import { OneTimeCode } from "models/data/oneTimeCode";
 import { Payment } from "models/data/payment";
@@ -28,6 +29,8 @@ class BudgeterMongoClient {
       }
       return BudgeterMongoClient.instance;
    }
+
+   public getAPIKeyCollection = () => new BudgeterEntityCollection<APIKey>(this._db.collection<APIKey>("apiKeys"));
 
    public getOneTimeCodeCollection = () => new BudgeterEntityCollection<OneTimeCode>(this._db.collection<OneTimeCode>("oneTimeCodes"));
 
