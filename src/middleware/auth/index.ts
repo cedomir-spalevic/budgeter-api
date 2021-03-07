@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { decodeAccessToken } from "services/internal/security/accessToken";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateHash } from "services/internal/security/hash";
+import { isStr, isValidJSONBody } from "middleware/validators";
 
 export const isAuthorized = async (event: APIGatewayProxyEvent): Promise<ObjectId> => {
    let token = event.headers["Authorization"];
@@ -30,7 +31,8 @@ export const isAdminAuthorized = async (event: APIGatewayProxyEvent): Promise<Ob
 }
 
 export const isAPIKeyAuthorized = async (event: APIGatewayProxyEvent): Promise<void> => {
-   let apiKey = event.headers["Authorization"];
+   const form = isValidJSONBody(event.body);
+   let apiKey = isStr(form, "apiKey", true);
    if (!apiKey)
       throw new UnauthorizedError();
 
