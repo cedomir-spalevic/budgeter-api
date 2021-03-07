@@ -9,27 +9,22 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateOneTimeCode, generateRandomKey } from "services/internal/security/oneTimeCode";
 
 export const processChallenge = async (challengeBody: ChallengeBody): Promise<ConfirmationResponse> => {
-   // Check if email is valid
    if (!challengeBody.email)
       throw new GeneralError("Email cannot be blank");
 
-   // Get Mongo Client
+   const email = challengeBody.email.toLowerCase();
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
    const usersService = budgeterClient.getUsersCollection();
 
-   // Set email to all lowercase
-   const email = challengeBody.email.toLowerCase();
-
-   // Look for a user with this email address
+   // Check if there exists a user with the given email address
+   // If the user does not exist and a VALID email was provided, then we want to return a fake key and expiration time
+   // That way we're not exactly presenting whether or not a users email exists to a possible social engineering attack
    const user = await usersService.find({ email });
    if (!user) {
-      // If no user exists then we run a regex on an email
       const validEmail = isValidEmail(email);
       if (!validEmail)
          throw new GeneralError("Email is not valid");
-
-      // If the email is valid, then return random key
       const randomKey = generateRandomKey();
       return {
          expires: randomKey.expires,
@@ -37,7 +32,6 @@ export const processChallenge = async (challengeBody: ChallengeBody): Promise<Co
       };
    }
 
-   // Create OTC
    const result = generateOneTimeCode(user._id, challengeBody.type);
    await oneTimeCodeService.create(result.code);
 
@@ -51,7 +45,6 @@ export const processChallenge = async (challengeBody: ChallengeBody): Promise<Co
       await sendEmail(email, "Budgeter - reset your password", html);
    }
 
-   // Return OTC key identifier
    return {
       expires: result.expires,
       key: result.code.key

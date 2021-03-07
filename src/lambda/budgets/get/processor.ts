@@ -15,13 +15,18 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
    const response = await incomesService.findMany({
-      "$or": [
-         { initialMonth: month, initialYear: year, userId: userId, recurrence: "oneTime" },
-         { userId: userId, recurrence: "daily" },
-         { userId: userId, recurrence: "weekly" },
-         { userId: userId, recurrence: "biweekly" },
-         { userId: userId, recurrence: "monthly" },
-         { initialMonth: month, recurrence: "yearly" }
+      "$and": [
+         { userId: userId },
+         {
+            "$or": [
+               { initialMonth: month, initialYear: year, recurrence: "oneTime" },
+               { recurrence: "daily" },
+               { recurrence: "weekly" },
+               { recurrence: "biweekly" },
+               { recurrence: "monthly" },
+               { initialMonth: month, recurrence: "yearly" }
+            ]
+         }
       ]
    });
 
@@ -72,16 +77,20 @@ const getPayments = async (request: GetBudgetsBody): Promise<BudgetPayment[]> =>
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
    const response = await paymentsService.findMany({
-      "$or": [
-         { initialMonth: month, initialYear: year, userId: userId, recurrence: "oneTime" },
-         { userId: userId, recurrence: "daily" },
-         { userId: userId, recurrence: "weekly" },
-         { userId: userId, recurrence: "biweekly" },
-         { userId: userId, recurrence: "monthly" },
-         { initialMonth: month, recurrence: "yearly" }
+      "$and": [
+         { userId: userId },
+         {
+            "$or": [
+               { initialMonth: month, initialYear: year, recurrence: "oneTime" },
+               { recurrence: "daily" },
+               { recurrence: "weekly" },
+               { recurrence: "biweekly" },
+               { recurrence: "monthly" },
+               { initialMonth: month, recurrence: "yearly" }
+            ]
+         }
       ]
    });
-   console.log(response)
 
    const budgetPayments: BudgetPayment[] = [];
    response.forEach(payment => {
