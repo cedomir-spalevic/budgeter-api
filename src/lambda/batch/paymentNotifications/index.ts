@@ -8,6 +8,7 @@ import { processPaymentNotifications } from "./processor";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
    try {
+      console.log(event);
       await isAPIKeyAuthorized(event);
       await processPaymentNotifications();
       return {
