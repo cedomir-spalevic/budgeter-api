@@ -4,7 +4,7 @@ import { ObjectId } from "mongodb";
 import { decodeAccessToken } from "services/internal/security/accessToken";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateHash } from "services/internal/security/hash";
-import { isStr, isValidJSONBody } from "middleware/validators";
+import { StepFunctionBatchJobRequest } from "models/requests";
 
 export const isAuthorized = async (event: APIGatewayProxyEvent): Promise<ObjectId> => {
    let token = event.headers["Authorization"];
@@ -30,14 +30,8 @@ export const isAdminAuthorized = async (event: APIGatewayProxyEvent): Promise<Ob
    return new ObjectId(decodedToken.userId);
 }
 
-export const isAPIKeyAuthorized = async (event: APIGatewayProxyEvent): Promise<void> => {
-   const form = isValidJSONBody(event.body);
-   let apiKey = isStr(form, "apiKey", true);
-   if (!apiKey)
-      throw new UnauthorizedError();
-
-   apiKey = apiKey.replace("Bearer ", "");
-
+export const isAPIKeyAuthorized = async (event: StepFunctionBatchJobRequest): Promise<void> => {
+   const apiKey = event.Input.apiKey;
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const apiKeyService = budgeterClient.getAPIKeyCollection();
 

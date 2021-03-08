@@ -17,3 +17,9 @@ export interface AdminUserRequest {
    isAdmin: boolean;
    password: string;
 }
+
+export interface StepFunctionBatchJobRequest {
+   Input: {
+      apiKey: string;
+   }
+}
