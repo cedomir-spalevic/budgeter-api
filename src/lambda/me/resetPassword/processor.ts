@@ -7,7 +7,9 @@ import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
 import { AuthResponse } from "models/responses";
 
-export const processPasswordReset = async (passwordResetBody: PasswordResetBody): Promise<AuthResponse> => {
+export const processPasswordReset = async (
+   passwordResetBody: PasswordResetBody
+): Promise<AuthResponse> => {
    // Test for a valid password
    if (!passwordResetBody.password)
       throw new GeneralError("Password cannot be blank");
@@ -20,9 +22,12 @@ export const processPasswordReset = async (passwordResetBody: PasswordResetBody)
    const refreshTokenService = budgeterClient.getRefreshTokenCollection();
 
    // Check if one time code exists
-   const otc = await oneTimeCodeService.find({ key: passwordResetBody.key, completed: true, type: "passwordReset" });
-   if (!otc)
-      throw new UnauthorizedError();
+   const otc = await oneTimeCodeService.find({
+      key: passwordResetBody.key,
+      completed: true,
+      type: "passwordReset",
+   });
+   if (!otc) throw new UnauthorizedError();
 
    // Get User and update email verification
    const user = await usersService.getById(otc.userId.toHexString());
@@ -32,8 +37,8 @@ export const processPasswordReset = async (passwordResetBody: PasswordResetBody)
    // Update user auth
    const userAuth: Partial<UserAuth> = {
       userId: otc.userId,
-      hash: generateHash(passwordResetBody.password)
-   }
+      hash: generateHash(passwordResetBody.password),
+   };
    await usersAuthService.replace({ userId: otc.userId }, userAuth);
 
    // Remove all refresh tokens for this user
@@ -41,7 +46,10 @@ export const processPasswordReset = async (passwordResetBody: PasswordResetBody)
 
    // Generate Access Token and Refresh Token
    const refreshToken = generateRefreshToken(otc.userId);
-   const accessToken = generateAccessToken(otc.userId.toHexString(), refreshToken.token);
+   const accessToken = generateAccessToken(
+      otc.userId.toHexString(),
+      refreshToken.token
+   );
 
    // Save Refresh Token in DB
    await refreshTokenService.create(refreshToken);
@@ -50,6 +58,6 @@ export const processPasswordReset = async (passwordResetBody: PasswordResetBody)
    return {
       accessToken: accessToken.token,
       expires: accessToken.expires,
-      refreshToken: refreshToken.token
-   }
-}
+      refreshToken: refreshToken.token,
+   };
+};

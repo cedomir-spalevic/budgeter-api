@@ -1,7 +1,4 @@
-import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAdminAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import { getPathParameter } from "middleware/url";
@@ -15,8 +12,10 @@ export interface AdminUpdateUserRequestBody {
    userRequest: AdminUserRequest;
 }
 
-const validator = async (event: APIGatewayProxyEvent): Promise<AdminUpdateUserRequestBody> => {
-   const adminId = await isAdminAuthorized(event);
+const validator = async (
+   event: APIGatewayProxyEvent
+): Promise<AdminUpdateUserRequestBody> => {
+   await isAdminAuthorized(event);
    const userId = getPathParameter("userId", event.pathParameters);
    const form = isValidJSONBody(event.body);
    const firstName = isStr(form, "firstName");
@@ -30,12 +29,14 @@ const validator = async (event: APIGatewayProxyEvent): Promise<AdminUpdateUserRe
          firstName,
          lastName,
          isAdmin,
-         password
-      }
-   }
-}
+         password,
+      },
+   };
+};
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (
+   event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
    try {
       const userRequest = await validator(event);
       const response = await processUpdateUser(userRequest);
@@ -43,11 +44,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
          statusCode: 200,
          body: JSON.stringify(response),
          headers: {
-            "Access-Control-Allow-Origin": "*"
-         }
-      }
-   }
-   catch (error) {
+            "Access-Control-Allow-Origin": "*",
+         },
+      };
+   } catch (error) {
       return handleErrorResponse(error);
    }
-}
+};

@@ -6,5 +6,5 @@ export interface Token {
 
 export enum UserClaims {
    Admin,
-   Service
+   Service,
 }

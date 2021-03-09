@@ -1,7 +1,9 @@
 import { Payment, PublicPayment } from "models/data/payment";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
-export const processCreatePayment = async (payment: Partial<Payment>): Promise<PublicPayment> => {
+export const processCreatePayment = async (
+   payment: Partial<Payment>
+): Promise<PublicPayment> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
@@ -19,6 +21,6 @@ export const processCreatePayment = async (payment: Partial<Payment>): Promise<P
       initialYear: payment.initialYear,
       recurrence: payment.recurrence,
       createdOn: payment.createdOn,
-      modifiedOn: payment.modifiedOn
-   }
-}
+      modifiedOn: payment.modifiedOn,
+   };
+};

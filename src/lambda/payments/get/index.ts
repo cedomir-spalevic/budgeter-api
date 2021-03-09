@@ -1,57 +1,66 @@
-import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import { getPathParameter, getListQueryStringParameters } from "middleware/url";
+import { PublicPayment } from "models/data/payment";
 import { GetListQueryStringParameters } from "models/requests";
+import { GetResponse } from "models/responses";
 import { ObjectId } from "mongodb";
 import { processGetMany, processGetSingle } from "./processor";
 
 export interface GetPaymentsBody {
    userId: ObjectId;
-   queryStrings?: GetListQueryStringParameters,
-   pathParameters?: { paymentId: ObjectId }
+   queryStrings?: GetListQueryStringParameters;
+   pathParameters?: { paymentId: ObjectId };
 }
 
-const validator = async (event: APIGatewayProxyEvent): Promise<GetPaymentsBody> => {
+const validator = async (
+   event: APIGatewayProxyEvent
+): Promise<GetPaymentsBody> => {
    const userId = await isAuthorized(event);
    if (event.pathParameters === null) {
-      const queryStrings = getListQueryStringParameters(event.queryStringParameters);
+      const queryStrings = getListQueryStringParameters(
+         event.queryStringParameters
+      );
       return {
          userId,
-         queryStrings
-      }
-   }
-   else {
+         queryStrings,
+      };
+   } else {
       const paymentId = getPathParameter("paymentId", event.pathParameters);
       return {
          userId,
          pathParameters: {
-            paymentId
-         }
-      }
+            paymentId,
+         },
+      };
    }
-}
+};
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (
+   event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
    try {
       const getIncomesBody = await validator(event);
-      let response: any;
+      let response: GetResponse<PublicPayment> | PublicPayment;
       if (getIncomesBody.queryStrings)
-         response = await processGetMany(getIncomesBody.userId, getIncomesBody.queryStrings);
+         response = await processGetMany(
+            getIncomesBody.userId,
+            getIncomesBody.queryStrings
+         );
       else
-         response = await processGetSingle(getIncomesBody.userId, getIncomesBody.pathParameters.paymentId)
+         response = await processGetSingle(
+            getIncomesBody.userId,
+            getIncomesBody.pathParameters.paymentId
+         );
       return {
          statusCode: 200,
          body: JSON.stringify(response),
          headers: {
-            "Access-Control-Allow-Origin": "*"
-         }
-      }
-   }
-   catch (error) {
+            "Access-Control-Allow-Origin": "*",
+         },
+      };
+   } catch (error) {
       return handleErrorResponse(error);
    }
-}
+};

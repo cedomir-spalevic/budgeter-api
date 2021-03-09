@@ -1,7 +1,4 @@
-import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { isStr, isValidJSONBody } from "middleware/validators";
 import { GeneralError } from "models/errors";
@@ -15,7 +12,9 @@ export interface RegisterDeviceBody {
    token: string;
 }
 
-const validator = async (event: APIGatewayProxyEvent): Promise<RegisterDeviceBody> => {
+const validator = async (
+   event: APIGatewayProxyEvent
+): Promise<RegisterDeviceBody> => {
    const userId = await isAuthorized(event);
    const form = isValidJSONBody(event.body);
    const device = isStr(form, "device", true);
@@ -23,10 +22,12 @@ const validator = async (event: APIGatewayProxyEvent): Promise<RegisterDeviceBod
       throw new GeneralError("Device must be ios or android");
    const token = isStr(form, "token", true);
 
-   return { userId, device, token }
-}
+   return { userId, device, token };
+};
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (
+   event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
    try {
       const registerDeviceBody = await validator(event);
 
@@ -35,11 +36,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
          statusCode: 200,
          body: JSON.stringify(response),
          headers: {
-            "Access-Control-Allow-Origin": "*"
-         }
-      }
-   }
-   catch (error) {
+            "Access-Control-Allow-Origin": "*",
+         },
+      };
+   } catch (error) {
       return handleErrorResponse(error);
    }
-}
+};
