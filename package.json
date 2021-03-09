@@ -3,14 +3,11 @@
    "version": "1.0.0",
    "description": "Budgeter API",
    "scripts": {
-      "dev": "serverless offline start",
-      "login": "serverless login",
-      "deploy": "serverless deploy",
-      "build": "tsc",
-      "bundle": "node scripts/bundle.js",
-      "dist": "webpack",
-      "lint": "eslint . --ext .ts",
-      "format": "prettier --write ."
+      "build": "npm run build:format && npm run build:lint && npm run build:bundle",
+      "build:transpile": "tsc",
+      "build:format": "prettier --write .",
+      "build:lint": "eslint . --ext .ts",
+      "build:bundle": "webpack"
    },
    "repository": {
       "type": "git",
