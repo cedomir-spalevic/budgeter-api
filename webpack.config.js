@@ -45,9 +45,8 @@ module.exports = {
             test: /\.ts?$/,
             exclude: /(node_modules)/,
             use: [
-               {
-                  loader: "ts-loader",
-               },
+               "ts-loader",
+               "eslint-loader"
             ],
          },
       ],
