@@ -15,9 +15,12 @@ module.exports = {
    mode: "production",
    entry: entries,
    output: {
-      filename: "[name].js",
+      filename: "[name]/index.js",
       path: `${rootDir}/dist`,
+      libraryTarget: "commonjs",
    },
+   //https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/webpack.html
+   target: "node",
    resolve: {
       extensions: [".ts", ".js"],
       plugins: [new TsConfigPathsPlugin()],

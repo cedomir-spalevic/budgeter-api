@@ -1,0 +1,272 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Budgeter API
+
+Globals:
+   Function:
+      MemorySize: 128
+      Runtime: nodejs14.x
+
+Resources:
+   apiKeysCreate:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/apiKeysCreate/index.handler
+         Events:
+            apiKeysCreate:
+               Type: Api
+               Properties:
+                  Path: /apikeys
+                  Method: post
+   apiKeysDelete:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/apiKeysDelete/index.handler
+         Events:
+            apiKeysDelete:
+               Type: Api
+               Properties:
+                  Path: /apikeys/{apiKeyId}
+                  Method: delete
+   apiKeysGet:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/apiKeysGet/index.handler
+         Events:
+            apiKeysGet:
+               Type: Api
+               Properties:
+                  Path: /apikeys
+                  Method: get
+   authChallenge:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/authChallenge/index.handler
+         Events:
+            authChallenge:
+               Type: Api
+               Properties:
+                  Path: /auth/challenge
+                  Method: post
+   authChallengeConfirmation:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/authChallengeConfirmation/index.handler
+         Events:
+            authChallengeConfirmation:
+               Type: Api
+               Properties:
+                  Path: /auth/challenge/{key}
+                  Method: post
+   authLogin:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/authLogin/index.handler
+         Events:
+            authLogin:
+               Type: Api
+               Properties:
+                  Path: /auth/Login
+                  Method: post
+   authRefresh:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/authRefresh/index.handler
+         Events:
+            authRefresh:
+               Type: Api
+               Properties:
+                  Path: /auth/refresh
+                  Method: post
+   authRegister:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/authRegister/index.handler
+         Events:
+            authRegister:
+               Type: Api
+               Properties:
+                  Path: /auth/register
+                  Method: post
+   batchClearTokens:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/batchClearTokens/index.handler
+   batchIncomeNotifications:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/batchIncomeNotifications/index.handler
+   batchPaymentNotifications:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/batchPaymentNotifications/index.handler
+   budgetsGet:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/budgetsGet/index.handler
+         Events:
+            budgetsGet:
+               Type: Api
+               Properties:
+                  Path: /budgets
+                  Method: get
+   incomesCreate:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/incomesCreate/index.handler
+         Events:
+            incomesCreate:
+               Type: Api
+               Properties:
+                  Path: /incomes
+                  Method: post
+   incomesDelete:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/incomesDelete/index.handler
+         Events:
+            incomesDelete:
+               Type: Api
+               Properties:
+                  Path: /incomes/{incomeId}
+                  Method: delete
+   incomesGet:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/incomesGet/index.handler
+         Events:
+            incomesGet:
+               Type: Api
+               Properties:
+                  path: /incomes
+                  Method: get
+   incomesUpdate:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/incomesUpdate/index.handler
+         Events:
+            incomesUpdate:
+               Type: Api
+               Properties:
+                  Path: /incomes/{incomeId}
+                  Method: patch
+   meGet:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/meGet/index.handler
+         Events:
+            meGet:
+               Type: Api
+               Properties:
+                  Path: /me
+                  Method: get
+   meRegisterDevice:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/meRegisterDevice/index.handler
+         Events:
+            meRegisterDevice:
+               Type: Api
+               Properties:
+                  Path: /me/registerDevice
+                  Method: post
+   meResetPassword:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/meResetPassword/index.handler
+         Events:
+            meResetPassword:
+               Type: Api
+               Properties:
+                  Path: /me/resetPassword/{key}
+                  Method: post
+   meUpdate:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/meUpdate/index.handler
+         Events:
+            meUpdate:
+               Type: Api
+               Properties:
+                  Path: /me
+                  Method: patch
+   paymentsCreate:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/paymentsCreate/index.handler
+         Events:
+            paymentsCreate:
+               Type: Api
+               Properties:
+                  Path: /payments
+                  Method: post
+   paymentsDelete:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/paymentsDelete/index.handler
+         Events:
+            paymentsDelete:
+               Type: Api
+               Properties:
+                  Path: /payments/{paymentId}
+                  Method: delete
+   paymentsGet:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/paymentsGet/index.handler
+         Events:
+            paymentsGet:
+               Type: Api
+               Properties:
+                  Path: /payments
+                  Method: get
+   paymentsUpdate:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/paymentsUpdate/index.handler
+         Events:
+            paymentsUpdate:
+               Type: Api
+               Properties:
+                  Path: /payments/{paymentId}
+                  Method: patch
+   usersCreate:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/usersCreate/index.handler
+         Events:
+            usersCreate:
+               Type: Api
+               Properties:
+                  Path: /users
+                  Method: post
+   usersDelete:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/usersDelete/index.handler
+         Events:
+            usersDelete:
+               Type: Api
+               Properties:
+                  Path: /users/{userId}
+                  Method: delete
+   usersGet:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/usersGet/index.handler
+         Events:
+            usersGet:
+               Type: Api
+               Properties:
+                  Path: /users
+                  Method: get
+   usersUpdate:
+      Type: AWS::Serverless::Function
+      Properties:
+         Handler: dist/usersUpdate/index.handler
+         Events:
+            usersUpdate:
+               Type: Api
+               Properties:
+                  Path: /users/{userId}
+                  Method: patch
