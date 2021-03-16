@@ -1,0 +1,28 @@
+name: SAM Validate, Build, Test
+on:
+   pull_request:
+      branches: [main]
+
+jobs:
+   sam-validate-build-test:
+      runs-on: ubuntu-latest
+      outputs:
+         env-name: ${{ steps.env-name.outputs.environment }}
+      steps:
+         - uses: actions/checkout@v2
+         - name: Install Dependencies with Apt Get
+           run: |
+              sudo apt-get update
+         - name: Configure AWS credentials
+           id: creds
+           uses: aws-actions/configure-aws-credentials@v1
+           with:
+              aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              aws-region: ${{ secrets.AWS_REGION }}
+         - name: SAM Validate
+           run: |
+              sam validate
+         - name: SAM Build
+           run: |
+              sam build
