@@ -1,36 +1,24 @@
-name: SAM Validate, Build, Test, Deploy
+name: Build, Test, Deploy
 on:
    push:
-      branches: [feature/sam-migration]
+      branches: [main]
 
 jobs:
-   sam-validate-build-test-deploy:
+   build-test-deploy:
       runs-on: ubuntu-latest
-      outputs:
-         env-name: ${{ steps.env-name.outputs.environment }}
       steps:
          - uses: actions/checkout@v2
-         - name: Install Dependencies with Apt Get
-           run: |
-              sudo apt-get update
+         - name: Install Dependencies
+           run: sudo apt-get update
+           run: npm install
          - name: Configure AWS credentials
            id: creds
            uses: aws-actions/configure-aws-credentials@v1
            with:
               aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              # aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
               aws-region: ${{ secrets.AWS_REGION }}
-         - name: SAM Validate
-           run: |
-              sam validate
-         - name: SAM Build
-           run: |
-              sam build
-         - name: SAM Deploy
-           run: |
-              # Run SAM Deploy
-              sam deploy --template-file cloudformation.yaml \
-                --stack-name budgeter-api \
-                --s3-bucket budgeter-api-deployment \
-                --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
+         - name: Build code
+           run: npm run build
+         - name: Deploy
+           run: npm run deploy

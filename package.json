@@ -12,7 +12,7 @@
       "build:lint": "eslint . --ext .ts",
       "build:bundle": "webpack",
       "deploy": "npm run deploy:validate && npm run deploy:package && npm run deploy:push",
-      "deploy:validate": "sam validate",
+      "deploy:validate": "sam validate -t cloudformation.yaml",
       "deploy:package": "sam package --template-file cloudformation.yaml --output-template-file sam.yaml --s3-bucket budgeter-api-deployment",
       "deploy:push": "sam deploy --template-file sam.yaml --stack-name budgeter-api --capabilities CAPABILITY_IAM"
    },
