@@ -1,7 +1,7 @@
 name: Build, Test
 on:
    pull_request:
-      branches: [feature/sam-migration]
+      branches: [main]
 
 jobs:
    build-test-deploy:
