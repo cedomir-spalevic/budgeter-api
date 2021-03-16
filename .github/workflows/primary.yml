@@ -8,8 +8,9 @@ jobs:
       runs-on: ubuntu-latest
       steps:
          - uses: actions/checkout@v2
-         - name: Install Dependencies
+         - name: Install Ubuntu Updates
            run: sudo apt-get update
+         - name: Install NPM Dependencies
            run: npm install
          - name: Configure AWS credentials
            id: creds
