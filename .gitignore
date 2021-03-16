@@ -16,3 +16,7 @@ jspm_packages
 
 # VSccode
 .vscode
+
+# AWS SAM Template
+sam-template.yaml
+sam.yaml

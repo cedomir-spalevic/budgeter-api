@@ -12,12 +12,12 @@ fs.readdirSync(lambdaDir).forEach((d) => {
 });
 
 module.exports = {
-   mode: "production",
    entry: entries,
    output: {
       filename: "[name]/index.js",
       path: `${rootDir}/dist`,
       libraryTarget: "commonjs",
+      clean: true
    },
    //https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/webpack.html
    target: "node",
