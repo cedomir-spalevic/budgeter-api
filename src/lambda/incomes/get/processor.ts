@@ -5,7 +5,10 @@ import { GetResponse } from "models/responses";
 import { FilterQuery, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
-export const processGetMany = async (userId: ObjectId, queryStringParameters: GetListQueryStringParameters): Promise<GetResponse<PublicIncome>> => {
+export const processGetMany = async (
+   userId: ObjectId,
+   queryStringParameters: GetListQueryStringParameters
+): Promise<GetResponse<PublicIncome>> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
@@ -15,13 +18,13 @@ export const processGetMany = async (userId: ObjectId, queryStringParameters: Ge
 
    // Get incomes
    const query: FilterQuery<Income> = {
-      userId
+      userId,
    };
    if (queryStringParameters.search) {
       query.title = {
-         "$regex": queryStringParameters.search,
-         "$options": "$I"
-      }
+         $regex: queryStringParameters.search,
+         $options: "$I",
+      };
    }
    const limit = queryStringParameters.limit;
    const skip = queryStringParameters.skip;
@@ -29,7 +32,7 @@ export const processGetMany = async (userId: ObjectId, queryStringParameters: Ge
 
    return {
       count,
-      values: values.map(x => ({
+      values: values.map((x) => ({
          id: x._id.toHexString(),
          title: x.title,
          amount: x.amount,
@@ -39,19 +42,21 @@ export const processGetMany = async (userId: ObjectId, queryStringParameters: Ge
          initialYear: x.initialYear,
          recurrence: x.recurrence,
          createdOn: x.createdOn,
-         modifiedOn: x.modifiedOn
-      }))
-   }
-}
+         modifiedOn: x.modifiedOn,
+      })),
+   };
+};
 
-export const processGetSingle = async (userId: ObjectId, incomeId: ObjectId): Promise<PublicIncome> => {
+export const processGetSingle = async (
+   userId: ObjectId,
+   incomeId: ObjectId
+): Promise<PublicIncome> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
 
    const income = await incomesService.find({ userId, _id: incomeId });
-   if (!income)
-      throw new NotFoundError("No Income found with the given Id");
+   if (!income) throw new NotFoundError("No Income found with the given Id");
 
    return {
       id: income._id.toHexString(),
@@ -63,6 +68,6 @@ export const processGetSingle = async (userId: ObjectId, incomeId: ObjectId): Pr
       initialYear: income.initialYear,
       recurrence: income.recurrence,
       createdOn: income.createdOn,
-      modifiedOn: income.modifiedOn
+      modifiedOn: income.modifiedOn,
    };
-}
+};

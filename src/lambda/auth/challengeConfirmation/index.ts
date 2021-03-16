@@ -1,7 +1,4 @@
-import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
 import { getPathParameterId } from "middleware/url";
 import { isNumber, isValidJSONBody } from "middleware/validators";
@@ -9,7 +6,7 @@ import { processRegisterConfirmation } from "./processor";
 
 export interface RegisterConfirmationBody {
    key: string;
-   code: number
+   code: number;
 }
 
 const validator = (event: APIGatewayProxyEvent): RegisterConfirmationBody => {
@@ -17,22 +14,25 @@ const validator = (event: APIGatewayProxyEvent): RegisterConfirmationBody => {
    const form = isValidJSONBody(event.body);
    const code = isNumber(form, "code", true);
 
-   return { key, code }
-}
+   return { key, code };
+};
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (
+   event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
    try {
       const registerConfirmationBody = validator(event);
-      const response = await processRegisterConfirmation(registerConfirmationBody);
+      const response = await processRegisterConfirmation(
+         registerConfirmationBody
+      );
       return {
          statusCode: 200,
          body: JSON.stringify(response),
          headers: {
-            "Access-Control-Allow-Origin": "*"
-         }
-      }
-   }
-   catch (error) {
+            "Access-Control-Allow-Origin": "*",
+         },
+      };
+   } catch (error) {
       return handleErrorResponse(error);
    }
-}
+};

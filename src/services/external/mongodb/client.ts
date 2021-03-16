@@ -30,21 +30,41 @@ class BudgeterMongoClient {
       return BudgeterMongoClient.instance;
    }
 
-   public getAPIKeyCollection = () => new BudgeterEntityCollection<APIKey>(this._db.collection<APIKey>("apiKeys"));
+   public getAPIKeyCollection = () =>
+      new BudgeterEntityCollection<APIKey>(
+         this._db.collection<APIKey>("apiKeys")
+      );
 
-   public getOneTimeCodeCollection = () => new BudgeterEntityCollection<OneTimeCode>(this._db.collection<OneTimeCode>("oneTimeCodes"));
+   public getOneTimeCodeCollection = () =>
+      new BudgeterEntityCollection<OneTimeCode>(
+         this._db.collection<OneTimeCode>("oneTimeCodes")
+      );
 
-   public getRefreshTokenCollection = () => new BudgeterEntityCollection<RefreshToken>(this._db.collection<RefreshToken>("refreshTokens"));
+   public getRefreshTokenCollection = () =>
+      new BudgeterEntityCollection<RefreshToken>(
+         this._db.collection<RefreshToken>("refreshTokens")
+      );
 
-   public getUsersAuthCollection = () => new BudgeterEntityCollection<UserAuth>(this._db.collection<UserAuth>("usersAuth"));
+   public getUsersAuthCollection = () =>
+      new BudgeterEntityCollection<UserAuth>(
+         this._db.collection<UserAuth>("usersAuth")
+      );
 
-   public getUsersCollection = () => new BudgeterEntityCollection<User>(this._db.collection<User>("users"));
+   public getUsersCollection = () =>
+      new BudgeterEntityCollection<User>(this._db.collection<User>("users"));
 
-   public getIncomesCollection = () => new BudgeterEntityCollection<Income>(this._db.collection<Income>("incomes"));
+   public getIncomesCollection = () =>
+      new BudgeterEntityCollection<Income>(
+         this._db.collection<Income>("incomes")
+      );
 
-   public getPaymentsCollection = () => new BudgeterEntityCollection<Payment>(this._db.collection<Payment>("payments"));
+   public getPaymentsCollection = () =>
+      new BudgeterEntityCollection<Payment>(
+         this._db.collection<Payment>("payments")
+      );
 }
 
 export default {
-   getInstance: () => BudgeterMongoClient.getInstance()
-}
+   getInstance: (): Promise<BudgeterMongoClient> =>
+      BudgeterMongoClient.getInstance(),
+};

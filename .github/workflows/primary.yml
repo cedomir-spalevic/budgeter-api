@@ -1,0 +1,25 @@
+name: Build, Test, Deploy
+on:
+   push:
+      branches: [main]
+
+jobs:
+   build-test-deploy:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v2
+         - name: Install Ubuntu Updates
+           run: sudo apt-get update
+         - name: Install NPM Dependencies
+           run: npm install
+         - name: Configure AWS credentials
+           id: creds
+           uses: aws-actions/configure-aws-credentials@v1
+           with:
+              aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              aws-region: ${{ secrets.AWS_REGION }}
+         - name: Build code
+           run: npm run build
+         - name: Deploy
+           run: npm run deploy

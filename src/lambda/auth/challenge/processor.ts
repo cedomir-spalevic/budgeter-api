@@ -6,11 +6,15 @@ import { emailConfirmationCodeTemplate } from "views/email-confirmation-code";
 import { passwordResetTemplate } from "views/password-reset";
 import { isValidEmail } from "middleware/validators";
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { generateOneTimeCode, generateRandomOneTimeCode } from "services/internal/security/oneTimeCode";
+import {
+   generateOneTimeCode,
+   generateRandomOneTimeCode,
+} from "services/internal/security/oneTimeCode";
 
-export const processChallenge = async (challengeBody: ChallengeBody): Promise<ConfirmationResponse> => {
-   if (!challengeBody.email)
-      throw new GeneralError("Email cannot be blank");
+export const processChallenge = async (
+   challengeBody: ChallengeBody
+): Promise<ConfirmationResponse> => {
+   if (!challengeBody.email) throw new GeneralError("Email cannot be blank");
 
    const email = challengeBody.email.toLowerCase();
    const budgeterClient = await BudgeterMongoClient.getInstance();
@@ -23,12 +27,11 @@ export const processChallenge = async (challengeBody: ChallengeBody): Promise<Co
    const user = await usersService.find({ email });
    if (!user) {
       const validEmail = isValidEmail(email);
-      if (!validEmail)
-         throw new GeneralError("Email is not valid");
+      if (!validEmail) throw new GeneralError("Email is not valid");
       const randomKey = generateRandomOneTimeCode();
       return {
          expires: randomKey.expires,
-         key: randomKey.key
+         key: randomKey.key,
       };
    }
 
@@ -39,14 +42,13 @@ export const processChallenge = async (challengeBody: ChallengeBody): Promise<Co
    if (challengeBody.type === "emailVerification") {
       const html = emailConfirmationCodeTemplate(result.code.code.toString());
       await sendEmail(email, "Budgeter - your confirmation code", html);
-   }
-   else if (challengeBody.type === "passwordReset") {
+   } else if (challengeBody.type === "passwordReset") {
       const html = passwordResetTemplate(result.code.code.toString());
       await sendEmail(email, "Budgeter - reset your password", html);
    }
 
    return {
       expires: result.expires,
-      key: result.code.key
-   }
-}
+      key: result.code.key,
+   };
+};

@@ -1,4 +1,4 @@
-export const passwordResetTemplate = (code: string) => `
+export const passwordResetTemplate = (code: string): string => `
 <html>
 
    <body>
@@ -11,4 +11,4 @@ export const passwordResetTemplate = (code: string) => `
       <p>${code}</p>
    </body>
 
-</html>`
+</html>`;

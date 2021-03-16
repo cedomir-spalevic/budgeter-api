@@ -1,15 +1,14 @@
-import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAdminAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import { isBool, isStr, isValidJSONBody } from "middleware/validators";
 import { AdminUserRequest } from "models/requests";
 import { processCreateUser } from "./processor";
 
-const validator = async (event: APIGatewayProxyEvent): Promise<AdminUserRequest> => {
-   const adminId = await isAdminAuthorized(event);
+const validator = async (
+   event: APIGatewayProxyEvent
+): Promise<AdminUserRequest> => {
+   await isAdminAuthorized(event);
    const form = isValidJSONBody(event.body);
    const firstName = isStr(form, "firstName", true);
    const lastName = isStr(form, "lastName", true);
@@ -22,11 +21,13 @@ const validator = async (event: APIGatewayProxyEvent): Promise<AdminUserRequest>
       lastName,
       email,
       isAdmin,
-      password
-   }
-}
+      password,
+   };
+};
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (
+   event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
    try {
       const userBody = await validator(event);
       const response = await processCreateUser(userBody);
@@ -34,11 +35,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
          statusCode: 200,
          body: JSON.stringify(response),
          headers: {
-            "Access-Control-Allow-Origin": "*"
-         }
-      }
-   }
-   catch (error) {
+            "Access-Control-Allow-Origin": "*",
+         },
+      };
+   } catch (error) {
       return handleErrorResponse(error);
    }
-}
+};

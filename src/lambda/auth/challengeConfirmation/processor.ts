@@ -5,7 +5,9 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
 
-export const processRegisterConfirmation = async (registerConfirmationBody: RegisterConfirmationBody): Promise<AuthResponse> => {
+export const processRegisterConfirmation = async (
+   registerConfirmationBody: RegisterConfirmationBody
+): Promise<AuthResponse> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
@@ -13,8 +15,11 @@ export const processRegisterConfirmation = async (registerConfirmationBody: Regi
    const refreshTokenService = budgeterClient.getRefreshTokenCollection();
 
    // Look for an OTC with the given key and code
-   let oneTimeCode = await oneTimeCodeService.find({ key: registerConfirmationBody.key, code: registerConfirmationBody.code });
-   if (!oneTimeCode || (oneTimeCode.expiresOn < Date.now()))
+   let oneTimeCode = await oneTimeCodeService.find({
+      key: registerConfirmationBody.key,
+      code: registerConfirmationBody.code,
+   });
+   if (!oneTimeCode || oneTimeCode.expiresOn < Date.now())
       throw new UnauthorizedError();
 
    // Set the OTC has completed
@@ -30,7 +35,10 @@ export const processRegisterConfirmation = async (registerConfirmationBody: Regi
 
    // Generate Access Token and Refresh Token
    const refreshToken = generateRefreshToken(oneTimeCode.userId);
-   const accessToken = generateAccessToken(oneTimeCode.userId.toHexString(), refreshToken.token);
+   const accessToken = generateAccessToken(
+      oneTimeCode.userId.toHexString(),
+      refreshToken.token
+   );
 
    // Save Refresh Token in DB
    await refreshTokenService.create(refreshToken);
@@ -39,6 +47,6 @@ export const processRegisterConfirmation = async (registerConfirmationBody: Regi
    return {
       accessToken: accessToken.token,
       expires: accessToken.expires,
-      refreshToken: refreshToken.token
-   }
-}
+      refreshToken: refreshToken.token,
+   };
+};

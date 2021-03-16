@@ -1,16 +1,20 @@
-import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import { getPathParameter } from "middleware/url";
-import { isDate, isNumber, isOneOfStr, isStr, isValidJSONBody } from "middleware/validators";
+import {
+   isNumber,
+   isOneOfStr,
+   isStr,
+   isValidJSONBody,
+} from "middleware/validators";
 import { Income } from "models/data/income";
 import { Recurrence, recurrenceTypes } from "models/data/recurrence";
 import { processUpdateIncome } from "./processor";
 
-const validator = async (event: APIGatewayProxyEvent): Promise<Partial<Income>> => {
+const validator = async (
+   event: APIGatewayProxyEvent
+): Promise<Partial<Income>> => {
    const userId = await isAuthorized(event);
    const incomeId = getPathParameter("incomeId", event.pathParameters);
    const form = isValidJSONBody(event.body);
@@ -20,7 +24,11 @@ const validator = async (event: APIGatewayProxyEvent): Promise<Partial<Income>> 
    const initialDate = isNumber(form, "initialDate");
    const initialMonth = isNumber(form, "initialMonth");
    const initialYear = isNumber(form, "initialYear");
-   const recurrence = isOneOfStr(form, "recurrence", recurrenceTypes) as Recurrence;
+   const recurrence = isOneOfStr(
+      form,
+      "recurrence",
+      recurrenceTypes
+   ) as Recurrence;
 
    return {
       _id: incomeId,
@@ -31,11 +39,13 @@ const validator = async (event: APIGatewayProxyEvent): Promise<Partial<Income>> 
       initialDate,
       initialMonth,
       initialYear,
-      recurrence
-   }
-}
+      recurrence,
+   };
+};
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (
+   event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
    try {
       const incomeBody = await validator(event);
       const response = await processUpdateIncome(incomeBody);
@@ -43,11 +53,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
          statusCode: 200,
          body: JSON.stringify(response),
          headers: {
-            "Access-Control-Allow-Origin": "*"
-         }
-      }
-   }
-   catch (error) {
+            "Access-Control-Allow-Origin": "*",
+         },
+      };
+   } catch (error) {
       return handleErrorResponse(error);
    }
-}
+};

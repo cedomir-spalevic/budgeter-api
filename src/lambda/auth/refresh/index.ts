@@ -1,22 +1,21 @@
-import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { processRefresh } from "./processor";
 import { handleErrorResponse } from "middleware/errors";
 import { isStr, isValidJSONBody } from "middleware/validators";
 
 export interface RefreshBody {
-   refreshToken: string
+   refreshToken: string;
 }
 
 const validator = (event: APIGatewayProxyEvent): RefreshBody => {
    const form = isValidJSONBody(event.body);
    const refreshToken = isStr(form, "refreshToken", true);
-   return { refreshToken }
-}
+   return { refreshToken };
+};
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (
+   event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
    try {
       const refreshBody = validator(event);
       const response = await processRefresh(refreshBody);
@@ -24,11 +23,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
          statusCode: 200,
          body: JSON.stringify(response),
          headers: {
-            "Access-Control-Allow-Origin": "*"
-         }
-      }
-   }
-   catch (error) {
+            "Access-Control-Allow-Origin": "*",
+         },
+      };
+   } catch (error) {
       return handleErrorResponse(error);
    }
-}
+};

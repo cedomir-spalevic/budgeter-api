@@ -8,13 +8,13 @@ export const processCreateAPIKey = async (): Promise<PublicAPIKey> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const apiKeyService = budgeterClient.getAPIKeyCollection();
 
-   const key = `budgeter/${getRandomKey()}`
+   const key = `budgeter/${getRandomKey()}`;
    const apiKey = await apiKeyService.create({ key: generateHash(key) });
 
-   console.log(key)
+   console.log(key);
 
    return {
       id: apiKey._id.toHexString(),
-      key
+      key,
    };
-}
+};

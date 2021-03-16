@@ -3,9 +3,18 @@
    "version": "1.0.0",
    "description": "Budgeter API",
    "scripts": {
-      "dev": "serverless offline start",
-      "login": "serverless login",
-      "deploy": "serverless deploy"
+      "dev": "concurrently \"npm run dev:watch\" \"npm run dev:api\"",
+      "dev:watch": "npx webpack --watch --hot --mode development",
+      "dev:api": "sam local start-api -t cloudformation.yaml",
+      "build": "npm run build:format && npm run build:lint && npm run build:bundle",
+      "build:transpile": "tsc",
+      "build:format": "prettier --write .",
+      "build:lint": "eslint . --ext .ts",
+      "build:bundle": "webpack",
+      "deploy": "npm run deploy:validate && npm run deploy:package && npm run deploy:push",
+      "deploy:validate": "sam validate -t cloudformation.yaml",
+      "deploy:package": "sam package --template-file cloudformation.yaml --output-template-file sam.yaml --s3-bucket budgeter-api-deployment",
+      "deploy:push": "sam deploy --template-file sam.yaml --stack-name budgeter-api --capabilities CAPABILITY_IAM"
    },
    "repository": {
       "type": "git",
@@ -18,28 +27,29 @@
    },
    "homepage": "https://github.com/cedomir-spalevic/budgeter-api#readme",
    "dependencies": {
-      "@types/uuid": "^8.3.0",
       "aws-sdk": "^2.799.0",
-      "faunadb": "^3.0.1",
       "jsonwebtoken": "^8.5.1",
       "mongodb": "^3.6.3",
-      "serverless": "2.1",
       "uuid": "^8.3.0"
    },
    "devDependencies": {
-      "@serverless/safeguards-plugin": "^1.0.1",
       "@types/aws-lambda": "^8.10.61",
       "@types/jsonwebtoken": "^8.5.0",
       "@types/mongodb": "^3.6.0",
       "@types/node": "^14.14.10",
+      "@types/uuid": "^8.3.0",
+      "@typescript-eslint/eslint-plugin": "^4.17.0",
+      "@typescript-eslint/parser": "^4.17.0",
+      "concurrently": "^6.0.0",
+      "eslint": "^7.21.0",
+      "eslint-loader": "^4.0.2",
       "nodemon": "^2.0.4",
-      "serverless-bundle": "^4.2.2",
-      "serverless-dotenv-plugin": "^3.0.0",
-      "serverless-offline": "6.8.0",
-      "ts-clean": "^1.0.3",
+      "prettier": "^2.2.1",
+      "ts-loader": "^8.0.17",
       "ts-node": "^9.0.0",
-      "tsconfig-paths": "^3.9.0",
-      "tscpaths": "0.0.9",
-      "typescript": "^4.1.3"
+      "tsconfig-paths-webpack-plugin": "^3.3.0",
+      "typescript": "^4.2.3",
+      "webpack": "^5.24.4",
+      "webpack-cli": "^4.5.0"
    }
 }

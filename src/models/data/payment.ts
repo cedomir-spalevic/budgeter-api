@@ -15,7 +15,7 @@ export interface Payment extends IEntity {
 
 export interface PublicPayment {
    id: string;
-   title: string
+   title: string;
    amount: number;
    initialDay: number; // Day of week
    initialDate: number; // Day of month

@@ -1,7 +1,4 @@
-import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import { getPathParameter } from "middleware/url";
@@ -13,13 +10,17 @@ export interface DeletePaymentBody {
    paymentId: ObjectId;
 }
 
-const validator = async (event: APIGatewayProxyEvent): Promise<DeletePaymentBody> => {
+const validator = async (
+   event: APIGatewayProxyEvent
+): Promise<DeletePaymentBody> => {
    const userId = await isAuthorized(event);
    const paymentId = getPathParameter("paymentId", event.pathParameters);
-   return { userId, paymentId }
-}
+   return { userId, paymentId };
+};
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (
+   event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
    try {
       const deletePaymentBody = await validator(event);
       await processDeletePayment(deletePaymentBody);
@@ -27,11 +28,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
          statusCode: 200,
          body: "",
          headers: {
-            "Access-Control-Allow-Origin": "*"
-         }
-      }
-   }
-   catch (error) {
+            "Access-Control-Allow-Origin": "*",
+         },
+      };
+   } catch (error) {
       return handleErrorResponse(error);
    }
-}
+};

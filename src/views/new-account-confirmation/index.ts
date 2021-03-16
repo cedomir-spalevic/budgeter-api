@@ -1,4 +1,4 @@
-export const newAccountConfirmationTemplate = (code: string) => `
+export const newAccountConfirmationTemplate = (code: string): string => `
 <html>
 
    <body>
@@ -11,4 +11,4 @@ export const newAccountConfirmationTemplate = (code: string) => `
       <p>${code}</p>
    </body>
 
-</html>`
+</html>`;

@@ -5,7 +5,10 @@ import { GetResponse } from "models/responses";
 import { FilterQuery, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
-export const processGetMany = async (userId: ObjectId, queryStringParameters: GetListQueryStringParameters): Promise<GetResponse<PublicPayment>> => {
+export const processGetMany = async (
+   userId: ObjectId,
+   queryStringParameters: GetListQueryStringParameters
+): Promise<GetResponse<PublicPayment>> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
@@ -15,13 +18,13 @@ export const processGetMany = async (userId: ObjectId, queryStringParameters: Ge
 
    // Get payments
    const query: FilterQuery<Payment> = {
-      userId
+      userId,
    };
    if (queryStringParameters.search) {
       query.title = {
-         "$regex": queryStringParameters.search,
-         "$options": "$I"
-      }
+         $regex: queryStringParameters.search,
+         $options: "$I",
+      };
    }
    const limit = queryStringParameters.limit;
    const skip = queryStringParameters.skip;
@@ -29,7 +32,7 @@ export const processGetMany = async (userId: ObjectId, queryStringParameters: Ge
 
    return {
       count,
-      values: values.map(x => ({
+      values: values.map((x) => ({
          id: x._id.toHexString(),
          title: x.title,
          amount: x.amount,
@@ -39,19 +42,21 @@ export const processGetMany = async (userId: ObjectId, queryStringParameters: Ge
          initialYear: x.initialYear,
          recurrence: x.recurrence,
          createdOn: x.createdOn,
-         modifiedOn: x.modifiedOn
-      }))
-   }
-}
+         modifiedOn: x.modifiedOn,
+      })),
+   };
+};
 
-export const processGetSingle = async (userId: ObjectId, paymentId: ObjectId): Promise<PublicPayment> => {
+export const processGetSingle = async (
+   userId: ObjectId,
+   paymentId: ObjectId
+): Promise<PublicPayment> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
    const payment = await paymentsService.find({ userId, _id: paymentId });
-   if (!payment)
-      throw new NotFoundError("No Payment found with the given Id");
+   if (!payment) throw new NotFoundError("No Payment found with the given Id");
 
    return {
       id: payment._id.toHexString(),
@@ -63,6 +68,6 @@ export const processGetSingle = async (userId: ObjectId, paymentId: ObjectId): P
       initialYear: payment.initialYear,
       recurrence: payment.recurrence,
       createdOn: payment.createdOn,
-      modifiedOn: payment.modifiedOn
-   }
-}
+      modifiedOn: payment.modifiedOn,
+   };
+};
