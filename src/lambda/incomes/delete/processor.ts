@@ -5,11 +5,9 @@ import { NotFoundError } from "models/errors";
 export const processDeleteIncome = async (
    deleteIncomeBody: DeleteIncomeBody
 ): Promise<void> => {
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
 
-   // Make sure Income exists
    const income = await incomesService.find({
       userId: deleteIncomeBody.userId,
       _id: deleteIncomeBody.incomeId,

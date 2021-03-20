@@ -5,18 +5,16 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 export const processUpdateIncome = async (
    updatedIncome: Partial<Income>
 ): Promise<PublicIncome> => {
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
 
-   // Make sure income exists
    let income = await incomesService.find({
       userId: updatedIncome.userId,
       _id: updatedIncome._id,
    });
    if (!income) throw new NotFoundError("No Income found with the given Id");
 
-   // Check differences
+   // We only want to update the income with the differences. Not replace
    if (
       updatedIncome.title !== undefined &&
       income.title !== updatedIncome.title
@@ -53,7 +51,6 @@ export const processUpdateIncome = async (
    )
       income.recurrence = updatedIncome.recurrence;
 
-   // Update Income
    income = await incomesService.update(income);
 
    return {

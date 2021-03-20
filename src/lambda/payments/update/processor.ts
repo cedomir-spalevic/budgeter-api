@@ -9,14 +9,12 @@ export const processUpdatePayment = async (
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
-   // Make sure Payment exists
    let payment = await paymentsService.find({
       userId: updatedPayment.userId,
       _id: updatedPayment._id,
    });
    if (!payment) throw new NotFoundError("No Payment found with the given Id");
 
-   // Check differences
    if (
       updatedPayment.title !== undefined &&
       payment.title !== updatedPayment.title
@@ -53,7 +51,6 @@ export const processUpdatePayment = async (
    )
       payment.recurrence = updatedPayment.recurrence;
 
-   // Update Payment
    payment = await paymentsService.update(payment);
 
    return {

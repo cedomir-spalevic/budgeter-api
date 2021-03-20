@@ -5,15 +5,12 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 export const processUpdateUser = async (
    updatedUser: Partial<User>
 ): Promise<PublicUser> => {
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
-   // Make sure user exists
    let user = await usersService.find({ _id: updatedUser._id });
    if (!user) throw new NotFoundError("No User found");
 
-   // Check differences
    if (
       updatedUser.firstName !== undefined &&
       user.firstName !== updatedUser.firstName
@@ -39,7 +36,6 @@ export const processUpdateUser = async (
       user.notificationPreferences.paymentNotifications =
          updatedUser.notificationPreferences.paymentNotifications;
 
-   // Update User
    user = await usersService.update(user);
 
    return {

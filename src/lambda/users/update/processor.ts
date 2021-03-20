@@ -7,16 +7,13 @@ import { AdminUpdateUserRequestBody } from ".";
 export const processUpdateUser = async (
    request: Partial<AdminUpdateUserRequestBody>
 ): Promise<AdminPublicUser> => {
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
 
-   // Make sure user exists
    let user = await usersService.find({ _id: request.userId });
    if (!user) throw new NotFoundError("No User found with the given Id");
 
-   // Check if the password should get updated
    if (request.userRequest.password !== undefined) {
       if (!request.userRequest.password)
          throw new GeneralError("Password cannot be blank");
@@ -27,7 +24,6 @@ export const processUpdateUser = async (
       await usersAuthService.update(userAuth);
    }
 
-   // Check differences
    if (
       request.userRequest.firstName !== undefined &&
       user.firstName !== request.userRequest.firstName
@@ -44,7 +40,6 @@ export const processUpdateUser = async (
    )
       user.isAdmin = request.userRequest.isAdmin;
 
-   // Update User
    user = await usersService.update(user);
 
    return {

@@ -9,14 +9,11 @@ export const processGetMany = async (
    userId: ObjectId,
    queryStringParameters: GetListQueryStringParameters
 ): Promise<GetResponse<PublicPayment>> => {
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
-   // Count number of payments user has
    const count = await paymentsService.count({ userId });
 
-   // Get payments
    const query: FilterQuery<Payment> = {
       userId,
    };
@@ -51,7 +48,6 @@ export const processGetSingle = async (
    userId: ObjectId,
    paymentId: ObjectId
 ): Promise<PublicPayment> => {
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 

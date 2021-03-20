@@ -38,7 +38,9 @@ export const processChallenge = async (
    const result = generateOneTimeCode(user._id, challengeBody.type);
    await oneTimeCodeService.create(result.code);
 
-   // Send different emails depending on type
+   // Type type field (ideally will entirely be controlled by the mobile app)
+   // should tell us what type of email we will be sending.
+   // All the templates are stored in src/views folder
    if (challengeBody.type === "emailVerification") {
       const html = emailConfirmationCodeTemplate(result.code.code.toString());
       await sendEmail(email, "Budgeter - your confirmation code", html);

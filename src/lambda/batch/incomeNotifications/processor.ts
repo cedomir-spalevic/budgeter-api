@@ -1,22 +1,64 @@
+import { User } from "models/data/user";
 import { publishToEndpoint } from "services/external/aws/sns";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
-export const processIncomeNotifications = async (): Promise<void> => {
-   // Get Mongo Client
+const today = new Date();
+const day = today.getDay();
+const date = today.getDate();
+const month = today.getMonth();
+const year = today.getFullYear();
+const numberFormat = new Intl.NumberFormat("en-us", {
+   style: "currency",
+   currency: "USD",
+});
+
+const notifyUser = async (user: User): Promise<void> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
-   const usersService = budgeterClient.getUsersCollection();
    const incomesService = budgeterClient.getIncomesCollection();
-   const today = new Date();
-   const day = today.getDay();
-   const date = today.getDate();
-   const month = today.getMonth();
-   const year = today.getFullYear();
-   const numberFormat = new Intl.NumberFormat("en-us", {
-      style: "currency",
-      currency: "USD",
+
+   const incomes = await incomesService.findMany({
+      $and: [
+         { userId: user._id },
+         {
+            $or: [
+               {
+                  initialMonth: month,
+                  initialYear: year,
+                  initialDate: date,
+                  recurrence: "oneTime",
+               },
+               { recurrence: "daily" },
+               { initialDay: day, recurrence: "weekly" },
+               { initialDay: day, recurrence: "biweekly" },
+               { initialDate: date, recurrence: "monthly" },
+               {
+                  initialMonth: month,
+                  initialDate: date,
+                  recurrence: "yearly",
+               },
+            ],
+         },
+      ],
    });
 
-   // Get all users with registered device and income notifications turned on
+   await Promise.all(
+      incomes.map((x) =>
+         publishToEndpoint(
+            user.device.platformApplicationEndpointArn,
+            `${x.title} expected today for ${numberFormat.format(
+               x.amount
+            )}`
+         )
+      )
+   );
+}
+
+export const processIncomeNotifications = async (): Promise<void> => {
+   const budgeterClient = await BudgeterMongoClient.getInstance();
+   const usersService = budgeterClient.getUsersCollection();
+
+   // We only want to send any notifications to users
+   // that have a registered device and wih the income notifications preferences turned on
    const usersToNotify = await usersService.findMany({
       $and: [
          { device: { $exists: true } },
@@ -25,44 +67,7 @@ export const processIncomeNotifications = async (): Promise<void> => {
    });
 
    // Determine their incomes for today and send notification
-   await Promise.all(
-      usersToNotify.map(async (user) => {
-         // Get user inccomes
-         const incomes = await incomesService.findMany({
-            $and: [
-               { userId: user._id },
-               {
-                  $or: [
-                     {
-                        initialMonth: month,
-                        initialYear: year,
-                        initialDate: date,
-                        recurrence: "oneTime",
-                     },
-                     { recurrence: "daily" },
-                     { initialDay: day, recurrence: "weekly" },
-                     { initialDay: day, recurrence: "biweekly" },
-                     { initialDate: date, recurrence: "monthly" },
-                     {
-                        initialMonth: month,
-                        initialDate: date,
-                        recurrence: "yearly",
-                     },
-                  ],
-               },
-            ],
-         });
-
-         await Promise.all(
-            incomes.map((x) =>
-               publishToEndpoint(
-                  user.device.platformApplicationEndpointArn,
-                  `${x.title} expected today for ${numberFormat.format(
-                     x.amount
-                  )}`
-               )
-            )
-         );
-      })
-   );
+   // Now we want to go through each user and determine which incomes should are expected for today
+   // and send a push notification to them
+   await Promise.all(usersToNotify.map(async (user) => await notifyUser(user)));
 };

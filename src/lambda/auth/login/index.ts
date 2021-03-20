@@ -23,10 +23,7 @@ export const handler = async (
       const response = await processSignIn(loginBody);
       return {
          statusCode: response.status,
-         body: JSON.stringify(response.response),
-         headers: {
-            "Access-Control-Allow-Origin": "*",
-         },
+         body: JSON.stringify(response.response)
       };
    } catch (error) {
       return handleErrorResponse(error);

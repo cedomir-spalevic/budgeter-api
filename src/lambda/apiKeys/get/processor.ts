@@ -5,7 +5,6 @@ import { GetResponse } from "models/responses";
 export const processGetAPIKeys = async (): Promise<
    GetResponse<PublicAPIKey>
 > => {
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const apiKeyService = budgeterClient.getAPIKeyCollection();
 

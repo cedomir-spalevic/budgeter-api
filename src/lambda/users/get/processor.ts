@@ -43,7 +43,6 @@ export const processGetSingle = async (
    adminId: ObjectId,
    userId: ObjectId
 ): Promise<AdminPublicUser> => {
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 

@@ -17,11 +17,9 @@ export const processCreateUser = async (
    const usersService = budgeterClient.getUsersCollection();
    const email = userRequest.email.toLowerCase();
 
-   // Check if a user already exists with this email
    const existingUser = await usersService.find({ email });
    if (existingUser) throw new AlreadyExistsError();
 
-   // Create a new user
    const newUser: Partial<User> = {
       firstName: userRequest.firstName,
       lastName: userRequest.lastName,
@@ -35,7 +33,6 @@ export const processCreateUser = async (
    };
    const user = await usersService.create(newUser);
 
-   // Create user auth
    try {
       const userAuth: Partial<UserAuth> = {
          userId: user._id,

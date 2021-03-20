@@ -4,11 +4,9 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 export const processCreatePayment = async (
    payment: Partial<Payment>
 ): Promise<PublicPayment> => {
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
-   // Create income
    payment = await paymentsService.create(payment);
 
    return {

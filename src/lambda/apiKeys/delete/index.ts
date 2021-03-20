@@ -25,10 +25,7 @@ export const handler = async (
       await processDeleteAPIKey(deleteApiKeyBody);
       return {
          statusCode: 200,
-         body: "",
-         headers: {
-            "Access-Control-Allow-Origin": "*",
-         },
+         body: ""
       };
    } catch (error) {
       return handleErrorResponse(error);

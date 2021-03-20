@@ -34,9 +34,6 @@ export const handler = async (
       return {
          statusCode: 200,
          body: JSON.stringify(response),
-         headers: {
-            "Access-Control-Allow-Origin": "*",
-         },
       };
    } catch (error) {
       return handleErrorResponse(error);

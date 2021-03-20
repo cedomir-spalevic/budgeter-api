@@ -14,7 +14,6 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
    const year = request.queryStrings.year;
    const userId = request.userId;
 
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
    const response = await incomesService.findMany({
@@ -87,7 +86,6 @@ const getPayments = async (
    const year = request.queryStrings.year;
    const userId = request.userId;
 
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
    const response = await paymentsService.findMany({

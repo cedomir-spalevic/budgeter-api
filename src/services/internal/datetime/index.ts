@@ -49,7 +49,7 @@ export const getWeeklyOccurrenceLength = (
 };
 
 /**
- *
+ * Get number of biweekly occurrences of a day of week in a certain month
  * @param dayOfWeek
  * @param month
  * @param year

@@ -32,10 +32,7 @@ export const handler = async (
       const response = await getBudget(getBudgetsBody);
       return {
          statusCode: 200,
-         body: JSON.stringify(response),
-         headers: {
-            "Access-Control-Allow-Origin": "*",
-         },
+         body: JSON.stringify(response)
       };
    } catch (error) {
       return handleErrorResponse(error);

@@ -4,7 +4,7 @@
    "description": "Budgeter API",
    "scripts": {
       "dev": "concurrently \"npm run dev:watch\" \"npm run dev:api\"",
-      "dev:watch": "npx webpack --watch --hot --mode development",
+      "dev:watch": "webpack --watch --hot --mode development",
       "dev:api": "sam local start-api -t cloudformation.yaml",
       "build": "npm run build:format && npm run build:lint && npm run build:bundle",
       "build:transpile": "tsc",
