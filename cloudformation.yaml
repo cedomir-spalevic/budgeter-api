@@ -17,7 +17,7 @@ Resources:
    apiKeysCreate:
       Type: AWS::Serverless::Function
       Properties:
-         CodeUri: dist/apiKeys/create/index.js
+         CodeUri: dist/apiKeysCreate/index.js
          Handler: index.handler
          Events:
             apiKeysCreate:
@@ -28,7 +28,7 @@ Resources:
    apiKeysDelete:
       Type: AWS::Serverless::Function
       Properties:
-         CodeUri: dist/apiKeys/delete/index.js
+         CodeUri: dist/apiKeysDelete/index.js
          Handler: index.handler
          Events:
             apiKeysDelete:
