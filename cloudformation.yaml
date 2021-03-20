@@ -308,11 +308,6 @@ Resources:
       Type: AWS::Serverless::StateMachine
       Properties:
          Role: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-clearTokensJob
-         Logging:
-            Destinations:
-               - CloudWatchLogsLogGroup:
-                    LogGroupArn: arn:aws:logs:us-east-1:075433893437:log-group:/aws/vendedlogs/states/budgeter-clear-tokens-Logs:*
-            Level: ALL
          Events:
             dailyJob:
                Type: Schedule
@@ -335,11 +330,6 @@ Resources:
       Type: AWS::Serverless::StateMachine
       Properties:
          Role: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-incomeNotificationsJob
-         Logging:
-            Destinations:
-               - CloudWatchLogsLogGroup:
-                    LogGroupArn: arn:aws:logs:us-east-1:075433893437:log-group:/aws/vendedlogs/states/budgeter-income-notifications-Logs:*
-            Level: ALL
          Events:
             dailyJob:
                Type: Schedule
@@ -362,11 +352,6 @@ Resources:
       Type: AWS::Serverless::StateMachine
       Properties:
          Role: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-paymentNotificationsJob
-         Logging:
-            Destinations:
-               - CloudWatchLogsLogGroup:
-                    LogGroupArn: arn:aws:logs:us-east-1:075433893437:log-group:/aws/vendedlogs/states/budgeter-payment-notifications-Logs:*
-            Level: ALL
          Events:
             dailyJob:
                Type: Schedule
