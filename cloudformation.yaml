@@ -307,7 +307,6 @@ Resources:
    clearTokensJob:
       Type: AWS::Serverless::StateMachine
       Properties:
-         Role: arn:aws:iam::075433893437:role/budgeter-step-functions-role
          Logging:
             Destinations:
                - CloudWatchLogsLogGroup:
@@ -334,7 +333,6 @@ Resources:
    incomeNotificationsJob:
       Type: AWS::Serverless::StateMachine
       Properties:
-         Role: arn:aws:iam::075433893437:role/budgeter-step-functions-role
          Logging:
             Destinations:
                - CloudWatchLogsLogGroup:
@@ -361,7 +359,6 @@ Resources:
    paymentNotificationsJob:
       Type: AWS::Serverless::StateMachine
       Properties:
-         Role: arn:aws:iam::075433893437:role/budgeter-step-functions-role
          Logging:
             Destinations:
                - CloudWatchLogsLogGroup:
