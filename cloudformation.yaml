@@ -307,6 +307,8 @@ Resources:
    clearTokensJob:
       Type: AWS::Serverless::StateMachine
       Properties:
+         Policies:
+            - arn:aws:iam::075433893437:policy/BudgeterLambdaInvocation
          Logging:
             Destinations:
                - CloudWatchLogsLogGroup:
@@ -333,6 +335,8 @@ Resources:
    incomeNotificationsJob:
       Type: AWS::Serverless::StateMachine
       Properties:
+         Policies:
+            - arn:aws:iam::075433893437:policy/BudgeterLambdaInvocation
          Logging:
             Destinations:
                - CloudWatchLogsLogGroup:
@@ -359,6 +363,8 @@ Resources:
    paymentNotificationsJob:
       Type: AWS::Serverless::StateMachine
       Properties:
+         Policies:
+            - arn:aws:iam::075433893437:policy/BudgeterLambdaInvocation
          Logging:
             Destinations:
                - CloudWatchLogsLogGroup:
