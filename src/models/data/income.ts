@@ -28,5 +28,6 @@ export interface PublicIncome {
 
 export interface BudgetIncome extends PublicIncome {
    dueToday: boolean;
+   numberOfOccurrences: number;
    totalAmount: number;
 }

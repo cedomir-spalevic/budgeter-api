@@ -71,3 +71,15 @@ export const getBiweeklyOccurrenceLength = (
    }
    return counter;
 };
+
+/**
+ * Get the number of days in a month, given the month and year
+ * @param month 
+ * @param year 
+ */
+export const getNumberOfDaysInMonth = (month: number, year: number) => {
+   const monthToUse = new Date(year, month);
+   monthToUse.setMonth(monthToUse.getMonth() + 1);
+   monthToUse.setDate(0);
+   return monthToUse.getDate();
+}

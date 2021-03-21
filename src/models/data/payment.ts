@@ -28,5 +28,6 @@ export interface PublicPayment {
 
 export interface BudgetPayment extends PublicPayment {
    dueToday: boolean;
+   numberOfOccurrences: number;
    totalAmount: number;
 }

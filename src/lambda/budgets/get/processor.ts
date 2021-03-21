@@ -5,6 +5,7 @@ import { BudgetIncome } from "models/data/income";
 import {
    getWeeklyOccurrenceLength,
    getBiweeklyOccurrenceLength,
+   getNumberOfDaysInMonth,
 } from "services/internal/datetime";
 import { BudgetPayment } from "models/data/payment";
 
@@ -38,7 +39,7 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
 
    const budgetIncomes: BudgetIncome[] = [];
    response.forEach((income) => {
-      let dueToday: boolean, totalAmount: number;
+      let dueToday: boolean, totalAmount: number, numberOfOccurrences: number;
       if (
          income.recurrence === "oneTime" ||
          income.recurrence === "monthly" ||
@@ -46,19 +47,19 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
       ) {
          dueToday = income.initialDate === date;
          totalAmount = income.amount;
+         numberOfOccurrences = 1;
       } else if (income.recurrence === "daily") {
          dueToday = true;
          totalAmount = income.amount * new Date(year, month, 0).getDate();
+         numberOfOccurrences = getNumberOfDaysInMonth(month, year);
       } else if (income.recurrence === "weekly") {
+         numberOfOccurrences = getWeeklyOccurrenceLength(income.initialDay, month, year);
          dueToday = income.initialDay === new Date(year, month, date).getDay();
-         totalAmount =
-            income.amount *
-            getWeeklyOccurrenceLength(income.initialDay, month, year);
+         totalAmount = income.amount * numberOfOccurrences;
       } else {
+         numberOfOccurrences = getBiweeklyOccurrenceLength(income.initialDay, month, year);
          dueToday = income.initialDay === new Date(year, month, date).getDay();
-         totalAmount =
-            income.amount *
-            getBiweeklyOccurrenceLength(income.initialDay, month, year);
+         totalAmount = income.amount * numberOfOccurrences;
       }
       budgetIncomes.push({
          id: income._id.toHexString(),
@@ -73,6 +74,7 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
          modifiedOn: income.modifiedOn,
          dueToday: dueToday,
          totalAmount: totalAmount,
+         numberOfOccurrences: numberOfOccurrences
       });
    });
    return budgetIncomes;
@@ -110,7 +112,7 @@ const getPayments = async (
 
    const budgetPayments: BudgetPayment[] = [];
    response.forEach((payment) => {
-      let dueToday: boolean, totalAmount: number;
+      let dueToday: boolean, totalAmount: number, numberOfOccurrences: number;
       if (
          payment.recurrence === "oneTime" ||
          payment.recurrence === "monthly" ||
@@ -118,19 +120,19 @@ const getPayments = async (
       ) {
          dueToday = payment.initialDate === date;
          totalAmount = payment.amount;
+         numberOfOccurrences = 1;
       } else if (payment.recurrence === "daily") {
          dueToday = true;
          totalAmount = payment.amount * new Date(year, month, 0).getDate();
+         numberOfOccurrences = getNumberOfDaysInMonth(month, year);
       } else if (payment.recurrence === "weekly") {
+         numberOfOccurrences = getWeeklyOccurrenceLength(payment.initialDay, month, year);
          dueToday = payment.initialDay === new Date(year, month, date).getDay();
-         totalAmount =
-            payment.amount *
-            getWeeklyOccurrenceLength(payment.initialDay, month, year);
+         totalAmount = payment.amount * numberOfOccurrences;
       } else {
+         numberOfOccurrences = getBiweeklyOccurrenceLength(payment.initialDay, month, year);
          dueToday = payment.initialDay === new Date(year, month, date).getDay();
-         totalAmount =
-            payment.amount *
-            getBiweeklyOccurrenceLength(payment.initialDay, month, year);
+         totalAmount = payment.amount * numberOfOccurrences;
       }
       budgetPayments.push({
          id: payment._id.toHexString(),
@@ -145,6 +147,7 @@ const getPayments = async (
          modifiedOn: payment.modifiedOn,
          dueToday: dueToday,
          totalAmount: totalAmount,
+         numberOfOccurrences: numberOfOccurrences
       });
    });
    return budgetPayments;
