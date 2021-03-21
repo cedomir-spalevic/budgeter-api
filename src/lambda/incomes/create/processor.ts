@@ -19,6 +19,6 @@ export const processCreateIncome = async (
       initialYear: income.initialYear,
       recurrence: income.recurrence,
       createdOn: income.createdOn,
-      modifiedOn: income.modifiedOn,
+      modifiedOn: income.modifiedOn
    };
 };

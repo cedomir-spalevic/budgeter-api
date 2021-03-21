@@ -29,8 +29,8 @@ const validator = async (
          firstName,
          lastName,
          isAdmin,
-         password,
-      },
+         password
+      }
    };
 };
 
@@ -42,7 +42,7 @@ export const handler = async (
       const response = await processUpdateUser(userRequest);
       return {
          statusCode: 200,
-         body: JSON.stringify(response),
+         body: JSON.stringify(response)
       };
    } catch (error) {
       return handleErrorResponse(error);

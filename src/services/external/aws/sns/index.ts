@@ -1,7 +1,7 @@
 import AWS from "aws-sdk";
 import {
    CreatePlatformEndpointInput,
-   MessageAttributeValue,
+   MessageAttributeValue
 } from "aws-sdk/clients/sns";
 
 const sns = new AWS.SNS();
@@ -11,7 +11,7 @@ export const subscribeToTopic = (endpoint: string): Promise<string> => {
       const params: AWS.SNS.SubscribeInput = {
          TopicArn: process.env.AWS_SNS_TOPIC,
          Protocol: "application",
-         Endpoint: endpoint,
+         Endpoint: endpoint
       };
       sns.subscribe(
          params,
@@ -28,7 +28,7 @@ export const unsubscribeFromTopic = (
 ): Promise<void> => {
    return new Promise((resolve, reject) => {
       const params: AWS.SNS.UnsubscribeInput = {
-         SubscriptionArn: subscriptionArn,
+         SubscriptionArn: subscriptionArn
       };
       sns.unsubscribe(params, (error: AWS.AWSError) => {
          if (error) reject(error);
@@ -40,7 +40,7 @@ export const unsubscribeFromTopic = (
 export const deletePlatformEndpoint = (endpointArn: string): Promise<void> => {
    return new Promise((resolve, reject) => {
       const params: AWS.SNS.DeleteEndpointInput = {
-         EndpointArn: endpointArn,
+         EndpointArn: endpointArn
       };
       sns.deleteEndpoint(params, (error: AWS.AWSError) => {
          if (error) reject(error);
@@ -60,7 +60,7 @@ export const createPlatformEndpoint = (
             : process.env.AWS_PLATFORM_APPLICATION_ANDROID;
       const params: CreatePlatformEndpointInput = {
          PlatformApplicationArn: platformApp,
-         Token: token,
+         Token: token
       };
       sns.createPlatformEndpoint(
          params,
@@ -79,7 +79,7 @@ export const publishToEndpoint = (
    return new Promise((resolve, reject) => {
       const msgAttr: MessageAttributeValue = {
          DataType: "Number",
-         StringValue: "90",
+         StringValue: "90"
       };
       const params: AWS.SNS.PublishInput = {
          TargetArn: endpointArn,
@@ -87,8 +87,8 @@ export const publishToEndpoint = (
          MessageAttributes: {
             "AWS.SNS.MOBILE.APNS.TTL": msgAttr,
             "AWS.SNS.MOBILE.APNS_SANDBOX.TTL": msgAttr,
-            "AWS.SNS.MOBILE.FCM.TTL": msgAttr,
-         },
+            "AWS.SNS.MOBILE.FCM.TTL": msgAttr
+         }
       };
       sns.publish(
          params,
@@ -106,7 +106,7 @@ export const publishToTopic = (
    return new Promise((resolve, reject) => {
       const msgAttr: MessageAttributeValue = {
          DataType: "Number",
-         StringValue: "90",
+         StringValue: "90"
       };
       const params: AWS.SNS.PublishInput = {
          TopicArn: process.env.AWS_SNS_TOPIC,
@@ -114,8 +114,8 @@ export const publishToTopic = (
          MessageAttributes: {
             "AWS.SNS.MOBILE.APNS.TTL": msgAttr,
             "AWS.SNS.MOBILE.APNS_SANDBOX.TTL": msgAttr,
-            "AWS.SNS.MOBILE.FCM.TTL": msgAttr,
-         },
+            "AWS.SNS.MOBILE.FCM.TTL": msgAttr
+         }
       };
       sns.publish(
          params,

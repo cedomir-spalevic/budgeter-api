@@ -26,7 +26,7 @@ export const handler = async (
       await processDeletePayment(deletePaymentBody);
       return {
          statusCode: 200,
-         body: "",
+         body: ""
       };
    } catch (error) {
       return handleErrorResponse(error);

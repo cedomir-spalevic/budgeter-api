@@ -28,15 +28,15 @@ export const processCreateUser = async (
       isEmailVerified: false,
       notificationPreferences: {
          incomeNotifications: false,
-         paymentNotifications: false,
-      },
+         paymentNotifications: false
+      }
    };
    const user = await usersService.create(newUser);
 
    try {
       const userAuth: Partial<UserAuth> = {
          userId: user._id,
-         hash: generateHash(userRequest.password),
+         hash: generateHash(userRequest.password)
       };
       await usersAuthService.create(userAuth);
    } catch (error) {
@@ -53,6 +53,6 @@ export const processCreateUser = async (
       email: user.email,
       emailVerified: user.isEmailVerified,
       createdOn: user.createdOn,
-      modifiedOn: user.modifiedOn,
+      modifiedOn: user.modifiedOn
    };
 };

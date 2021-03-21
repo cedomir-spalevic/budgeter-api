@@ -12,5 +12,5 @@ export const recurrenceTypes: string[] = [
    "weekly",
    "biweekly",
    "monthly",
-   "yearly",
+   "yearly"
 ];

@@ -24,15 +24,15 @@ const validator = async (
       );
       return {
          userId,
-         queryStrings,
+         queryStrings
       };
    } else {
       const paymentId = getPathParameter("paymentId", event.pathParameters);
       return {
          userId,
          pathParameters: {
-            paymentId,
-         },
+            paymentId
+         }
       };
    }
 };
@@ -55,7 +55,7 @@ export const handler = async (
          );
       return {
          statusCode: 200,
-         body: JSON.stringify(response),
+         body: JSON.stringify(response)
       };
    } catch (error) {
       return handleErrorResponse(error);

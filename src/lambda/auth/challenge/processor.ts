@@ -8,7 +8,7 @@ import { isValidEmail } from "middleware/validators";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import {
    generateOneTimeCode,
-   generateRandomOneTimeCode,
+   generateRandomOneTimeCode
 } from "services/internal/security/oneTimeCode";
 
 export const processChallenge = async (
@@ -31,7 +31,7 @@ export const processChallenge = async (
       const randomKey = generateRandomOneTimeCode();
       return {
          expires: randomKey.expires,
-         key: randomKey.key,
+         key: randomKey.key
       };
    }
 
@@ -51,6 +51,6 @@ export const processChallenge = async (
 
    return {
       expires: result.expires,
-      key: result.code.key,
+      key: result.code.key
    };
 };

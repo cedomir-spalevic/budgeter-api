@@ -15,15 +15,15 @@ export const sendEmail = async (
          Message: {
             Subject: {
                Data: subject,
-               Charset: "utf-8",
+               Charset: "utf-8"
             },
             Body: {
                Html: {
                   Data: html,
-                  Charset: "utf-8",
-               },
-            },
-         },
+                  Charset: "utf-8"
+               }
+            }
+         }
       })
       .promise();
 };

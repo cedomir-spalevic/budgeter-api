@@ -10,7 +10,7 @@ export const processDeleteIncome = async (
 
    const income = await incomesService.find({
       userId: deleteIncomeBody.userId,
-      _id: deleteIncomeBody.incomeId,
+      _id: deleteIncomeBody.incomeId
    });
    if (!income) throw new NotFoundError("No Income found with the given Id");
 

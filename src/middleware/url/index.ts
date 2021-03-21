@@ -1,7 +1,7 @@
 import { GeneralError } from "models/errors";
 import {
    GetBudgetQueryStringParameters,
-   GetListQueryStringParameters,
+   GetListQueryStringParameters
 } from "models/requests";
 import { ObjectId } from "mongodb";
 

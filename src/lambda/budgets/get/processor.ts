@@ -5,7 +5,7 @@ import { BudgetIncome } from "models/data/income";
 import {
    getWeeklyOccurrenceLength,
    getBiweeklyOccurrenceLength,
-   getNumberOfDaysInMonth,
+   getNumberOfDaysInMonth
 } from "services/internal/datetime";
 import { BudgetPayment } from "models/data/payment";
 
@@ -25,16 +25,16 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
                {
                   initialMonth: month,
                   initialYear: year,
-                  recurrence: "oneTime",
+                  recurrence: "oneTime"
                },
                { recurrence: "daily" },
                { recurrence: "weekly" },
                { recurrence: "biweekly" },
                { recurrence: "monthly" },
-               { initialMonth: month, recurrence: "yearly" },
-            ],
-         },
-      ],
+               { initialMonth: month, recurrence: "yearly" }
+            ]
+         }
+      ]
    });
 
    const budgetIncomes: BudgetIncome[] = [];
@@ -53,11 +53,19 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
          totalAmount = income.amount * new Date(year, month, 0).getDate();
          numberOfOccurrences = getNumberOfDaysInMonth(month, year);
       } else if (income.recurrence === "weekly") {
-         numberOfOccurrences = getWeeklyOccurrenceLength(income.initialDay, month, year);
+         numberOfOccurrences = getWeeklyOccurrenceLength(
+            income.initialDay,
+            month,
+            year
+         );
          dueToday = income.initialDay === new Date(year, month, date).getDay();
          totalAmount = income.amount * numberOfOccurrences;
       } else {
-         numberOfOccurrences = getBiweeklyOccurrenceLength(income.initialDay, month, year);
+         numberOfOccurrences = getBiweeklyOccurrenceLength(
+            income.initialDay,
+            month,
+            year
+         );
          dueToday = income.initialDay === new Date(year, month, date).getDay();
          totalAmount = income.amount * numberOfOccurrences;
       }
@@ -98,16 +106,16 @@ const getPayments = async (
                {
                   initialMonth: month,
                   initialYear: year,
-                  recurrence: "oneTime",
+                  recurrence: "oneTime"
                },
                { recurrence: "daily" },
                { recurrence: "weekly" },
                { recurrence: "biweekly" },
                { recurrence: "monthly" },
-               { initialMonth: month, recurrence: "yearly" },
-            ],
-         },
-      ],
+               { initialMonth: month, recurrence: "yearly" }
+            ]
+         }
+      ]
    });
 
    const budgetPayments: BudgetPayment[] = [];
@@ -126,11 +134,19 @@ const getPayments = async (
          totalAmount = payment.amount * new Date(year, month, 0).getDate();
          numberOfOccurrences = getNumberOfDaysInMonth(month, year);
       } else if (payment.recurrence === "weekly") {
-         numberOfOccurrences = getWeeklyOccurrenceLength(payment.initialDay, month, year);
+         numberOfOccurrences = getWeeklyOccurrenceLength(
+            payment.initialDay,
+            month,
+            year
+         );
          dueToday = payment.initialDay === new Date(year, month, date).getDay();
          totalAmount = payment.amount * numberOfOccurrences;
       } else {
-         numberOfOccurrences = getBiweeklyOccurrenceLength(payment.initialDay, month, year);
+         numberOfOccurrences = getBiweeklyOccurrenceLength(
+            payment.initialDay,
+            month,
+            year
+         );
          dueToday = payment.initialDay === new Date(year, month, date).getDay();
          totalAmount = payment.amount * numberOfOccurrences;
       }
@@ -158,11 +174,11 @@ export const getBudget = async (
 ): Promise<GetBudgetResponse> => {
    const response = await Promise.all([
       await getIncomes(request),
-      await getPayments(request),
+      await getPayments(request)
    ]);
 
    return {
       incomes: response[0],
-      payments: response[1],
+      payments: response[1]
    };
 };

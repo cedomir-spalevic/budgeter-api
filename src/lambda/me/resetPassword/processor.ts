@@ -26,7 +26,7 @@ export const processPasswordReset = async (
    const otc = await oneTimeCodeService.find({
       key: passwordResetBody.key,
       completed: true,
-      type: "passwordReset",
+      type: "passwordReset"
    });
    if (!otc) throw new UnauthorizedError();
 
@@ -36,15 +36,15 @@ export const processPasswordReset = async (
 
    const userAuth: Partial<UserAuth> = {
       userId: otc.userId,
-      hash: generateHash(passwordResetBody.password),
+      hash: generateHash(passwordResetBody.password)
    };
    await usersAuthService.replace({ userId: otc.userId }, userAuth);
 
-   // If the user is resetting their password, then we want to kill all other sessions. This is easily done by removing all of the refresh tokens for 
+   // If the user is resetting their password, then we want to kill all other sessions. This is easily done by removing all of the refresh tokens for
    // this user. So then, the /refresh endpoint will never find any valid refresh tokens and force them to sign in again. BUT, our access tokens expire
    // after 15 minutes. So realistically, there is a possibility that another session could still continue to send requests for another 15 minutes without
    // having to put in the new password. Although this is not good if this is a sort of identity attack. We could always set the access token
-   // to expire after 5 minutes or so. 
+   // to expire after 5 minutes or so.
    await refreshTokenService.deleteAll({ userId: otc.userId });
 
    const refreshToken = generateRefreshToken(otc.userId);
@@ -58,6 +58,6 @@ export const processPasswordReset = async (
    return {
       accessToken: accessToken.token,
       expires: accessToken.expires,
-      refreshToken: refreshToken.token,
+      refreshToken: refreshToken.token
    };
 };

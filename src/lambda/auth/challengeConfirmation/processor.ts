@@ -15,7 +15,7 @@ export const processRegisterConfirmation = async (
 
    let oneTimeCode = await oneTimeCodeService.find({
       key: registerConfirmationBody.key,
-      code: registerConfirmationBody.code,
+      code: registerConfirmationBody.code
    });
    if (!oneTimeCode || oneTimeCode.expiresOn < Date.now())
       throw new UnauthorizedError();
@@ -40,6 +40,6 @@ export const processRegisterConfirmation = async (
    return {
       accessToken: accessToken.token,
       expires: accessToken.expires,
-      refreshToken: refreshToken.token,
+      refreshToken: refreshToken.token
    };
 };

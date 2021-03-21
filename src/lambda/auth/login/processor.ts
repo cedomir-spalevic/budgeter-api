@@ -1,7 +1,7 @@
 import {
    GeneralError,
    NoUserEmailFoundError,
-   UnauthorizedError,
+   UnauthorizedError
 } from "models/errors";
 import { AuthResponse, ConfirmationResponse } from "models/responses";
 import BudgeterMongoClient from "services/external/mongodb/client";
@@ -38,7 +38,7 @@ export const processSignIn = async (
    // Which is why we only do a count
    const count = await usersAuthService.count({
       userId: user._id,
-      hash: generateHash(loginBody.password),
+      hash: generateHash(loginBody.password)
    });
    if (count < 1) throw new UnauthorizedError();
 
@@ -60,7 +60,7 @@ export const processSignIn = async (
          response: {
             expires: result.expires,
             key: result.code.key
-         },
+         }
       };
    }
 
@@ -77,7 +77,7 @@ export const processSignIn = async (
       response: {
          accessToken: accessToken.token,
          expires: accessToken.expires,
-         refreshToken: refreshToken.token,
-      },
+         refreshToken: refreshToken.token
+      }
    };
 };

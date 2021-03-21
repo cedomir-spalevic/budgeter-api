@@ -14,7 +14,7 @@ export const processDeleteUser = async (
    const user = await usersService.find({ _id: deleteUserBody.userId });
    if (!user) throw new NotFoundError("No User found with the given Id");
    const userAuth = await usersAuthService.find({
-      userId: deleteUserBody.userId,
+      userId: deleteUserBody.userId
    });
 
    await usersService.delete(user._id);

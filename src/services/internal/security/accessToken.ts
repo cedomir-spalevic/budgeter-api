@@ -14,11 +14,11 @@ export const generateAccessToken = (
    const payload: Token = {
       issuedAt: now,
       userId,
-      refreshToken,
+      refreshToken
    };
    const token = jwt.sign(payload, process.env.JWT_KEY, {
       algorithm: "HS256",
-      expiresIn: "15 mins",
+      expiresIn: "15 mins"
    });
    return { token, expires: expires - now };
 };
@@ -29,7 +29,7 @@ export const generateAccessToken = (
 export const decodeAccessToken = (token: string): Token => {
    try {
       return jwt.verify(token, process.env.JWT_KEY, {
-         algorithms: ["HS256"],
+         algorithms: ["HS256"]
       }) as Token;
    } catch (error) {
       throw new TokenVerificationError();

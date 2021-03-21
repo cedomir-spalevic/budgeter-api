@@ -39,8 +39,8 @@ export const processRegister = async (
       isEmailVerified: false,
       notificationPreferences: {
          incomeNotifications: false,
-         paymentNotifications: false,
-      },
+         paymentNotifications: false
+      }
    };
    const user = await usersService.create(newUser);
 
@@ -48,7 +48,7 @@ export const processRegister = async (
    try {
       const userAuth: Partial<UserAuth> = {
          userId: user._id,
-         hash: generateHash(registerBody.password),
+         hash: generateHash(registerBody.password)
       };
       await usersAuthService.create(userAuth);
    } catch (error) {
@@ -68,6 +68,6 @@ export const processRegister = async (
    // Return Key identifier
    return {
       expires: result.expires,
-      key: result.code.key,
+      key: result.code.key
    };
 };

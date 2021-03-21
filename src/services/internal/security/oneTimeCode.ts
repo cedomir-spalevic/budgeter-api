@@ -20,8 +20,8 @@ export const generateOneTimeCode = (
          key,
          code,
          expiresOn: expires,
-         type,
-      },
+         type
+      }
    };
 };
 

@@ -66,5 +66,5 @@ class BudgeterMongoClient {
 
 export default {
    getInstance: (): Promise<BudgeterMongoClient> =>
-      BudgeterMongoClient.getInstance(),
+      BudgeterMongoClient.getInstance()
 };

@@ -10,7 +10,7 @@ export const processUpdateIncome = async (
 
    let income = await incomesService.find({
       userId: updatedIncome.userId,
-      _id: updatedIncome._id,
+      _id: updatedIncome._id
    });
    if (!income) throw new NotFoundError("No Income found with the given Id");
 
@@ -63,6 +63,6 @@ export const processUpdateIncome = async (
       initialYear: income.initialYear,
       recurrence: income.recurrence,
       createdOn: income.createdOn,
-      modifiedOn: income.modifiedOn,
+      modifiedOn: income.modifiedOn
    };
 };

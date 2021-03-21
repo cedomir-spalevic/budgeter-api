@@ -4,7 +4,7 @@ import {
    FindOneOptions,
    ObjectId,
    OptionalId,
-   WithId,
+   WithId
 } from "mongodb";
 import { IEntity } from "models/data/ientity";
 
@@ -23,7 +23,7 @@ export class BudgeterEntityCollection<T extends IEntity> {
       const entityToCreate: Partial<T> = {
          ...entity,
          createdOn: date,
-         modifiedOn: date,
+         modifiedOn: date
       };
       const response = await this.collection.insertOne(
          entityToCreate as OptionalId<T>
@@ -33,7 +33,7 @@ export class BudgeterEntityCollection<T extends IEntity> {
 
    public async getById(id: string): Promise<WithId<T>> {
       return await this.collection.findOne({
-         _id: new ObjectId(id),
+         _id: new ObjectId(id)
       } as FilterQuery<T>);
    }
 
@@ -54,7 +54,7 @@ export class BudgeterEntityCollection<T extends IEntity> {
    public async update(entity: T): Promise<WithId<T>> {
       const entityToUpdate: T = {
          ...entity,
-         modifiedOn: new Date(),
+         modifiedOn: new Date()
       };
       const response = await this.collection.replaceOne(
          { _id: entity._id } as FilterQuery<T>,
@@ -69,7 +69,7 @@ export class BudgeterEntityCollection<T extends IEntity> {
    ): Promise<void> {
       const entityToUpdate: Partial<T> = {
          ...entity,
-         modifiedOn: new Date(),
+         modifiedOn: new Date()
       };
       await this.collection.replaceOne(filter, entityToUpdate as T);
    }

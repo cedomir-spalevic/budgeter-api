@@ -39,16 +39,16 @@ module.exports = {
          dns: false,
          buffer: false,
          module: false,
-         os: false,
-      },
+         os: false
+      }
    },
    module: {
       rules: [
          {
             test: /\.ts?$/,
             exclude: /(node_modules)/,
-            use: ["ts-loader", "eslint-loader"],
-         },
-      ],
-   },
+            use: ["ts-loader", "eslint-loader"]
+         }
+      ]
+   }
 };

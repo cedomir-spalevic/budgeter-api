@@ -10,7 +10,7 @@ export const processDeletePayment = async (
 
    const payment = await paymentsService.find({
       userId: deletePaymentBody.userId,
-      _id: deletePaymentBody.paymentId,
+      _id: deletePaymentBody.paymentId
    });
    if (!payment) throw new NotFoundError("No Payment found with the given Id");
 

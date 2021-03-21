@@ -30,8 +30,8 @@ export const handler = async (
          statusCode: 201,
          body: JSON.stringify(response),
          headers: {
-            "Access-Control-Allow-Origin": "*",
-         },
+            "Access-Control-Allow-Origin": "*"
+         }
       };
    } catch (error) {
       return handleErrorResponse(error);

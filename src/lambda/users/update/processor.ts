@@ -18,7 +18,7 @@ export const processUpdateUser = async (
       if (!request.userRequest.password)
          throw new GeneralError("Password cannot be blank");
       const userAuth = await usersAuthService.find({
-         userId: request.userId,
+         userId: request.userId
       });
       userAuth.hash = generateHash(request.userRequest.password);
       await usersAuthService.update(userAuth);
@@ -50,6 +50,6 @@ export const processUpdateUser = async (
       email: user.email,
       emailVerified: user.isEmailVerified,
       createdOn: user.createdOn,
-      modifiedOn: user.modifiedOn,
+      modifiedOn: user.modifiedOn
    };
 };

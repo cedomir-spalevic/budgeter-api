@@ -9,13 +9,13 @@ const month = today.getMonth();
 const year = today.getFullYear();
 const numberFormat = new Intl.NumberFormat("en-us", {
    style: "currency",
-   currency: "USD",
+   currency: "USD"
 });
 
 const notifyUser = async (user: User): Promise<void> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
-   
+
    const payments = await paymentsService.findMany({
       $and: [
          { userId: user._id },
@@ -25,7 +25,7 @@ const notifyUser = async (user: User): Promise<void> => {
                   initialMonth: month,
                   initialYear: year,
                   initialDate: date,
-                  recurrence: "oneTime",
+                  recurrence: "oneTime"
                },
                { recurrence: "daily" },
                { initialDay: day, recurrence: "weekly" },
@@ -34,11 +34,11 @@ const notifyUser = async (user: User): Promise<void> => {
                {
                   initialMonth: month,
                   initialDate: date,
-                  recurrence: "yearly",
-               },
-            ],
-         },
-      ],
+                  recurrence: "yearly"
+               }
+            ]
+         }
+      ]
    });
 
    await Promise.all(
@@ -49,7 +49,7 @@ const notifyUser = async (user: User): Promise<void> => {
          )
       )
    );
-}
+};
 
 export const processPaymentNotifications = async (): Promise<void> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
@@ -60,8 +60,8 @@ export const processPaymentNotifications = async (): Promise<void> => {
    const usersToNotify = await usersService.findMany({
       $and: [
          { device: { $exists: true } },
-         { "notificationPreferences.paymentNotifications": true },
-      ],
+         { "notificationPreferences.paymentNotifications": true }
+      ]
    });
 
    // Determine their incomes for today and send notification

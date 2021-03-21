@@ -21,8 +21,8 @@ const validator = async (
       lastName: lastName,
       notificationPreferences: {
          incomeNotifications,
-         paymentNotifications,
-      },
+         paymentNotifications
+      }
    };
 };
 
@@ -34,7 +34,7 @@ export const handler = async (
       const response = await processUpdateUser(updatedUser);
       return {
          statusCode: 200,
-         body: JSON.stringify(response),
+         body: JSON.stringify(response)
       };
    } catch (error) {
       return handleErrorResponse(error);

@@ -1,7 +1,7 @@
 import { NoUserFoundError } from "models/errors";
 import {
    createPlatformEndpoint,
-   subscribeToTopic,
+   subscribeToTopic
 } from "services/external/aws/sns";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { RegisterDeviceBody } from ".";
@@ -37,7 +37,7 @@ export const processRegisterDevice = async (
    user.device = {
       os: request.device,
       platformApplicationEndpointArn,
-      subscriptionArn,
+      subscriptionArn
    };
    await usersService.update(user);
 };

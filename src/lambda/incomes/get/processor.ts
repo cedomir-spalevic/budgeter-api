@@ -15,12 +15,12 @@ export const processGetMany = async (
    const count = await incomesService.count({ userId });
 
    const query: FilterQuery<Income> = {
-      userId,
+      userId
    };
    if (queryStringParameters.search) {
       query.title = {
          $regex: queryStringParameters.search,
-         $options: "$I",
+         $options: "$I"
       };
    }
    const limit = queryStringParameters.limit;
@@ -39,8 +39,8 @@ export const processGetMany = async (
          initialYear: x.initialYear,
          recurrence: x.recurrence,
          createdOn: x.createdOn,
-         modifiedOn: x.modifiedOn,
-      })),
+         modifiedOn: x.modifiedOn
+      }))
    };
 };
 
@@ -64,6 +64,6 @@ export const processGetSingle = async (
       initialYear: income.initialYear,
       recurrence: income.recurrence,
       createdOn: income.createdOn,
-      modifiedOn: income.modifiedOn,
+      modifiedOn: income.modifiedOn
    };
 };

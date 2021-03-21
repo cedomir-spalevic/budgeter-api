@@ -11,6 +11,6 @@ export const processGetAPIKeys = async (): Promise<
    const response = await apiKeyService.findMany({});
    return {
       count: response.length,
-      values: response.map((x) => ({ id: x._id.toHexString(), key: x.key })),
+      values: response.map((x) => ({ id: x._id.toHexString(), key: x.key }))
    };
 };

@@ -17,7 +17,7 @@ export const processGetMany = async (
    if (queryStringParameters.search) {
       query.title = {
          $regex: queryStringParameters.search,
-         $options: "$I",
+         $options: "$I"
       };
    }
    const limit = queryStringParameters.limit;
@@ -34,8 +34,8 @@ export const processGetMany = async (
          email: x.email,
          emailVerified: x.isEmailVerified,
          createdOn: x.createdOn,
-         modifiedOn: x.modifiedOn,
-      })),
+         modifiedOn: x.modifiedOn
+      }))
    };
 };
 
@@ -57,6 +57,6 @@ export const processGetSingle = async (
       email: user.email,
       emailVerified: user.isEmailVerified,
       createdOn: user.createdOn,
-      modifiedOn: user.modifiedOn,
+      modifiedOn: user.modifiedOn
    };
 };

@@ -11,7 +11,7 @@ export const processUpdatePayment = async (
 
    let payment = await paymentsService.find({
       userId: updatedPayment.userId,
-      _id: updatedPayment._id,
+      _id: updatedPayment._id
    });
    if (!payment) throw new NotFoundError("No Payment found with the given Id");
 
@@ -63,6 +63,6 @@ export const processUpdatePayment = async (
       initialYear: payment.initialYear,
       recurrence: payment.recurrence,
       createdOn: payment.createdOn,
-      modifiedOn: payment.modifiedOn,
+      modifiedOn: payment.modifiedOn
    };
 };

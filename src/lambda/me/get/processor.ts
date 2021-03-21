@@ -14,12 +14,11 @@ export const processGetMe = async (userId: ObjectId): Promise<PublicUser> => {
       createdOn: user.createdOn,
       modifiedOn: user.modifiedOn,
       device: {
-         os: user.device ? user.device.os : null,
+         os: user.device ? user.device.os : null
       },
       notificationPreferences: {
          incomeNotifications: user.notificationPreferences.incomeNotifications,
-         paymentNotifications:
-            user.notificationPreferences.paymentNotifications,
-      },
+         paymentNotifications: user.notificationPreferences.paymentNotifications
+      }
    };
 };

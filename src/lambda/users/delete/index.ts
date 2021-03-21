@@ -26,7 +26,7 @@ export const handler = async (
       await processDeleteUser(deleteUserBody);
       return {
          statusCode: 200,
-         body: "",
+         body: ""
       };
    } catch (error) {
       return handleErrorResponse(error);

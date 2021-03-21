@@ -11,7 +11,7 @@ export const processRefresh = async (
    const refreshTokenService = budgeterClient.getRefreshTokenCollection();
 
    const refreshToken = await refreshTokenService.find({
-      token: refreshBody.refreshToken,
+      token: refreshBody.refreshToken
    });
 
    if (!refreshToken || refreshToken.expiresOn < Date.now())
@@ -25,6 +25,6 @@ export const processRefresh = async (
    return {
       accessToken: accessToken.token,
       expires: accessToken.expires,
-      refreshToken: refreshToken.token,
+      refreshToken: refreshToken.token
    };
 };

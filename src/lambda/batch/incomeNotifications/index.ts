@@ -12,7 +12,7 @@ export const handler = async (
       await processIncomeNotifications();
       return {
          statusCode: 200,
-         body: "",
+         body: ""
       };
    } catch (error) {
       return handleErrorResponse(error);

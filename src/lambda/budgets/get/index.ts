@@ -20,7 +20,7 @@ const validator = async (
    );
    return {
       userId,
-      queryStrings,
+      queryStrings
    };
 };
 

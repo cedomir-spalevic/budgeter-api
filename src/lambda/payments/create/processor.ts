@@ -19,6 +19,6 @@ export const processCreatePayment = async (
       initialYear: payment.initialYear,
       recurrence: payment.recurrence,
       createdOn: payment.createdOn,
-      modifiedOn: payment.modifiedOn,
+      modifiedOn: payment.modifiedOn
    };
 };
