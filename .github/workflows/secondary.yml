@@ -1,0 +1,33 @@
+name: Build, Test
+
+on:
+   pull_request:
+      branches:
+         - main
+
+jobs:
+   build-test:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v2
+         - name: Install NPM dependencies
+            run: npm ci
+         - name: Configure AWS credentials
+            id: creds
+            uses: aws-actions/configure-aws-credentials@v1
+            with:
+              aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              aws-region: ${{ secrets.AWS_REGION }}
+         - name: Create env file
+            run: |
+               cat > .env << EOF
+               JWT_KEY=${{ secrets.JWT_KEY }}
+               MONGO_CONNECTION_STRING=${{ secrets.MONGO_CONNECTION_STRING }}
+               AWS_PLATFORM_APPLICATION_IOS=${{ secrets.AWS_PLATFORM_APPLICATION_IOS }}
+               AWS_PLATFORM_APPLICATION_ANDROID=${{ secrets.AWS_PLATFORM_APPLICATION_ANDROID }}
+               AWS_SNS_TOPIC=${{ secrets.AWS_SNS_TOPIC }}
+               BUDGETER_API_KEY=${{ secrets.BUDGETER_API_KEY }}
+               EOF
+         - name: Build code
+            run: npm run build
