@@ -5,12 +5,16 @@ frameworkVersion: "2.1"
 
 provider:
    name: aws
-   runtime: nodejs12.x
-
+   runtime: nodejs14.x
+   region: us-east-1
+   stackName: budgeter-api
+   apiName: budgeter
+   memorySize: 128
+   timeout: 10
+   deploymentPrefix:
    environment:
       JWT_KEY: ${env:JWT_KEY}
       AWS_PLATFORM_APPLICATION_IOS: ${env:AWS_PLATFORM_APPLICATION_IOS}
-      AWS_PLATFORM_APPLICATION_ANDROID: ${env:AWS_PLATFORM_APPLICATION_ANDROID}
       AWS_SNS_TOPIC: ${env:AWS_SNS_TOPIC}
       MONGO_CONNECTION_STRING: ${env:MONGO_CONNECTION_STRING}
 
@@ -257,7 +261,7 @@ stepFunctions:
                      FunctionName: !Ref batchClearTokens
                      Payload:
                         Input:
-                           apiKey: budgeter/bc6e4807d09296d324dd353c9591d91de548d61c
+                           apiKey: ${env:BUDGETER_API_KEY}
                   End: true
          dependsOn: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-clearTokensJob
       paymentNotificationsJob:
@@ -277,7 +281,7 @@ stepFunctions:
                      FunctionName: !Ref batchPaymentNotifications
                      Payload:
                         Input:
-                           apiKey: budgeter/bc6e4807d09296d324dd353c9591d91de548d61c
+                           apiKey: ${env:BUDGETER_API_KEY}
                   End: true
          dependsOn: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-incomeNotificationsJob
       incomeNotificationsJob:
@@ -297,7 +301,7 @@ stepFunctions:
                      FunctionName: !Ref batchIncomeNotifications
                      Payload:
                         Input:
-                           apiKey: budgeter/bc6e4807d09296d324dd353c9591d91de548d61c
+                           apiKey: ${env:BUDGETER_API_KEY}
                   End: true
          dependsOn: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-incomeNotificationsJob
 
