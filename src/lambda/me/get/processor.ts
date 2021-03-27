@@ -3,7 +3,6 @@ import { ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
 export const processGetMe = async (userId: ObjectId): Promise<PublicUser> => {
-   // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const user = await usersService.getById(userId.toHexString());
@@ -15,11 +14,11 @@ export const processGetMe = async (userId: ObjectId): Promise<PublicUser> => {
       createdOn: user.createdOn,
       modifiedOn: user.modifiedOn,
       device: {
-         os: (user.device ? user.device.os : null)
+         os: user.device ? user.device.os : null
       },
       notificationPreferences: {
          incomeNotifications: user.notificationPreferences.incomeNotifications,
          paymentNotifications: user.notificationPreferences.paymentNotifications
       }
-   }
-}
+   };
+};

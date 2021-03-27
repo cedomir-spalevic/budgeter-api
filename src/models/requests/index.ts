@@ -21,5 +21,5 @@ export interface AdminUserRequest {
 export interface StepFunctionBatchJobRequest {
    Input: {
       apiKey: string;
-   }
+   };
 }

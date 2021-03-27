@@ -26,7 +26,7 @@ export class UnauthorizedError extends BudgeterError {
    }
 }
 
-export class TokenVerificationError extends UnauthorizedError { }
+export class TokenVerificationError extends UnauthorizedError {}
 
 export class NotFoundError extends BudgeterError {
    constructor(message: string) {

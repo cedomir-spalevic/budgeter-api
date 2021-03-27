@@ -15,7 +15,7 @@ export interface Income extends IEntity {
 
 export interface PublicIncome {
    id: string;
-   title: string
+   title: string;
    amount: number;
    initialDay: number; // Day of week
    initialDate: number; // Day of month
@@ -28,5 +28,6 @@ export interface PublicIncome {
 
 export interface BudgetIncome extends PublicIncome {
    dueToday: boolean;
+   numberOfOccurrences: number;
    totalAmount: number;
 }

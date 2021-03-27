@@ -9,10 +9,11 @@ import { UserAuth } from "models/data/userAuth";
 import { generateHash } from "services/internal/security/hash";
 import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
 
-export const processRegister = async (registerBody: RegisterBody): Promise<ConfirmationResponse> => {
+export const processRegister = async (
+   registerBody: RegisterBody
+): Promise<ConfirmationResponse> => {
    // Check if email and password are valid
-   if (!registerBody.email)
-      throw new GeneralError("Email cannot be blank");
+   if (!registerBody.email) throw new GeneralError("Email cannot be blank");
    if (!registerBody.password)
       throw new GeneralError("Password cannot be blank");
 
@@ -27,8 +28,7 @@ export const processRegister = async (registerBody: RegisterBody): Promise<Confi
 
    // Check if a user already exists with this email
    const existingUser = await usersService.find({ email });
-   if (existingUser)
-      throw new AlreadyExistsError();
+   if (existingUser) throw new AlreadyExistsError();
 
    // Create a new user
    const newUser: Partial<User> = {
@@ -41,7 +41,7 @@ export const processRegister = async (registerBody: RegisterBody): Promise<Confi
          incomeNotifications: false,
          paymentNotifications: false
       }
-   }
+   };
    const user = await usersService.create(newUser);
 
    // Create user auth
@@ -49,10 +49,9 @@ export const processRegister = async (registerBody: RegisterBody): Promise<Confi
       const userAuth: Partial<UserAuth> = {
          userId: user._id,
          hash: generateHash(registerBody.password)
-      }
+      };
       await usersAuthService.create(userAuth);
-   }
-   catch (error) {
+   } catch (error) {
       // If this fails, we'll try to delete the user record
       await usersService.delete(user._id);
       throw error;
@@ -70,5 +69,5 @@ export const processRegister = async (registerBody: RegisterBody): Promise<Confi
    return {
       expires: result.expires,
       key: result.code.key
-   }
-}
+   };
+};

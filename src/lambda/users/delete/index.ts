@@ -1,7 +1,4 @@
-import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAdminAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import { getPathParameter } from "middleware/url";
@@ -13,25 +10,25 @@ export interface DeleteUserBody {
    userId: ObjectId;
 }
 
-const validator = async (event: APIGatewayProxyEvent): Promise<DeleteUserBody> => {
+const validator = async (
+   event: APIGatewayProxyEvent
+): Promise<DeleteUserBody> => {
    const adminId = await isAdminAuthorized(event);
    const userId = getPathParameter("userId", event.pathParameters);
-   return { adminId, userId }
-}
+   return { adminId, userId };
+};
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (
+   event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
    try {
       const deleteUserBody = await validator(event);
       await processDeleteUser(deleteUserBody);
       return {
          statusCode: 200,
-         body: "",
-         headers: {
-            "Access-Control-Allow-Origin": "*"
-         }
-      }
-   }
-   catch (error) {
+         body: ""
+      };
+   } catch (error) {
       return handleErrorResponse(error);
    }
-}
+};

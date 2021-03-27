@@ -5,6 +5,7 @@
 API for Budgeter mobile app
 
 ## How to run
+
 ```
    # Install modules
    npm install

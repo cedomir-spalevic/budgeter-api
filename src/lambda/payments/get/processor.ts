@@ -5,23 +5,23 @@ import { GetResponse } from "models/responses";
 import { FilterQuery, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
-export const processGetMany = async (userId: ObjectId, queryStringParameters: GetListQueryStringParameters): Promise<GetResponse<PublicPayment>> => {
-   // Get Mongo Client
+export const processGetMany = async (
+   userId: ObjectId,
+   queryStringParameters: GetListQueryStringParameters
+): Promise<GetResponse<PublicPayment>> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
-   // Count number of payments user has
    const count = await paymentsService.count({ userId });
 
-   // Get payments
    const query: FilterQuery<Payment> = {
       userId
    };
    if (queryStringParameters.search) {
       query.title = {
-         "$regex": queryStringParameters.search,
-         "$options": "$I"
-      }
+         $regex: queryStringParameters.search,
+         $options: "$I"
+      };
    }
    const limit = queryStringParameters.limit;
    const skip = queryStringParameters.skip;
@@ -29,7 +29,7 @@ export const processGetMany = async (userId: ObjectId, queryStringParameters: Ge
 
    return {
       count,
-      values: values.map(x => ({
+      values: values.map((x) => ({
          id: x._id.toHexString(),
          title: x.title,
          amount: x.amount,
@@ -41,17 +41,18 @@ export const processGetMany = async (userId: ObjectId, queryStringParameters: Ge
          createdOn: x.createdOn,
          modifiedOn: x.modifiedOn
       }))
-   }
-}
+   };
+};
 
-export const processGetSingle = async (userId: ObjectId, paymentId: ObjectId): Promise<PublicPayment> => {
-   // Get Mongo Client
+export const processGetSingle = async (
+   userId: ObjectId,
+   paymentId: ObjectId
+): Promise<PublicPayment> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
    const payment = await paymentsService.find({ userId, _id: paymentId });
-   if (!payment)
-      throw new NotFoundError("No Payment found with the given Id");
+   if (!payment) throw new NotFoundError("No Payment found with the given Id");
 
    return {
       id: payment._id.toHexString(),
@@ -64,5 +65,5 @@ export const processGetSingle = async (userId: ObjectId, paymentId: ObjectId): P
       recurrence: payment.recurrence,
       createdOn: payment.createdOn,
       modifiedOn: payment.modifiedOn
-   }
-}
+   };
+};

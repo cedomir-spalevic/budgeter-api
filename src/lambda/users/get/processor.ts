@@ -5,7 +5,10 @@ import { GetResponse } from "models/responses";
 import { FilterQuery, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
-export const processGetMany = async (adminId: ObjectId, queryStringParameters: GetListQueryStringParameters): Promise<GetResponse<AdminPublicUser>> => {
+export const processGetMany = async (
+   adminId: ObjectId,
+   queryStringParameters: GetListQueryStringParameters
+): Promise<GetResponse<AdminPublicUser>> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
@@ -13,9 +16,9 @@ export const processGetMany = async (adminId: ObjectId, queryStringParameters: G
    const query: FilterQuery<User> = {};
    if (queryStringParameters.search) {
       query.title = {
-         "$regex": queryStringParameters.search,
-         "$options": "$I"
-      }
+         $regex: queryStringParameters.search,
+         $options: "$I"
+      };
    }
    const limit = queryStringParameters.limit;
    const skip = queryStringParameters.skip;
@@ -23,7 +26,7 @@ export const processGetMany = async (adminId: ObjectId, queryStringParameters: G
 
    return {
       count,
-      values: values.map(x => ({
+      values: values.map((x) => ({
          id: x._id.toHexString(),
          isAdmin: x.isAdmin,
          firstName: x.firstName,
@@ -33,17 +36,18 @@ export const processGetMany = async (adminId: ObjectId, queryStringParameters: G
          createdOn: x.createdOn,
          modifiedOn: x.modifiedOn
       }))
-   }
-}
+   };
+};
 
-export const processGetSingle = async (adminId: ObjectId, userId: ObjectId): Promise<AdminPublicUser> => {
-   // Get Mongo Client
+export const processGetSingle = async (
+   adminId: ObjectId,
+   userId: ObjectId
+): Promise<AdminPublicUser> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
    const user = await usersService.find({ _id: userId });
-   if (!user)
-      throw new NotFoundError("No User found with the given Id");
+   if (!user) throw new NotFoundError("No User found with the given Id");
 
    return {
       id: user._id.toHexString(),
@@ -55,4 +59,4 @@ export const processGetSingle = async (adminId: ObjectId, userId: ObjectId): Pro
       createdOn: user.createdOn,
       modifiedOn: user.modifiedOn
    };
-}
+};

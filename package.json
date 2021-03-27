@@ -4,6 +4,9 @@
    "description": "Budgeter API",
    "scripts": {
       "dev": "serverless offline start",
+      "build": "npm run build:format && npm run build:lint",
+      "build:lint": "eslint . --ext .ts",
+      "build:format": "prettier --write .",
       "login": "serverless login",
       "deploy": "serverless deploy"
    },

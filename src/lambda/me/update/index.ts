@@ -1,14 +1,13 @@
-import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import { isBool, isStr, isValidJSONBody } from "middleware/validators";
 import { User } from "models/data/user";
 import { processUpdateUser } from "./processor";
 
-const validator = async (event: APIGatewayProxyEvent): Promise<Partial<User>> => {
+const validator = async (
+   event: APIGatewayProxyEvent
+): Promise<Partial<User>> => {
    const userId = await isAuthorized(event);
    const form = isValidJSONBody(event.body);
    const firstName = isStr(form, "firstName", false);
@@ -24,22 +23,20 @@ const validator = async (event: APIGatewayProxyEvent): Promise<Partial<User>> =>
          incomeNotifications,
          paymentNotifications
       }
-   }
-}
+   };
+};
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (
+   event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
    try {
       const updatedUser = await validator(event);
       const response = await processUpdateUser(updatedUser);
       return {
          statusCode: 200,
-         body: JSON.stringify(response),
-         headers: {
-            "Access-Control-Allow-Origin": "*"
-         }
-      }
-   }
-   catch (error) {
+         body: JSON.stringify(response)
+      };
+   } catch (error) {
       return handleErrorResponse(error);
    }
-}
+};
