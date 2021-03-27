@@ -32,6 +32,7 @@
       "mongodb": "^3.6.3",
       "prettier": "^2.2.1",
       "serverless": "2.1",
+      "serverless-step-functions": "^2.29.0",
       "uuid": "^8.3.0"
    },
    "devDependencies": {

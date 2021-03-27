@@ -230,24 +230,83 @@ functions:
    batch-clear-tokens:
       transfer:
       handler: src/lambda/batch/clearTokens/index.handler
-      events:
-         - schedule: cron(0 15 * * ? *)
    batch-income-notifications:
       transfer:
       handler: src/lambda/batch/incomeNotifications/index.handler
-      events:
-         - schedule: cron(0 15 * * ? *)
    batch-payment-notifications:
       transfer:
       handler: src/lambda/batch/paymentNotifications/index.handler
-      events:
-         - schedule: cron(0 15 * * ? *)
+
+stepFunctions:
+   validate: true
+   stateMachines:
+      clearTokensJob:
+         events:
+            - schedule:
+                 rate: cron(0 15 * * ? *)
+                 enabled: true
+         name: clearTokensJob
+         definition:
+            Comment: Step function to clear any expired tokens
+            StartAt: InvokeFunction
+            States:
+               InvokeFunction:
+                  Type: Task
+                  Resource: arn:aws:states:::lambda:invoke
+                  Parameters:
+                     FunctionName: !Ref batchClearTokens
+                     Payload:
+                        Input:
+                           apiKey: budgeter/bc6e4807d09296d324dd353c9591d91de548d61c
+                  End: true
+         dependsOn: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-clearTokensJob
+      paymentNotificationsJob:
+         events:
+            - schedule:
+                 rate: cron(0 15 * * ? *)
+                 enabled: true
+         name: paymentNotificationsJob
+         definition:
+            Comment: Step function to send any payment notifications
+            StartAt: InvokeFunction
+            States:
+               InvokeFunction:
+                  Type: Task
+                  Resource: arn:aws:states:::lambda:invoke
+                  Parameters:
+                     FunctionName: !Ref batchPaymentNotifications
+                     Payload:
+                        Input:
+                           apiKey: budgeter/bc6e4807d09296d324dd353c9591d91de548d61c
+                  End: true
+         dependsOn: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-incomeNotificationsJob
+      incomeNotificationsJob:
+         events:
+            - schedule:
+                 rate: cron(0 15 * * ? *)
+                 enabled: true
+         name: incomeNotificationsJob
+         definition:
+            Comment: Step function to send any income notifications
+            StartAt: InvokeFunction
+            States:
+               InvokeFunction:
+                  Type: Task
+                  Resource: arn:aws:states:::lambda:invoke
+                  Parameters:
+                     FunctionName: !Ref batchIncomeNotifications
+                     Payload:
+                        Input:
+                           apiKey: budgeter/bc6e4807d09296d324dd353c9591d91de548d61c
+                  End: true
+         dependsOn: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-incomeNotificationsJob
 
 plugins:
    - "@serverless/safeguards-plugin"
    - "serverless-bundle"
    - "serverless-offline"
    - "serverless-dotenv-plugin"
+   - "serverless-step-functions"
 
 # Custom variables read from serverless-bundle
 custom:
