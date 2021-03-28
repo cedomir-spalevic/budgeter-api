@@ -263,7 +263,6 @@ stepFunctions:
                         Input:
                            apiKey: ${env:BUDGETER_API_KEY}
                   End: true
-         dependsOn: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-clearTokensJob
       paymentNotificationsJob:
          events:
             - schedule:
@@ -283,7 +282,6 @@ stepFunctions:
                         Input:
                            apiKey: ${env:BUDGETER_API_KEY}
                   End: true
-         dependsOn: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-incomeNotificationsJob
       incomeNotificationsJob:
          events:
             - schedule:
@@ -303,7 +301,6 @@ stepFunctions:
                         Input:
                            apiKey: ${env:BUDGETER_API_KEY}
                   End: true
-         dependsOn: arn:aws:iam::075433893437:role/budgeter-api-stepfunction-incomeNotificationsJob
 
 plugins:
    - "@serverless/safeguards-plugin"
