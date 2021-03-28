@@ -13,7 +13,7 @@ import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
 import { getNewAccountConfirmationView } from "views/new-account-confirmation";
 import { sendEmail } from "services/external/aws/ses";
 
-export const processSignIn = async (
+export const processLogin = async (
    loginBody: LoginBody
 ): Promise<{
    status: number;
@@ -36,11 +36,11 @@ export const processSignIn = async (
    // We only want to check if the hashed password exists in the DB
    // We don't want to send the hashed password in the database in transit at all.
    // Which is why we only do a count
-   const count = await usersAuthService.count({
+   const userAuthRecordsAmount = await usersAuthService.count({
       userId: user._id,
       hash: generateHash(loginBody.password)
    });
-   if (count < 1) throw new UnauthorizedError();
+   if (userAuthRecordsAmount < 1) throw new UnauthorizedError();
 
    // If the users email is not verified, then we want to force them to verify
    // by sending a verification email. If executed properly, the challengeConfirmation endpoint will get invoked.
@@ -51,8 +51,14 @@ export const processSignIn = async (
       await oneTimeCodeService.create(result.code);
 
       // Send email verification with the confirmation code
-      const accountConfirmationView = getNewAccountConfirmationView(result.code.code.toString());
-      await sendEmail(email, "Budgeter - verify your email", accountConfirmationView);
+      const accountConfirmationView = getNewAccountConfirmationView(
+         result.code.code.toString()
+      );
+      await sendEmail(
+         email,
+         "Budgeter - verify your email",
+         accountConfirmationView
+      );
 
       // Return Key identifier
       return {

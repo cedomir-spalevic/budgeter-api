@@ -9,6 +9,20 @@ import {
 } from "services/internal/datetime";
 import { BudgetPayment } from "models/data/payment";
 
+export const getBudget = async (
+   request: GetBudgetsBody
+): Promise<GetBudgetResponse> => {
+   const response = await Promise.all([
+      await getIncomes(request),
+      await getPayments(request)
+   ]);
+
+   return {
+      incomes: response[0],
+      payments: response[1]
+   };
+};
+
 const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
    const date = request.queryStrings.date;
    const month = request.queryStrings.month;
@@ -17,7 +31,7 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
 
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
-   const response = await incomesService.findMany({
+   const incomes = await incomesService.findMany({
       $and: [
          { userId: userId },
          {
@@ -38,7 +52,7 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
    });
 
    const budgetIncomes: BudgetIncome[] = [];
-   response.forEach((income) => {
+   incomes.forEach((income) => {
       let dueToday: boolean, totalAmount: number, numberOfOccurrences: number;
       if (
          income.recurrence === "oneTime" ||
@@ -98,7 +112,7 @@ const getPayments = async (
 
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
-   const response = await paymentsService.findMany({
+   const payments = await paymentsService.findMany({
       $and: [
          { userId: userId },
          {
@@ -119,7 +133,7 @@ const getPayments = async (
    });
 
    const budgetPayments: BudgetPayment[] = [];
-   response.forEach((payment) => {
+   payments.forEach((payment) => {
       let dueToday: boolean, totalAmount: number, numberOfOccurrences: number;
       if (
          payment.recurrence === "oneTime" ||
@@ -167,18 +181,4 @@ const getPayments = async (
       });
    });
    return budgetPayments;
-};
-
-export const getBudget = async (
-   request: GetBudgetsBody
-): Promise<GetBudgetResponse> => {
-   const response = await Promise.all([
-      await getIncomes(request),
-      await getPayments(request)
-   ]);
-
-   return {
-      incomes: response[0],
-      payments: response[1]
-   };
 };

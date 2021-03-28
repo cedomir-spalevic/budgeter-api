@@ -3,54 +3,60 @@ import { NotFoundError } from "models/errors";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
 export const processUpdateUser = async (
-   updatedUser: Partial<User>
+   partiallyUpdatedUser: Partial<User>
 ): Promise<PublicUser> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
-   let user = await usersService.find({ _id: updatedUser._id });
-   if (!user) throw new NotFoundError("No User found");
+   const existingUser = await usersService.find({
+      _id: partiallyUpdatedUser._id
+   });
+   if (!existingUser) throw new NotFoundError("No existingUser found");
 
    if (
-      updatedUser.firstName !== undefined &&
-      user.firstName !== updatedUser.firstName
+      partiallyUpdatedUser.firstName !== undefined &&
+      existingUser.firstName !== partiallyUpdatedUser.firstName
    )
-      user.firstName = updatedUser.firstName;
+      existingUser.firstName = partiallyUpdatedUser.firstName;
    if (
-      updatedUser.lastName !== undefined &&
-      user.lastName !== updatedUser.lastName
+      partiallyUpdatedUser.lastName !== undefined &&
+      existingUser.lastName !== partiallyUpdatedUser.lastName
    )
-      user.lastName = updatedUser.lastName;
+      existingUser.lastName = partiallyUpdatedUser.lastName;
    if (
-      updatedUser.notificationPreferences.incomeNotifications !== undefined &&
-      user.notificationPreferences.incomeNotifications !==
-         updatedUser.notificationPreferences.incomeNotifications
+      partiallyUpdatedUser.notificationPreferences.incomeNotifications !==
+         undefined &&
+      existingUser.notificationPreferences.incomeNotifications !==
+         partiallyUpdatedUser.notificationPreferences.incomeNotifications
    )
-      user.notificationPreferences.incomeNotifications =
-         updatedUser.notificationPreferences.incomeNotifications;
+      existingUser.notificationPreferences.incomeNotifications =
+         partiallyUpdatedUser.notificationPreferences.incomeNotifications;
    if (
-      updatedUser.notificationPreferences.paymentNotifications !== undefined &&
-      user.notificationPreferences.paymentNotifications !==
-         updatedUser.notificationPreferences.paymentNotifications
+      partiallyUpdatedUser.notificationPreferences.paymentNotifications !==
+         undefined &&
+      existingUser.notificationPreferences.paymentNotifications !==
+         partiallyUpdatedUser.notificationPreferences.paymentNotifications
    )
-      user.notificationPreferences.paymentNotifications =
-         updatedUser.notificationPreferences.paymentNotifications;
+      existingUser.notificationPreferences.paymentNotifications =
+         partiallyUpdatedUser.notificationPreferences.paymentNotifications;
 
-   user = await usersService.update(user);
+   const updatedUser = await usersService.update(existingUser);
 
    return {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      emailVerified: user.isEmailVerified,
-      createdOn: user.createdOn,
-      modifiedOn: user.modifiedOn,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      email: updatedUser.email,
+      emailVerified: updatedUser.isEmailVerified,
+      createdOn: updatedUser.createdOn,
+      modifiedOn: updatedUser.modifiedOn,
       device: {
-         os: user.device ? user.device.os : null
+         os: updatedUser.device ? updatedUser.device.os : null
       },
       notificationPreferences: {
-         incomeNotifications: user.notificationPreferences.incomeNotifications,
-         paymentNotifications: user.notificationPreferences.paymentNotifications
+         incomeNotifications:
+            updatedUser.notificationPreferences.incomeNotifications,
+         paymentNotifications:
+            updatedUser.notificationPreferences.paymentNotifications
       }
    };
 };

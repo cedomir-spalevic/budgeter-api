@@ -12,7 +12,7 @@ export interface RegisterDeviceBody {
    token: string;
 }
 
-const validator = async (
+const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<RegisterDeviceBody> => {
    const userId = await isAuthorized(event);
@@ -29,7 +29,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const registerDeviceBody = await validator(event);
+      const registerDeviceBody = await validate(event);
 
       const response = await processRegisterDevice(registerDeviceBody);
       return {

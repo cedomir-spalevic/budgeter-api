@@ -2,7 +2,7 @@ import { AdminPublicUser, User } from "models/data/user";
 import { NotFoundError } from "models/errors";
 import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
-import { FilterQuery, ObjectId } from "mongodb";
+import { FilterQuery, FindOneOptions, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
 export const processGetMany = async (
@@ -12,7 +12,7 @@ export const processGetMany = async (
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
-   const count = await usersService.count();
+   const usersAmount = await usersService.count();
    const query: FilterQuery<User> = {};
    if (queryStringParameters.search) {
       query.title = {
@@ -20,13 +20,15 @@ export const processGetMany = async (
          $options: "$I"
       };
    }
-   const limit = queryStringParameters.limit;
-   const skip = queryStringParameters.skip;
-   const values = await usersService.findMany(query, { limit, skip });
+   const queryOptions: FindOneOptions<User> = {
+      limit: queryStringParameters.limit,
+      skip: queryStringParameters.skip
+   };
+   const users = await usersService.findMany(query, queryOptions);
 
    return {
-      count,
-      values: values.map((x) => ({
+      count: usersAmount,
+      values: users.map((x) => ({
          id: x._id.toHexString(),
          isAdmin: x.isAdmin,
          firstName: x.firstName,

@@ -9,7 +9,7 @@ export interface ChallengeBody {
    type: OneTimeCodeType;
 }
 
-const validator = (event: APIGatewayProxyEvent): ChallengeBody => {
+const validate = (event: APIGatewayProxyEvent): ChallengeBody => {
    const form = isValidJSONBody(event.body);
    const type = isOneOfStr(
       form,
@@ -26,7 +26,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const challengeBody = validator(event);
+      const challengeBody = validate(event);
       const response = await processChallenge(challengeBody);
       return {
          statusCode: 200,

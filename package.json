@@ -6,7 +6,7 @@
       "dev": "serverless offline start",
       "build": "npm run build:format && npm run build:lint",
       "build:lint": "eslint . --ext .ts",
-      "build:format": "prettier --write .",
+      "build:format": "prettier --write ./src",
       "login": "serverless login",
       "deploy": "serverless deploy"
    },

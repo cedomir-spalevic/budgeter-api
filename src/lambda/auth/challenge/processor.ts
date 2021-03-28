@@ -28,29 +28,41 @@ export const processChallenge = async (
    if (!user) {
       const validEmail = isValidEmail(email);
       if (!validEmail) throw new GeneralError("Email is not valid");
-      const randomKey = generateRandomOneTimeCode();
+      const randomOneTimeCode = generateRandomOneTimeCode();
       return {
-         expires: randomKey.expires,
-         key: randomKey.key
+         expires: randomOneTimeCode.expires,
+         key: randomOneTimeCode.key
       };
    }
 
-   const result = generateOneTimeCode(user._id, challengeBody.type);
-   await oneTimeCodeService.create(result.code);
+   const oneTimeCode = generateOneTimeCode(user._id, challengeBody.type);
+   await oneTimeCodeService.create(oneTimeCode.code);
 
    // Type type field (ideally will entirely be controlled by the mobile app)
    // should tell us what type of email we will be sending.
    // All the templates are stored in src/views folder
    if (challengeBody.type === "emailVerification") {
-      const emailConfirmationCodeView = getEmailConfirmationCodeView(result.code.code.toString());
-      await sendEmail(email, "Budgeter - your confirmation code", emailConfirmationCodeView);
+      const emailConfirmationCodeView = getEmailConfirmationCodeView(
+         oneTimeCode.code.code.toString()
+      );
+      await sendEmail(
+         email,
+         "Budgeter - your confirmation code",
+         emailConfirmationCodeView
+      );
    } else if (challengeBody.type === "passwordReset") {
-      const passwordResetView = getPasswordResetView(result.code.code.toString());
-      await sendEmail(email, "Budgeter - reset your password", passwordResetView);
+      const passwordResetView = getPasswordResetView(
+         oneTimeCode.code.code.toString()
+      );
+      await sendEmail(
+         email,
+         "Budgeter - reset your password",
+         passwordResetView
+      );
    }
 
    return {
-      expires: result.expires,
-      key: result.code.key
+      expires: oneTimeCode.expires,
+      key: oneTimeCode.code.key
    };
 };

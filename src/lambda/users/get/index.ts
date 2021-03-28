@@ -14,9 +14,7 @@ export interface GetUsersBody {
    pathParameters?: { userId: ObjectId };
 }
 
-const validator = async (
-   event: APIGatewayProxyEvent
-): Promise<GetUsersBody> => {
+const validate = async (event: APIGatewayProxyEvent): Promise<GetUsersBody> => {
    const adminId = await isAdminAuthorized(event);
    if (event.pathParameters === null) {
       const queryStrings = getListQueryStringParameters(
@@ -41,7 +39,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const getIncomesBody = await validator(event);
+      const getIncomesBody = await validate(event);
       let response: GetResponse<AdminPublicUser> | AdminPublicUser;
       if (getIncomesBody.queryStrings)
          response = await processGetMany(

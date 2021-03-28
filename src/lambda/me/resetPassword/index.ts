@@ -9,7 +9,7 @@ export interface PasswordResetBody {
    password: string;
 }
 
-const validator = (event: APIGatewayProxyEvent): PasswordResetBody => {
+const validate = (event: APIGatewayProxyEvent): PasswordResetBody => {
    const key = getPathParameterId("key", event.pathParameters);
    const form = isValidJSONBody(event.body);
    const password = isStr(form, "password", true);
@@ -21,8 +21,8 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const registerBody = validator(event);
-      const response = await processPasswordReset(registerBody);
+      const passwordResetBody = validate(event);
+      const response = await processPasswordReset(passwordResetBody);
       return {
          statusCode: 200,
          body: JSON.stringify(response)

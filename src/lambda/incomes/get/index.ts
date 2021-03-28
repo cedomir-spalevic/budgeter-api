@@ -14,7 +14,7 @@ export interface GetIncomesBody {
    pathParameters?: { incomeId: ObjectId };
 }
 
-const validator = async (
+const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<GetIncomesBody> => {
    const userId = await isAuthorized(event);
@@ -41,7 +41,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const getIncomesBody = await validator(event);
+      const getIncomesBody = await validate(event);
       let response: GetResponse<PublicIncome> | PublicIncome;
       if (getIncomesBody.queryStrings)
          response = await processGetMany(

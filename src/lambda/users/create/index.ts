@@ -5,7 +5,7 @@ import { isBool, isStr, isValidJSONBody } from "middleware/validators";
 import { AdminUserRequest } from "models/requests";
 import { processCreateUser } from "./processor";
 
-const validator = async (
+const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<AdminUserRequest> => {
    await isAdminAuthorized(event);
@@ -29,7 +29,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const userBody = await validator(event);
+      const userBody = await validate(event);
       const response = await processCreateUser(userBody);
       return {
          statusCode: 200,

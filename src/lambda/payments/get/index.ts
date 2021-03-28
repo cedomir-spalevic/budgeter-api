@@ -14,7 +14,7 @@ export interface GetPaymentsBody {
    pathParameters?: { paymentId: ObjectId };
 }
 
-const validator = async (
+const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<GetPaymentsBody> => {
    const userId = await isAuthorized(event);
@@ -41,7 +41,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const getIncomesBody = await validator(event);
+      const getIncomesBody = await validate(event);
       let response: GetResponse<PublicPayment> | PublicPayment;
       if (getIncomesBody.queryStrings)
          response = await processGetMany(
