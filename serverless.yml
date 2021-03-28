@@ -257,7 +257,7 @@ stepFunctions:
                InvokeFunction:
                   Type: Task
                   Resource:
-                     Fn::GetAtt: [batchClearTokens, Arn]
+                     Fn::GetAtt: [batch-clear-tokens, Arn]
                   Parameters:
                      Payload:
                         Input:
@@ -277,7 +277,7 @@ stepFunctions:
                InvokeFunction:
                   Type: Task
                   Resource:
-                     Fn::GetAtt: [batchPaymentNotifications, Arn]
+                     Fn::GetAtt: [batch-payment-notifications, Arn]
                   Parameters:
                      Payload:
                         Input:
@@ -297,7 +297,7 @@ stepFunctions:
                InvokeFunction:
                   Type: Task
                   Resource:
-                     Fn::GetAtt: [batchIncomeNotifications, Arn]
+                     Fn::GetAtt: [batch-income-notifications, Arn]
                   Parameters:
                      Payload:
                         Input:
