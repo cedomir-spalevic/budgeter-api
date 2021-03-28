@@ -1,4 +1,4 @@
-export const newAccountConfirmationTemplate = (code: string): string => `
+export const getNewAccountConfirmationView = (code: string): string => `
 <html>
 
    <body>

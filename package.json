@@ -43,7 +43,7 @@
       "serverless": "2.1",
       "serverless-bundle": "^4.2.2",
       "serverless-dotenv-plugin": "^3.0.0",
-      "serverless-offline": "6.8.0",
+      "serverless-offline": "^6.9.0",
       "serverless-pseudo-parameters": "^2.5.0",
       "serverless-step-functions": "^2.29.0",
       "ts-clean": "^1.0.3",

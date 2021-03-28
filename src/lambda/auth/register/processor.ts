@@ -2,7 +2,7 @@ import { AlreadyExistsError, GeneralError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
 import { sendEmail } from "services/external/aws/ses";
 import { RegisterBody } from ".";
-import { newAccountConfirmationTemplate } from "views/new-account-confirmation";
+import { getNewAccountConfirmationView } from "views/new-account-confirmation";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { User } from "models/data/user";
 import { UserAuth } from "models/data/userAuth";
@@ -62,8 +62,8 @@ export const processRegister = async (
    await oneTimeCodeService.create(result.code);
 
    // Send email verification with the confirmation code
-   const html = newAccountConfirmationTemplate(result.code.code.toString());
-   await sendEmail(email, "Budgeter - verify your email", html);
+   const accountConfirmationView = getNewAccountConfirmationView(result.code.code.toString());
+   await sendEmail(email, "Budgeter - verify your email", accountConfirmationView);
 
    // Return Key identifier
    return {

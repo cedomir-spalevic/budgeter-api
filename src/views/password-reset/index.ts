@@ -1,4 +1,4 @@
-export const passwordResetTemplate = (code: string): string => `
+export const getPasswordResetView = (code: string): string => `
 <html>
 
    <body>

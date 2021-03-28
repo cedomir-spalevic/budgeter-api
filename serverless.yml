@@ -244,12 +244,11 @@ functions:
 stepFunctions:
    validate: true
    stateMachines:
-      clearTokensJob:
+      clear-tokens-job:
          events:
             - schedule:
                  rate: cron(0 15 * * ? *)
                  enabled: true
-         name: clearTokensJob
          definition:
             Comment: Step function to clear any expired tokens
             StartAt: InvokeFunction
@@ -263,12 +262,11 @@ stepFunctions:
                         Input:
                            apiKey: ${env:BUDGETER_API_KEY}
                   End: true
-      paymentNotificationsJob:
+      payment-notifications-job:
          events:
             - schedule:
                  rate: cron(0 15 * * ? *)
                  enabled: true
-         name: paymentNotificationsJob
          definition:
             Comment: Step function to send any payment notifications
             StartAt: InvokeFunction
@@ -282,12 +280,11 @@ stepFunctions:
                         Input:
                            apiKey: ${env:BUDGETER_API_KEY}
                   End: true
-      incomeNotificationsJob:
+      income-notifications-job:
          events:
             - schedule:
                  rate: cron(0 15 * * ? *)
                  enabled: true
-         name: incomeNotificationsJob
          definition:
             Comment: Step function to send any income notifications
             StartAt: InvokeFunction

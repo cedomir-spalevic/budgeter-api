@@ -10,7 +10,7 @@ import { generateRefreshToken } from "services/internal/security/refreshToken";
 import { generateHash } from "services/internal/security/hash";
 import { LoginBody } from ".";
 import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
-import { newAccountConfirmationTemplate } from "views/new-account-confirmation";
+import { getNewAccountConfirmationView } from "views/new-account-confirmation";
 import { sendEmail } from "services/external/aws/ses";
 
 export const processSignIn = async (
@@ -51,8 +51,8 @@ export const processSignIn = async (
       await oneTimeCodeService.create(result.code);
 
       // Send email verification with the confirmation code
-      const html = newAccountConfirmationTemplate(result.code.code.toString());
-      await sendEmail(email, "Budgeter - verify your email", html);
+      const accountConfirmationView = getNewAccountConfirmationView(result.code.code.toString());
+      await sendEmail(email, "Budgeter - verify your email", accountConfirmationView);
 
       // Return Key identifier
       return {

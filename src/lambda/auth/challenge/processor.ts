@@ -2,8 +2,8 @@ import { GeneralError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
 import { ChallengeBody } from ".";
 import { sendEmail } from "services/external/aws/ses";
-import { emailConfirmationCodeTemplate } from "views/email-confirmation-code";
-import { passwordResetTemplate } from "views/password-reset";
+import { getEmailConfirmationCodeView } from "views/email-confirmation-code";
+import { getPasswordResetView } from "views/password-reset";
 import { isValidEmail } from "middleware/validators";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import {
@@ -42,11 +42,11 @@ export const processChallenge = async (
    // should tell us what type of email we will be sending.
    // All the templates are stored in src/views folder
    if (challengeBody.type === "emailVerification") {
-      const html = emailConfirmationCodeTemplate(result.code.code.toString());
-      await sendEmail(email, "Budgeter - your confirmation code", html);
+      const emailConfirmationCodeView = getEmailConfirmationCodeView(result.code.code.toString());
+      await sendEmail(email, "Budgeter - your confirmation code", emailConfirmationCodeView);
    } else if (challengeBody.type === "passwordReset") {
-      const html = passwordResetTemplate(result.code.code.toString());
-      await sendEmail(email, "Budgeter - reset your password", html);
+      const passwordResetView = getPasswordResetView(result.code.code.toString());
+      await sendEmail(email, "Budgeter - reset your password", passwordResetView);
    }
 
    return {

@@ -1,4 +1,4 @@
-export const emailConfirmationCodeTemplate = (code: string): string => `
+export const getEmailConfirmationCodeView = (code: string): string => `
 <html>
 
    <body>
