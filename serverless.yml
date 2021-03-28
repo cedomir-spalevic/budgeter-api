@@ -256,9 +256,9 @@ stepFunctions:
             States:
                InvokeFunction:
                   Type: Task
-                  Resource: arn:aws:states:::lambda:invoke
+                  Resource:
+                     Fn::GetAtt: [batchClearTokens, Arn]
                   Parameters:
-                     FunctionName: !Ref batchClearTokens
                      Payload:
                         Input:
                            apiKey: ${env:BUDGETER_API_KEY}
@@ -276,9 +276,9 @@ stepFunctions:
             States:
                InvokeFunction:
                   Type: Task
-                  Resource: arn:aws:states:::lambda:invoke
+                  Resource:
+                     Fn::GetAtt: [batchPaymentNotifications, Arn]
                   Parameters:
-                     FunctionName: !Ref batchPaymentNotifications
                      Payload:
                         Input:
                            apiKey: ${env:BUDGETER_API_KEY}
@@ -296,9 +296,9 @@ stepFunctions:
             States:
                InvokeFunction:
                   Type: Task
-                  Resource: arn:aws:states:::lambda:invoke
+                  Resource:
+                     Fn::GetAtt: [batchIncomeNotifications, Arn]
                   Parameters:
-                     FunctionName: !Ref batchIncomeNotifications
                      Payload:
                         Input:
                            apiKey: ${env:BUDGETER_API_KEY}
@@ -311,6 +311,7 @@ plugins:
    - "serverless-offline"
    - "serverless-dotenv-plugin"
    - "serverless-step-functions"
+   - "serverless-pseudo-parameters"
 
 # Custom variables read from serverless-bundle
 custom:
