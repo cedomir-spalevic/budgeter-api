@@ -12,11 +12,7 @@ import { Income } from "models/data/income";
 import { Recurrence, recurrenceTypes } from "models/data/recurrence";
 import { processUpdateIncome } from "./processor";
 
-<<<<<<< HEAD
 const validate = async (
-=======
-const validator = async (
->>>>>>> main
    event: APIGatewayProxyEvent
 ): Promise<Partial<Income>> => {
    const userId = await isAuthorized(event);
