@@ -3,66 +3,67 @@ import { NotFoundError } from "models/errors";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
 export const processUpdateIncome = async (
-   updatedIncome: Partial<Income>
+   partiallyUpdatedIncome: Partial<Income>
 ): Promise<PublicIncome> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
 
-   let income = await incomesService.find({
-      userId: updatedIncome.userId,
-      _id: updatedIncome._id
+   const existingIncome = await incomesService.find({
+      userId: partiallyUpdatedIncome.userId,
+      _id: partiallyUpdatedIncome._id
    });
-   if (!income) throw new NotFoundError("No Income found with the given Id");
+   if (!existingIncome)
+      throw new NotFoundError("No Income found with the given Id");
 
    // We only want to update the income with the differences. Not replace
    if (
-      updatedIncome.title !== undefined &&
-      income.title !== updatedIncome.title
+      partiallyUpdatedIncome.title !== undefined &&
+      existingIncome.title !== partiallyUpdatedIncome.title
    )
-      income.title = updatedIncome.title;
+      existingIncome.title = partiallyUpdatedIncome.title;
    if (
-      updatedIncome.amount !== undefined &&
-      income.amount !== updatedIncome.amount
+      partiallyUpdatedIncome.amount !== undefined &&
+      existingIncome.amount !== partiallyUpdatedIncome.amount
    )
-      income.amount = updatedIncome.amount;
+      existingIncome.amount = partiallyUpdatedIncome.amount;
    if (
-      updatedIncome.initialDay !== undefined &&
-      income.initialDay !== updatedIncome.initialDay
+      partiallyUpdatedIncome.initialDay !== undefined &&
+      existingIncome.initialDay !== partiallyUpdatedIncome.initialDay
    )
-      income.initialDay = updatedIncome.initialDay;
+      existingIncome.initialDay = partiallyUpdatedIncome.initialDay;
    if (
-      updatedIncome.initialDate !== undefined &&
-      income.initialDate !== updatedIncome.initialDate
+      partiallyUpdatedIncome.initialDate !== undefined &&
+      existingIncome.initialDate !== partiallyUpdatedIncome.initialDate
    )
-      income.initialDate = updatedIncome.initialDate;
+      existingIncome.initialDate = partiallyUpdatedIncome.initialDate;
    if (
-      updatedIncome.initialMonth !== undefined &&
-      income.initialMonth !== updatedIncome.initialMonth
+      partiallyUpdatedIncome.initialMonth !== undefined &&
+      existingIncome.initialMonth !== partiallyUpdatedIncome.initialMonth
    )
-      income.initialMonth = updatedIncome.initialMonth;
+      existingIncome.initialMonth = partiallyUpdatedIncome.initialMonth;
    if (
-      updatedIncome.initialYear !== undefined &&
-      income.initialYear !== updatedIncome.initialYear
+      partiallyUpdatedIncome.initialYear !== undefined &&
+      existingIncome.initialYear !== partiallyUpdatedIncome.initialYear
    )
-      income.initialYear = updatedIncome.initialYear;
+      existingIncome.initialYear = partiallyUpdatedIncome.initialYear;
    if (
-      updatedIncome.recurrence !== undefined &&
-      income.recurrence !== updatedIncome.recurrence
+      partiallyUpdatedIncome.recurrence !== undefined &&
+      existingIncome.recurrence !== partiallyUpdatedIncome.recurrence
    )
-      income.recurrence = updatedIncome.recurrence;
+      existingIncome.recurrence = partiallyUpdatedIncome.recurrence;
 
-   income = await incomesService.update(income);
+   const updatedIncome = await incomesService.update(existingIncome);
 
    return {
-      id: income._id.toHexString(),
-      title: income.title,
-      amount: income.amount,
-      initialDay: income.initialDay,
-      initialDate: income.initialDate,
-      initialMonth: income.initialMonth,
-      initialYear: income.initialYear,
-      recurrence: income.recurrence,
-      createdOn: income.createdOn,
-      modifiedOn: income.modifiedOn
+      id: updatedIncome._id.toHexString(),
+      title: updatedIncome.title,
+      amount: updatedIncome.amount,
+      initialDay: updatedIncome.initialDay,
+      initialDate: updatedIncome.initialDate,
+      initialMonth: updatedIncome.initialMonth,
+      initialYear: updatedIncome.initialYear,
+      recurrence: updatedIncome.recurrence,
+      createdOn: updatedIncome.createdOn,
+      modifiedOn: updatedIncome.modifiedOn
    };
 };

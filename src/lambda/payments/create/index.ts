@@ -11,7 +11,7 @@ import { Payment } from "models/data/payment";
 import { Recurrence, recurrenceTypes } from "models/data/recurrence";
 import { processCreatePayment } from "./processor";
 
-const validator = async (
+const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<Partial<Payment>> => {
    const userId = await isAuthorized(event);
@@ -45,7 +45,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const paymentBody = await validator(event);
+      const paymentBody = await validate(event);
       const response = await processCreatePayment(paymentBody);
       return {
          statusCode: 200,

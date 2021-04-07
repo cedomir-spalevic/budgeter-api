@@ -12,7 +12,7 @@ export interface AdminUpdateUserRequestBody {
    userRequest: AdminUserRequest;
 }
 
-const validator = async (
+const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<AdminUpdateUserRequestBody> => {
    await isAdminAuthorized(event);
@@ -38,7 +38,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const userRequest = await validator(event);
+      const userRequest = await validate(event);
       const response = await processUpdateUser(userRequest);
       return {
          statusCode: 200,

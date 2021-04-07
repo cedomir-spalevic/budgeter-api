@@ -8,9 +8,12 @@ export const processGetAPIKeys = async (): Promise<
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const apiKeyService = budgeterClient.getAPIKeyCollection();
 
-   const response = await apiKeyService.findMany({});
+   const allApiKeys = await apiKeyService.findMany({});
    return {
-      count: response.length,
-      values: response.map((x) => ({ id: x._id.toHexString(), key: x.key }))
+      count: allApiKeys.length,
+      values: allApiKeys.map((apiKey) => ({
+         id: apiKey._id.toHexString(),
+         key: apiKey.key
+      }))
    };
 };

@@ -12,7 +12,7 @@ import { Income } from "models/data/income";
 import { Recurrence, recurrenceTypes } from "models/data/recurrence";
 import { processUpdateIncome } from "./processor";
 
-const validator = async (
+const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<Partial<Income>> => {
    const userId = await isAuthorized(event);
@@ -47,8 +47,8 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const incomeBody = await validator(event);
-      const response = await processUpdateIncome(incomeBody);
+      const partiallyUpdatedIncome = await validate(event);
+      const response = await processUpdateIncome(partiallyUpdatedIncome);
       return {
          statusCode: 200,
          body: JSON.stringify(response)

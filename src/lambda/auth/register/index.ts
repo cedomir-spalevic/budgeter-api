@@ -10,7 +10,7 @@ export interface RegisterBody {
    password: string;
 }
 
-const validator = (event: APIGatewayProxyEvent): RegisterBody => {
+const validate = (event: APIGatewayProxyEvent): RegisterBody => {
    const form = isValidJSONBody(event.body);
    const firstName = isStr(form, "firstName", true);
    const lastName = isStr(form, "lastName", true);
@@ -24,7 +24,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const registerBody = validator(event);
+      const registerBody = validate(event);
       const response = await processRegister(registerBody);
       return {
          statusCode: 201,

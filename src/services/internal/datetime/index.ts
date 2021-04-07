@@ -77,7 +77,7 @@ export const getBiweeklyOccurrenceLength = (
  * @param month
  * @param year
  */
-export const getNumberOfDaysInMonth = (month: number, year: number) => {
+export const getNumberOfDaysInMonth = (month: number, year: number): number => {
    const monthToUse = new Date(year, month);
    monthToUse.setMonth(monthToUse.getMonth() + 1);
    monthToUse.setDate(0);

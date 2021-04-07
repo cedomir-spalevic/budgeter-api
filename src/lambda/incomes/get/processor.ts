@@ -2,7 +2,7 @@ import { Income, PublicIncome } from "models/data/income";
 import { NotFoundError } from "models/errors";
 import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
-import { FilterQuery, ObjectId } from "mongodb";
+import { FilterQuery, FindOneOptions, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
 export const processGetMany = async (
@@ -12,24 +12,29 @@ export const processGetMany = async (
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
 
-   const count = await incomesService.count({ userId });
+   const userIncomesAmount = await incomesService.count({ userId });
 
-   const query: FilterQuery<Income> = {
+   const userIncomesQuery: FilterQuery<Income> = {
       userId
    };
    if (queryStringParameters.search) {
-      query.title = {
+      userIncomesQuery.title = {
          $regex: queryStringParameters.search,
          $options: "$I"
       };
    }
-   const limit = queryStringParameters.limit;
-   const skip = queryStringParameters.skip;
-   const values = await incomesService.findMany(query, { limit, skip });
+   const queryOptions: FindOneOptions<Income> = {
+      limit: queryStringParameters.limit,
+      skip: queryStringParameters.skip
+   };
+   const userIncomes = await incomesService.findMany(
+      userIncomesQuery,
+      queryOptions
+   );
 
    return {
-      count,
-      values: values.map((x) => ({
+      count: userIncomesAmount,
+      values: userIncomes.map((x) => ({
          id: x._id.toHexString(),
          title: x.title,
          amount: x.amount,
@@ -51,19 +56,20 @@ export const processGetSingle = async (
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
 
-   const income = await incomesService.find({ userId, _id: incomeId });
-   if (!income) throw new NotFoundError("No Income found with the given Id");
+   const userIncome = await incomesService.find({ userId, _id: incomeId });
+   if (!userIncome)
+      throw new NotFoundError("No Income found with the given Id");
 
    return {
-      id: income._id.toHexString(),
-      title: income.title,
-      amount: income.amount,
-      initialDay: income.initialDay,
-      initialDate: income.initialDate,
-      initialMonth: income.initialMonth,
-      initialYear: income.initialYear,
-      recurrence: income.recurrence,
-      createdOn: income.createdOn,
-      modifiedOn: income.modifiedOn
+      id: userIncome._id.toHexString(),
+      title: userIncome.title,
+      amount: userIncome.amount,
+      initialDay: userIncome.initialDay,
+      initialDate: userIncome.initialDate,
+      initialMonth: userIncome.initialMonth,
+      initialYear: userIncome.initialYear,
+      recurrence: userIncome.recurrence,
+      createdOn: userIncome.createdOn,
+      modifiedOn: userIncome.modifiedOn
    };
 };

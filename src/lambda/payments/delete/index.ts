@@ -10,7 +10,7 @@ export interface DeletePaymentBody {
    paymentId: ObjectId;
 }
 
-const validator = async (
+const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<DeletePaymentBody> => {
    const userId = await isAuthorized(event);
@@ -22,7 +22,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const deletePaymentBody = await validator(event);
+      const deletePaymentBody = await validate(event);
       await processDeletePayment(deletePaymentBody);
       return {
          statusCode: 200,

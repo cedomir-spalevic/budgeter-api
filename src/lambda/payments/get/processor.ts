@@ -2,7 +2,7 @@ import { Payment, PublicPayment } from "models/data/payment";
 import { NotFoundError } from "models/errors";
 import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
-import { FilterQuery, ObjectId } from "mongodb";
+import { FilterQuery, FindOneOptions, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
 export const processGetMany = async (
@@ -12,24 +12,29 @@ export const processGetMany = async (
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
-   const count = await paymentsService.count({ userId });
+   const userPaymentsAmount = await paymentsService.count({ userId });
 
-   const query: FilterQuery<Payment> = {
+   const userPaymentsQuery: FilterQuery<Payment> = {
       userId
    };
    if (queryStringParameters.search) {
-      query.title = {
+      userPaymentsQuery.title = {
          $regex: queryStringParameters.search,
          $options: "$I"
       };
    }
-   const limit = queryStringParameters.limit;
-   const skip = queryStringParameters.skip;
-   const values = await paymentsService.findMany(query, { limit, skip });
+   const queryOptions: FindOneOptions<Payment> = {
+      limit: queryStringParameters.limit,
+      skip: queryStringParameters.skip
+   };
+   const userPayments = await paymentsService.findMany(
+      userPaymentsQuery,
+      queryOptions
+   );
 
    return {
-      count,
-      values: values.map((x) => ({
+      count: userPaymentsAmount,
+      values: userPayments.map((x) => ({
          id: x._id.toHexString(),
          title: x.title,
          amount: x.amount,

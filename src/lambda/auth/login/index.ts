@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { processSignIn } from "./processor";
+import { processLogin } from "./processor";
 import { handleErrorResponse } from "middleware/errors";
 import { isStr, isValidJSONBody } from "middleware/validators";
 
@@ -8,7 +8,7 @@ export interface LoginBody {
    password: string;
 }
 
-const validator = (event: APIGatewayProxyEvent): LoginBody => {
+const validate = (event: APIGatewayProxyEvent): LoginBody => {
    const form = isValidJSONBody(event.body);
    const email = isStr(form, "email", true);
    const password = isStr(form, "password", true);
@@ -19,8 +19,8 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const loginBody = validator(event);
-      const response = await processSignIn(loginBody);
+      const loginBody = validate(event);
+      const response = await processLogin(loginBody);
       return {
          statusCode: response.status,
          body: JSON.stringify(response.response)

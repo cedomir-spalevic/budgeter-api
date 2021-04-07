@@ -5,7 +5,7 @@ import { isBool, isStr, isValidJSONBody } from "middleware/validators";
 import { User } from "models/data/user";
 import { processUpdateUser } from "./processor";
 
-const validator = async (
+const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<Partial<User>> => {
    const userId = await isAuthorized(event);
@@ -30,8 +30,8 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const updatedUser = await validator(event);
-      const response = await processUpdateUser(updatedUser);
+      const partiallyUpdatedUser = await validate(event);
+      const response = await processUpdateUser(partiallyUpdatedUser);
       return {
          statusCode: 200,
          body: JSON.stringify(response)

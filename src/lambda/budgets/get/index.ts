@@ -11,7 +11,7 @@ export interface GetBudgetsBody {
    queryStrings: GetBudgetQueryStringParameters;
 }
 
-const validator = async (
+const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<GetBudgetsBody> => {
    const userId = await isAuthorized(event);
@@ -28,7 +28,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const getBudgetsBody = await validator(event);
+      const getBudgetsBody = await validate(event);
       const response = await getBudget(getBudgetsBody);
       return {
          statusCode: 200,

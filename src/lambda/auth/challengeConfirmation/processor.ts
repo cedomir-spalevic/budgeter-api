@@ -1,12 +1,12 @@
 import { UnauthorizedError } from "models/errors";
 import { AuthResponse } from "models/responses";
-import { RegisterConfirmationBody } from ".";
+import { ChallengeConfirmationBody } from ".";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
 
-export const processRegisterConfirmation = async (
-   registerConfirmationBody: RegisterConfirmationBody
+export const processChallengeConfirmation = async (
+   challengeConfirmationBody: ChallengeConfirmationBody
 ): Promise<AuthResponse> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
@@ -14,8 +14,8 @@ export const processRegisterConfirmation = async (
    const refreshTokenService = budgeterClient.getRefreshTokenCollection();
 
    let oneTimeCode = await oneTimeCodeService.find({
-      key: registerConfirmationBody.key,
-      code: registerConfirmationBody.code
+      key: challengeConfirmationBody.key,
+      code: challengeConfirmationBody.code
    });
    if (!oneTimeCode || oneTimeCode.expiresOn < Date.now())
       throw new UnauthorizedError();

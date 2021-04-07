@@ -9,7 +9,7 @@ export interface DeleteAPIKeyBody {
    apiKeyId: ObjectId;
 }
 
-const validator = async (
+const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<DeleteAPIKeyBody> => {
    await isAdminAuthorized(event);
@@ -21,7 +21,7 @@ export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const deleteApiKeyBody = await validator(event);
+      const deleteApiKeyBody = await validate(event);
       await processDeleteAPIKey(deleteApiKeyBody);
       return {
          statusCode: 200,

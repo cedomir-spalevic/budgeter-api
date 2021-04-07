@@ -3,66 +3,67 @@ import { NotFoundError } from "models/errors";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
 export const processUpdatePayment = async (
-   updatedPayment: Partial<Payment>
+   partiallyUpdatedPayment: Partial<Payment>
 ): Promise<PublicPayment> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
-   let payment = await paymentsService.find({
-      userId: updatedPayment.userId,
-      _id: updatedPayment._id
+   const existingPayment = await paymentsService.find({
+      userId: partiallyUpdatedPayment.userId,
+      _id: partiallyUpdatedPayment._id
    });
-   if (!payment) throw new NotFoundError("No Payment found with the given Id");
+   if (!existingPayment)
+      throw new NotFoundError("No Payment found with the given Id");
 
    if (
-      updatedPayment.title !== undefined &&
-      payment.title !== updatedPayment.title
+      partiallyUpdatedPayment.title !== undefined &&
+      existingPayment.title !== partiallyUpdatedPayment.title
    )
-      payment.title = updatedPayment.title;
+      existingPayment.title = partiallyUpdatedPayment.title;
    if (
-      updatedPayment.amount !== undefined &&
-      payment.amount !== updatedPayment.amount
+      partiallyUpdatedPayment.amount !== undefined &&
+      existingPayment.amount !== partiallyUpdatedPayment.amount
    )
-      payment.amount = updatedPayment.amount;
+      existingPayment.amount = partiallyUpdatedPayment.amount;
    if (
-      updatedPayment.initialDay !== undefined &&
-      payment.initialDay !== updatedPayment.initialDay
+      partiallyUpdatedPayment.initialDay !== undefined &&
+      existingPayment.initialDay !== partiallyUpdatedPayment.initialDay
    )
-      payment.initialDay = updatedPayment.initialDay;
+      existingPayment.initialDay = partiallyUpdatedPayment.initialDay;
    if (
-      updatedPayment.initialDate !== undefined &&
-      payment.initialDate !== updatedPayment.initialDate
+      partiallyUpdatedPayment.initialDate !== undefined &&
+      existingPayment.initialDate !== partiallyUpdatedPayment.initialDate
    )
-      payment.initialDate = updatedPayment.initialDate;
+      existingPayment.initialDate = partiallyUpdatedPayment.initialDate;
    if (
-      updatedPayment.initialMonth !== undefined &&
-      payment.initialMonth !== updatedPayment.initialMonth
+      partiallyUpdatedPayment.initialMonth !== undefined &&
+      existingPayment.initialMonth !== partiallyUpdatedPayment.initialMonth
    )
-      payment.initialMonth = updatedPayment.initialMonth;
+      existingPayment.initialMonth = partiallyUpdatedPayment.initialMonth;
    if (
-      updatedPayment.initialYear !== undefined &&
-      payment.initialYear !== updatedPayment.initialYear
+      partiallyUpdatedPayment.initialYear !== undefined &&
+      existingPayment.initialYear !== partiallyUpdatedPayment.initialYear
    )
-      payment.initialYear = updatedPayment.initialYear;
+      existingPayment.initialYear = partiallyUpdatedPayment.initialYear;
    if (
-      updatedPayment.recurrence !== undefined &&
-      payment.recurrence !== updatedPayment.recurrence
+      partiallyUpdatedPayment.recurrence !== undefined &&
+      existingPayment.recurrence !== partiallyUpdatedPayment.recurrence
    )
-      payment.recurrence = updatedPayment.recurrence;
+      existingPayment.recurrence = partiallyUpdatedPayment.recurrence;
 
-   payment = await paymentsService.update(payment);
+   const updatedPayment = await paymentsService.update(existingPayment);
 
    return {
-      id: payment._id.toHexString(),
-      title: payment.title,
-      amount: payment.amount,
-      initialDate: payment.initialDate,
-      initialDay: payment.initialDay,
-      initialMonth: payment.initialMonth,
-      initialYear: payment.initialYear,
-      recurrence: payment.recurrence,
-      createdOn: payment.createdOn,
-      modifiedOn: payment.modifiedOn
+      id: updatedPayment._id.toHexString(),
+      title: updatedPayment.title,
+      amount: updatedPayment.amount,
+      initialDate: updatedPayment.initialDate,
+      initialDay: updatedPayment.initialDay,
+      initialMonth: updatedPayment.initialMonth,
+      initialYear: updatedPayment.initialYear,
+      recurrence: updatedPayment.recurrence,
+      createdOn: updatedPayment.createdOn,
+      modifiedOn: updatedPayment.modifiedOn
    };
 };

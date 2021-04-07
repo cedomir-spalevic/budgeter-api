@@ -20,7 +20,7 @@ export const processCreateUser = async (
    const existingUser = await usersService.find({ email });
    if (existingUser) throw new AlreadyExistsError();
 
-   const newUser: Partial<User> = {
+   let newUser: Partial<User> = {
       firstName: userRequest.firstName,
       lastName: userRequest.lastName,
       email: email,
@@ -31,28 +31,28 @@ export const processCreateUser = async (
          paymentNotifications: false
       }
    };
-   const user = await usersService.create(newUser);
+   newUser = await usersService.create(newUser);
 
    try {
       const userAuth: Partial<UserAuth> = {
-         userId: user._id,
+         userId: newUser._id,
          hash: generateHash(userRequest.password)
       };
       await usersAuthService.create(userAuth);
    } catch (error) {
       // If this fails, we'll try to delete the user record
-      await usersService.delete(user._id);
+      await usersService.delete(newUser._id);
       throw error;
    }
 
    return {
-      id: user._id.toHexString(),
-      isAdmin: user.isAdmin,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      emailVerified: user.isEmailVerified,
-      createdOn: user.createdOn,
-      modifiedOn: user.modifiedOn
+      id: newUser._id.toHexString(),
+      isAdmin: newUser.isAdmin,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      email: newUser.email,
+      emailVerified: newUser.isEmailVerified,
+      createdOn: newUser.createdOn,
+      modifiedOn: newUser.modifiedOn
    };
 };
