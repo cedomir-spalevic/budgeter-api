@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { v4 as uuid } from "uuid";
 
 /**
- * Generat the key, code and expiration of an OTC
+ * Generate the key, code and expiration of an OTC
  */
 export const generateOneTimeCode = (
    userId: ObjectId,
