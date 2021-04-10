@@ -3,9 +3,10 @@ import { IEntity } from "./ientity";
 export interface User extends IEntity {
    firstName: string;
    lastName: string;
-   email: string;
+   email: string | null;
+   phoneNumber: string | null;
    isAdmin: boolean;
-   isEmailVerified: boolean;
+   isMfaVerified: boolean;
    device?: {
       os: string;
       platformApplicationEndpointArn: string;
@@ -21,7 +22,8 @@ export interface PublicUser {
    firstName: string;
    lastName: string;
    email: string;
-   emailVerified: boolean;
+   phoneNumber: string;
+   isMfaVerified: boolean;
    createdOn: Date;
    modifiedOn: Date;
    device: {
@@ -39,7 +41,8 @@ export interface AdminPublicUser {
    firstName: string;
    lastName: string;
    email: string;
-   emailVerified: boolean;
+   phoneNumber: string;
+   isMfaVerified: boolean;
    createdOn: Date;
    modifiedOn: Date;
 }

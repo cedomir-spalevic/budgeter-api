@@ -25,7 +25,7 @@ export const processCreateUser = async (
       lastName: userRequest.lastName,
       email: email,
       isAdmin: userRequest.isAdmin,
-      isEmailVerified: false,
+      isMfaVerified: false,
       notificationPreferences: {
          incomeNotifications: false,
          paymentNotifications: false
@@ -51,7 +51,8 @@ export const processCreateUser = async (
       firstName: newUser.firstName,
       lastName: newUser.lastName,
       email: newUser.email,
-      emailVerified: newUser.isEmailVerified,
+      phoneNumber: newUser.phoneNumber,
+      isMfaVerified: newUser.isMfaVerified,
       createdOn: newUser.createdOn,
       modifiedOn: newUser.modifiedOn
    };

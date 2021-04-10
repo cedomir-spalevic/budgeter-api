@@ -45,7 +45,7 @@ export const processLogin = async (
    // If the users email is not verified, then we want to force them to verify
    // by sending a verification email. If executed properly, the challengeConfirmation endpoint will get invoked.
    // If not then the token will naturally expire, and our clearTokens job will delete it
-   if (!user.isEmailVerified) {
+   if (!user.isMfaVerified) {
       // Create OTC
       const result = generateOneTimeCode(user._id, "emailVerification");
       await oneTimeCodeService.create(result.code);

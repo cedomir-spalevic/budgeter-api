@@ -25,7 +25,7 @@ export const processChallengeConfirmation = async (
 
    if (oneTimeCode.type === "emailVerification") {
       const user = await usersService.getById(oneTimeCode.userId.toHexString());
-      user.isEmailVerified = true;
+      user.isMfaVerified = true;
       await usersService.update(user);
    }
 

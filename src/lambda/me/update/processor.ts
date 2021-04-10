@@ -25,17 +25,17 @@ export const processUpdateUser = async (
       existingUser.lastName = partiallyUpdatedUser.lastName;
    if (
       partiallyUpdatedUser.notificationPreferences.incomeNotifications !==
-         undefined &&
+      undefined &&
       existingUser.notificationPreferences.incomeNotifications !==
-         partiallyUpdatedUser.notificationPreferences.incomeNotifications
+      partiallyUpdatedUser.notificationPreferences.incomeNotifications
    )
       existingUser.notificationPreferences.incomeNotifications =
          partiallyUpdatedUser.notificationPreferences.incomeNotifications;
    if (
       partiallyUpdatedUser.notificationPreferences.paymentNotifications !==
-         undefined &&
+      undefined &&
       existingUser.notificationPreferences.paymentNotifications !==
-         partiallyUpdatedUser.notificationPreferences.paymentNotifications
+      partiallyUpdatedUser.notificationPreferences.paymentNotifications
    )
       existingUser.notificationPreferences.paymentNotifications =
          partiallyUpdatedUser.notificationPreferences.paymentNotifications;
@@ -46,7 +46,8 @@ export const processUpdateUser = async (
       firstName: updatedUser.firstName,
       lastName: updatedUser.lastName,
       email: updatedUser.email,
-      emailVerified: updatedUser.isEmailVerified,
+      phoneNumber: updatedUser.phoneNumber,
+      isMfaVerified: updatedUser.isMfaVerified,
       createdOn: updatedUser.createdOn,
       modifiedOn: updatedUser.modifiedOn,
       device: {

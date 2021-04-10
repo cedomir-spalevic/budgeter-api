@@ -48,7 +48,8 @@ export const processUpdateUser = async (
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      emailVerified: user.isEmailVerified,
+      phoneNumber: user.phoneNumber,
+      isMfaVerified: user.isMfaVerified,
       createdOn: user.createdOn,
       modifiedOn: user.modifiedOn
    };

@@ -31,7 +31,7 @@ export const processRegister = async (
       lastName: registerBody.lastName,
       email: email,
       isAdmin: false,
-      isEmailVerified: false,
+      isMfaVerified: false,
       notificationPreferences: {
          incomeNotifications: false,
          paymentNotifications: false
