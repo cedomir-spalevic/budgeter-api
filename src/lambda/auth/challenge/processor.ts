@@ -14,19 +14,16 @@ import {
 export const processChallenge = async (
    challengeBody: ChallengeBody
 ): Promise<ConfirmationResponse> => {
-   if (!challengeBody.email) throw new GeneralError("Email cannot be blank");
-
-   const email = challengeBody.email.toLowerCase();
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
    const usersService = budgeterClient.getUsersCollection();
 
-   // Check if there exists a user with the given email address
+   // Check if there exists a user with the given email address OR phone number
    // If the user does not exist and a VALID email was provided, then we want to return a fake key and expiration time
    // That way we're not exactly presenting whether or not a users email exists to a possible social engineering attack
-   const user = await usersService.find({ email });
+   const user = await usersService.find({ email: challengeBody.email });
    if (!user) {
-      const validEmail = isValidEmail(email);
+      const validEmail = isValidEmail(challengeBody.email);
       if (!validEmail) throw new GeneralError("Email is not valid");
       const randomOneTimeCode = generateRandomOneTimeCode();
       return {
@@ -46,7 +43,7 @@ export const processChallenge = async (
          oneTimeCode.code.code.toString()
       );
       await sendEmail(
-         email,
+         challengeBody.email,
          "Budgeter - your confirmation code",
          emailConfirmationCodeView
       );
@@ -55,7 +52,7 @@ export const processChallenge = async (
          oneTimeCode.code.code.toString()
       );
       await sendEmail(
-         email,
+         challengeBody.email,
          "Budgeter - reset your password",
          passwordResetView
       );
