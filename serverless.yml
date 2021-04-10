@@ -1,7 +1,7 @@
 service: budgeter-api
 app: budgeter-api
 org: cedomirspalevic
-frameworkVersion: "2.1"
+frameworkVersion: "2.35"
 
 provider:
    name: aws
