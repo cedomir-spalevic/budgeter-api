@@ -32,9 +32,10 @@ export class BudgeterEntityCollection<T extends IEntity> {
    }
 
    public async getById(id: string): Promise<WithId<T>> {
-      return await this.collection.findOne({
+      const entity = await this.collection.findOne({
          _id: new ObjectId(id)
       } as FilterQuery<T>);
+      return entity as WithId<T>;
    }
 
    public async find(
