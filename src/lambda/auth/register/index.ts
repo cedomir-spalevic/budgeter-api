@@ -1,7 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
-import { isStr, isValidJSONBody, isValidPhoneNumber } from "middleware/validators";
+import { isStr, isValidEmail, isValidJSONBody } from "middleware/validators";
 import { GeneralError } from "models/errors";
+import { parsePhoneNumber } from "services/external/phoneNumber";
 import { processRegister } from "./processor";
 
 export interface RegisterBody {
@@ -16,21 +17,32 @@ const validate = (event: APIGatewayProxyEvent): RegisterBody => {
    const form = isValidJSONBody(event.body);
    const firstName = isStr(form, "firstName", true);
    const lastName = isStr(form, "lastName", true);
-   const email = isStr(form, "email");
-   const phoneNumber = isStr(form, "phoneNumber");
+   let email = isStr(form, "email");
+   let phoneNumber = isStr(form, "phoneNumber");
    const password = isStr(form, "password", true);
 
-   if (!email && !phoneNumber)
+   if (email === undefined && phoneNumber === undefined)
       throw new GeneralError("An email or phone number must be provided");
-   if (email !== undefined && email.trim().length === 0)
-      throw new GeneralError("Email cannot be blank");
-   if (phoneNumber !== undefined && !isValidPhoneNumber(phoneNumber))
-      throw new GeneralError("Phone number must be valid");
+   if (email) {
+      if (email === null || email.trim().length === 0)
+         throw new GeneralError("Email cannot be blank");
+      if (!isValidEmail(email))
+         throw new GeneralError("Email is not valid");
+      email = email.toLowerCase().trim();
+   }
+   if (phoneNumber) {
+      if (phoneNumber === null || phoneNumber.trim().length === 0)
+         throw new GeneralError("Phone number cannot be blank");
+      const parsedPhoneNumber = parsePhoneNumber(phoneNumber);
+      if (!parsedPhoneNumber.isValid)
+         throw new GeneralError("Phone number is not valid");
+      phoneNumber = parsedPhoneNumber.internationalFormat;
+   }
 
    return {
       firstName,
       lastName,
-      email: email !== undefined ? email.toLowerCase().trim() : undefined,
+      email,
       phoneNumber,
       password
    };
