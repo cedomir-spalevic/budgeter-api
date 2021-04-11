@@ -17,7 +17,16 @@ export const processRegister = async (
    const usersService = budgeterClient.getUsersCollection();
    const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
 
-   const existingUser = await usersService.find({ email: registerBody.email });
+   const existingUser = await usersService.find({
+      $or: [
+         {
+            email: registerBody.email
+         },
+         {
+            phoneNumber: registerBody.phoneNumber
+         }
+      ]
+   });
    if (existingUser) throw new AlreadyExistsError();
 
    const newUser: Partial<User> = {
