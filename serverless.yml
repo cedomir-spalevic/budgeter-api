@@ -17,6 +17,7 @@ provider:
       AWS_PLATFORM_APPLICATION_IOS: ${env:AWS_PLATFORM_APPLICATION_IOS}
       AWS_SNS_TOPIC: ${env:AWS_SNS_TOPIC}
       MONGO_CONNECTION_STRING: ${env:MONGO_CONNECTION_STRING}
+      BUDGETER_API_KEY: ${env:BUDGETER_API_KEY}
 
 # For serverless-bundle to remove dead code
 package:
