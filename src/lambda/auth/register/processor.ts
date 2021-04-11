@@ -1,13 +1,13 @@
 import { AlreadyExistsError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
-import { sendEmail } from "services/external/aws/ses";
 import { RegisterBody } from ".";
-import { getNewAccountConfirmationView } from "views/new-account-confirmation";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { User } from "models/data/user";
 import { UserAuth } from "models/data/userAuth";
 import { generateHash } from "services/internal/security/hash";
-import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
+import { IVerification } from "services/internal/verification/iVerification";
+import EmailVerification from "services/internal/verification/email";
+import PhoneNumberVerification from "services/internal/verification/phoneNumber";
 
 export const processRegister = async (
    registerBody: RegisterBody
@@ -54,23 +54,18 @@ export const processRegister = async (
       throw error;
    }
 
-   // We are going to send the user an email with the generated one time code
-   // If the user gets the email, then there will be a request for verification
+   // We are going to send the user an email or phone number with the generated one time code
+   // If the user gets the message, then there will be a request for verification
    // in the challengeConfirmation endpoint
-   const result = generateOneTimeCode(user._id, "emailVerification");
-   await oneTimeCodeService.create(result.code);
-
-   const accountConfirmationView = getNewAccountConfirmationView(
-      result.code.code.toString()
-   );
-   await sendEmail(
-      registerBody.email,
-      "Budgeter - verify your email",
-      accountConfirmationView
-   );
-
-   return {
-      expires: result.expires,
-      key: result.code.key
-   };
+   let verification: IVerification;
+   let emailOrPhone: string;
+   if (user.email) {
+      verification = new EmailVerification();
+      emailOrPhone = user.email;
+   }
+   if (user.phoneNumber) {
+      verification = new PhoneNumberVerification();
+      emailOrPhone = user.phoneNumber;
+   }
+   return verification.sendVerification(user._id, emailOrPhone);
 };
