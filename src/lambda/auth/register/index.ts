@@ -8,7 +8,7 @@ import { processRegister } from "./processor";
 export interface RegisterBody {
    firstName: string;
    lastName: string;
-   email?: string;
+   email: string;
    phoneNumber?: string;
    password: string;
 }
@@ -26,8 +26,7 @@ const validate = (event: APIGatewayProxyEvent): RegisterBody => {
    if (email) {
       if (email === null || email.trim().length === 0)
          throw new GeneralError("Email cannot be blank");
-      if (!isValidEmail(email))
-         throw new GeneralError("Email is not valid");
+      if (!isValidEmail(email)) throw new GeneralError("Email is not valid");
       email = email.toLowerCase().trim();
    }
    if (phoneNumber) {
@@ -38,6 +37,8 @@ const validate = (event: APIGatewayProxyEvent): RegisterBody => {
          throw new GeneralError("Phone number is not valid");
       phoneNumber = parsedPhoneNumber.internationalFormat;
    }
+   if (!email) email = null;
+   if (!phoneNumber) phoneNumber = null;
 
    return {
       firstName,

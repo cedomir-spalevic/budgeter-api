@@ -1,6 +1,11 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
-import { isOneOfStr, isStr, isValidJSONBody, isValidPhoneNumber } from "middleware/validators";
+import {
+   isOneOfStr,
+   isStr,
+   isValidJSONBody,
+   isValidPhoneNumber
+} from "middleware/validators";
 import { OneTimeCodeType } from "models/data/oneTimeCode";
 import { GeneralError } from "models/errors";
 import { processChallenge } from "./processor";

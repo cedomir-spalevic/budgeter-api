@@ -1,9 +1,7 @@
 import { GeneralError, InvalidJSONBodyError } from "models/errors";
 import { ObjectId } from "mongodb";
 import { isISOStr } from "services/internal/datetime";
-import {
-   isValidPhoneNumber as glibIsValidPhoneNumber
-} from "libphonenumber-js";
+import { isValidPhoneNumber as glibIsValidPhoneNumber } from "libphonenumber-js";
 
 interface Form {
    [name: string]: string | number | boolean | null | undefined;
@@ -112,7 +110,6 @@ export const isValidEmail = (email: string): boolean => {
    return re.test(email.toLowerCase());
 };
 
-
 export const isValidPhoneNumber = (phoneNumber: string): boolean => {
    return glibIsValidPhoneNumber(phoneNumber, "US");
-}
+};

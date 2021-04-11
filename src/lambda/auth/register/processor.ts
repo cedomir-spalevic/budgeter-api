@@ -1,4 +1,4 @@
-import { AlreadyExistsError, GeneralError } from "models/errors";
+import { AlreadyExistsError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
 import { sendEmail } from "services/external/aws/ses";
 import { RegisterBody } from ".";
