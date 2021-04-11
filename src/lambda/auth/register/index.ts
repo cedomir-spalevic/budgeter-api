@@ -1,12 +1,14 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
-import { isStr, isValidJSONBody } from "middleware/validators";
+import { isStr, isValidJSONBody, isValidPhoneNumber } from "middleware/validators";
+import { GeneralError } from "models/errors";
 import { processRegister } from "./processor";
 
 export interface RegisterBody {
    firstName: string;
    lastName: string;
-   email: string;
+   email?: string;
+   phoneNumber?: string;
    password: string;
 }
 
@@ -14,10 +16,24 @@ const validate = (event: APIGatewayProxyEvent): RegisterBody => {
    const form = isValidJSONBody(event.body);
    const firstName = isStr(form, "firstName", true);
    const lastName = isStr(form, "lastName", true);
-   const email = isStr(form, "email", true);
+   const email = isStr(form, "email");
+   const phoneNumber = isStr(form, "phoneNumber");
    const password = isStr(form, "password", true);
 
-   return { firstName, lastName, email, password };
+   if (!email && !phoneNumber)
+      throw new GeneralError("An email or phone number must be provided");
+   if (email !== undefined && email.trim().length === 0)
+      throw new GeneralError("Email cannot be blank");
+   if (phoneNumber !== undefined && !isValidPhoneNumber(phoneNumber))
+      throw new GeneralError("Phone number must be valid");
+
+   return {
+      firstName,
+      lastName,
+      email: email !== undefined ? email.toLowerCase().trim() : undefined,
+      phoneNumber,
+      password
+   };
 };
 
 export const handler = async (

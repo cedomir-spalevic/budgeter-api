@@ -12,24 +12,19 @@ import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
 export const processRegister = async (
    registerBody: RegisterBody
 ): Promise<ConfirmationResponse> => {
-   if (!registerBody.email) throw new GeneralError("Email cannot be blank");
-   if (!registerBody.password)
-      throw new GeneralError("Password cannot be blank");
-
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
    const usersService = budgeterClient.getUsersCollection();
    const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
 
-   const email = registerBody.email.toLowerCase();
-
-   const existingUser = await usersService.find({ email });
+   const existingUser = await usersService.find({ email: registerBody.email });
    if (existingUser) throw new AlreadyExistsError();
 
    const newUser: Partial<User> = {
       firstName: registerBody.firstName,
       lastName: registerBody.lastName,
-      email: email,
+      email: registerBody.email,
+      phoneNumber: registerBody.phoneNumber,
       isAdmin: false,
       isMfaVerified: false,
       notificationPreferences: {
@@ -60,7 +55,7 @@ export const processRegister = async (
       result.code.code.toString()
    );
    await sendEmail(
-      email,
+      registerBody.email,
       "Budgeter - verify your email",
       accountConfirmationView
    );
