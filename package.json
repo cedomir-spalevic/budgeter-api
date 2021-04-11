@@ -24,6 +24,7 @@
       "aws-sdk": "^2.799.0",
       "jsonwebtoken": "^8.5.1",
       "mongodb": "^3.6.3",
+      "mongodb-client-encryption": "^1.2.3",
       "uuid": "^8.3.0"
    },
    "devDependencies": {
@@ -48,8 +49,6 @@
       "ts-clean": "^1.0.3",
       "ts-node": "^9.0.0",
       "tsconfig-paths-webpack-plugin": "^3.3.0",
-      "typescript": "^4.2.3",
-      "webpack": "^5.24.4",
-      "webpack-cli": "^4.5.0"
+      "typescript": "^4.2.3"
    }
 }
