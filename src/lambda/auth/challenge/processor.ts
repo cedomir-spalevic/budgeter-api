@@ -43,7 +43,7 @@ export const processChallenge = async (
    // Type type field (ideally will entirely be controlled by the mobile app)
    // should tell us what type of email we will be sending.
    // All the templates are stored in src/views folder
-   if (challengeBody.type === "emailVerification") {
+   if (challengeBody.type === "mfaVerification") {
       const emailConfirmationCodeView = getEmailConfirmationCodeView(
          oneTimeCode.code.code.toString()
       );

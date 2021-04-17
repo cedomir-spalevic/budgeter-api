@@ -47,7 +47,7 @@ export const processLogin = async (
    // If not then the token will naturally expire, and our clearTokens job will delete it
    if (!user.isMfaVerified) {
       // Create OTC
-      const result = generateOneTimeCode(user._id, "emailVerification");
+      const result = generateOneTimeCode(user._id, "mfaVerification");
       await oneTimeCodeService.create(result.code);
 
       // Send email verification with the confirmation code

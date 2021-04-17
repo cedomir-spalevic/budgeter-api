@@ -21,7 +21,7 @@ const validate = (event: APIGatewayProxyEvent): ChallengeBody => {
    const type = isOneOfStr(
       form,
       "type",
-      ["emailVerification", "passwordReset"],
+      ["mfaVerification", "passwordReset"],
       true
    ) as OneTimeCodeType;
    let email = isStr(form, "email");
