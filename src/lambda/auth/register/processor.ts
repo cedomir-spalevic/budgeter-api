@@ -15,7 +15,6 @@ export const processRegister = async (
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
    const usersService = budgeterClient.getUsersCollection();
-   const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
 
    const existingUser = await usersService.find({
       $or: [
