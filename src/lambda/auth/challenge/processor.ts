@@ -2,9 +2,7 @@ import { NotFoundError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
 import { ChallengeBody } from ".";
 import BudgeterMongoClient from "services/external/mongodb/client";
-import {
-   generateOneTimeCode
-} from "services/internal/security/oneTimeCode";
+import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
 import { sendVerification } from "services/internal/verification";
 import { User } from "models/data/user";
 
@@ -16,24 +14,25 @@ export const processChallenge = async (
    const usersService = budgeterClient.getUsersCollection();
 
    // Check if there exists a user with the given email address OR phone number
-   const user = await usersService.find({ 
-      "$or" : [
-         { 
-            "$and": [
-               { email: { "$ne": null } },
-               { email: challengeBody.email }
-            ]
+   const user = await usersService.find({
+      $or: [
+         {
+            $and: [{ email: { $ne: null } }, { email: challengeBody.email }]
          },
-         { 
-            "$and": [
-               { phoneNumber: { "$ne": null } },
+         {
+            $and: [
+               { phoneNumber: { $ne: null } },
                { phoneNumber: challengeBody.phoneNumber }
             ]
          }
       ]
    });
    if (!user) {
-      throw new NotFoundError(`No user found with the provided ${(challengeBody.email ? "email" : "phone number")}`);
+      throw new NotFoundError(
+         `No user found with the provided ${
+            challengeBody.email ? "email" : "phone number"
+         }`
+      );
    }
 
    const oneTimeCode = generateOneTimeCode(user._id, challengeBody.type);

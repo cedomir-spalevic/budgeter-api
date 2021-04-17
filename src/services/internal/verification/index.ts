@@ -6,7 +6,10 @@ import { IVerification } from "./iVerification";
 import PhoneNumberVerification from "./phoneNumber";
 
 // Send a one time code verification to a user depending on if they have email or phone number populated
-export const sendVerification = (user: Partial<User>, type: OneTimeCodeType): Promise<ConfirmationResponse> => {
+export const sendVerification = (
+   user: Partial<User>,
+   type: OneTimeCodeType
+): Promise<ConfirmationResponse> => {
    let verification: IVerification;
    let emailOrPhone: string;
    if (user.email) {
@@ -18,4 +21,4 @@ export const sendVerification = (user: Partial<User>, type: OneTimeCodeType): Pr
       emailOrPhone = user.phoneNumber;
    }
    return verification.sendVerification(user._id, emailOrPhone, type);
-}
+};

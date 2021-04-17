@@ -1,10 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
-import {
-   isOneOfStr,
-   isStr,
-   isValidJSONBody
-} from "middleware/validators";
+import { isOneOfStr, isStr, isValidJSONBody } from "middleware/validators";
 import { OneTimeCodeType } from "models/data/oneTimeCode";
 import { GeneralError } from "models/errors";
 import { parsePhoneNumber } from "services/external/phoneNumber";
@@ -26,16 +22,16 @@ const validate = (event: APIGatewayProxyEvent): ChallengeBody => {
    ) as OneTimeCodeType;
    let email = isStr(form, "email");
    let phoneNumber = isStr(form, "phoneNumber");
-   
+
    if (email === undefined && phoneNumber === undefined)
       throw new GeneralError("An email or phone number must be provided");
-   if(email) {
+   if (email) {
       if (email === null || email.trim().length === 0)
          throw new GeneralError("Email cannot be blank");
       email = email.toLowerCase().trim();
       phoneNumber = null;
    }
-   if(phoneNumber) {
+   if (phoneNumber) {
       if (phoneNumber === null || phoneNumber.trim().length === 0)
          throw new GeneralError("Phone number cannot be blank");
       const parsedPhoneNumber = parsePhoneNumber(phoneNumber);

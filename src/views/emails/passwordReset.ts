@@ -17,4 +17,4 @@ export const getPasswordResetEmailView = (code: string): IEmailView => ({
 
    </html>
    `
-})
+});

@@ -21,12 +21,12 @@ const validate = async (
 
    if (email === undefined && phoneNumber === undefined)
       throw new GeneralError("An email or phone number must be provided");
-   if(email) {
+   if (email) {
       if (email === null || email.trim().length === 0)
          throw new GeneralError("Email cannot be blank");
       email = email.toLowerCase().trim();
    }
-   if(phoneNumber) {
+   if (phoneNumber) {
       if (phoneNumber === null || phoneNumber.trim().length === 0)
          throw new GeneralError("Phone number cannot be blank");
       const parsedPhoneNumber = parsePhoneNumber(phoneNumber);
@@ -34,9 +34,8 @@ const validate = async (
          throw new GeneralError("Phone number is not valid");
       phoneNumber = parsedPhoneNumber.internationalFormat;
    }
-   
-   if (!password)
-      throw new GeneralError("Password cannot be blank");
+
+   if (!password) throw new GeneralError("Password cannot be blank");
 
    return {
       firstName,

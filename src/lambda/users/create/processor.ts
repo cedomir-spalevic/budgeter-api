@@ -12,17 +12,14 @@ export const processCreateUser = async (
    const usersAuthService = budgeterClient.getUsersAuthCollection();
    const usersService = budgeterClient.getUsersCollection();
 
-   const existingUser = await usersService.find({ 
-      "$or" : [
-         { 
-            "$and": [
-               { email: { "$ne": null } },
-               { email: userRequest.email }
-            ]
+   const existingUser = await usersService.find({
+      $or: [
+         {
+            $and: [{ email: { $ne: null } }, { email: userRequest.email }]
          },
-         { 
-            "$and": [
-               { phoneNumber: { "$ne": null } },
+         {
+            $and: [
+               { phoneNumber: { $ne: null } },
                { phoneNumber: userRequest.phoneNumber }
             ]
          }

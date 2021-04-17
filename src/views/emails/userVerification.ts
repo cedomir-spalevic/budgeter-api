@@ -17,4 +17,4 @@ export const getUserVerificationEmailView = (code: string): IEmailView => ({
 
    </html>
    `
-})
+});

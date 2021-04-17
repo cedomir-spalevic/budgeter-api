@@ -23,6 +23,6 @@ export interface StepFunctionBatchJobRequest {
    Payload: {
       Input: {
          apiKey: string;
-      }
-   }
+      };
+   };
 }
