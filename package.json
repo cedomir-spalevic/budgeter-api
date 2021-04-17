@@ -3,7 +3,7 @@
    "version": "1.0.0",
    "description": "Budgeter API",
    "scripts": {
-      "dev": "serverless offline start",
+      "dev": "serverless offline start --stage dev",
       "build": "npm run build:format && npm run build:lint",
       "build:lint": "eslint . --ext .ts",
       "build:format": "prettier --write ./src",
@@ -26,6 +26,7 @@
       "jsonwebtoken": "^8.5.1",
       "libphonenumber-js": "^1.9.16",
       "mongodb": "^3.6.3",
+      "mongodb-client-encryption": "^1.2.3",
       "uuid": "^8.3.0"
    },
    "devDependencies": {
