@@ -1,14 +1,12 @@
-import { GeneralError } from "models/errors";
+import { NotFoundError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
 import { ChallengeBody } from ".";
 import { sendEmail } from "services/external/aws/ses";
 import { getEmailConfirmationCodeView } from "views/email-confirmation-code";
 import { getPasswordResetView } from "views/password-reset";
-import { isValidEmail } from "middleware/validators";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import {
-   generateOneTimeCode,
-   generateRandomOneTimeCode
+   generateOneTimeCode
 } from "services/internal/security/oneTimeCode";
 
 export const processChallenge = async (
@@ -19,17 +17,24 @@ export const processChallenge = async (
    const usersService = budgeterClient.getUsersCollection();
 
    // Check if there exists a user with the given email address OR phone number
-   // If the user does not exist and a VALID email was provided, then we want to return a fake key and expiration time
-   // That way we're not exactly presenting whether or not a users email exists to a possible social engineering attack
-   const user = await usersService.find({ email: challengeBody.email });
+   const user = await usersService.find({ 
+      "$or" : [
+         { 
+            "$and": [
+               { email: { "$ne": null } },
+               { email: challengeBody.email }
+            ]
+         },
+         { 
+            "$and": [
+               { phoneNumber: { "$ne": null } },
+               { phoneNumber: challengeBody.phoneNumber }
+            ]
+         }
+      ]
+   });
    if (!user) {
-      const validEmail = isValidEmail(challengeBody.email);
-      if (!validEmail) throw new GeneralError("Email is not valid");
-      const randomOneTimeCode = generateRandomOneTimeCode();
-      return {
-         expires: randomOneTimeCode.expires,
-         key: randomOneTimeCode.key
-      };
+      throw new NotFoundError(`No user found with the provided ${(challengeBody.email ? "email" : "phone number")}`);
    }
 
    const oneTimeCode = generateOneTimeCode(user._id, challengeBody.type);
