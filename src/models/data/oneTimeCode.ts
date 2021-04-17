@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { IEntity } from "./ientity";
 
-export type OneTimeCodeType = "mfaVerification" | "passwordReset";
+export type OneTimeCodeType = "userVerification" | "newUserVerification" | "passwordReset";
 
 export interface OneTimeCode extends IEntity {
    userId: ObjectId;
