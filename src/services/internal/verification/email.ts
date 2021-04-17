@@ -3,11 +3,10 @@ import { ObjectId } from "mongodb";
 import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
 import { IVerification } from "./iVerification";
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { getNewAccountConfirmationView } from "views/new-account-confirmation";
 import { sendEmail } from "services/external/aws/ses";
 import { OneTimeCodeType } from "models/data/oneTimeCode";
-import { getEmailConfirmationCodeView } from "views/email-confirmation-code";
-import { getPasswordResetView } from "views/password-reset";
+import { IEmailView } from "views/emails/iEmailView";
+import { getEmailView } from "views/emails";
 
 class EmailVerification implements IVerification {
    async sendVerification(userId: ObjectId, email: string, type: OneTimeCodeType): Promise<ConfirmationResponse> {
@@ -18,22 +17,11 @@ class EmailVerification implements IVerification {
       const code = oneTimeCode.code.code.toString();
       await oneTimeCodeService.create(oneTimeCode.code);
 
-      let view: string;
-      let subject: string;
-      if(type === "newUserVerification") {
-         view = getNewAccountConfirmationView(code);
-         subject = "Budgeter - verify your email";
-      } else if(type === "userVerification") {
-         view = getEmailConfirmationCodeView(code);
-         subject = "Budgeter - your confirmation code";
-      } else {
-         view = getPasswordResetView(code);
-         subject = "Budgeter - reset your password";
-      }
+      const emailView: IEmailView = getEmailView(type, code);
       await sendEmail(
          email,
-         subject,
-         view
+         emailView.subject,
+         emailView.html
       );
 
       return {
