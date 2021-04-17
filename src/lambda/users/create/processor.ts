@@ -1,6 +1,6 @@
 import { AdminPublicUser, User } from "models/data/user";
 import { UserAuth } from "models/data/userAuth";
-import { AlreadyExistsError, GeneralError } from "models/errors";
+import { AlreadyExistsError } from "models/errors";
 import { AdminUserRequest } from "models/requests";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateHash } from "services/internal/security/hash";
@@ -8,22 +8,33 @@ import { generateHash } from "services/internal/security/hash";
 export const processCreateUser = async (
    userRequest: AdminUserRequest
 ): Promise<AdminPublicUser> => {
-   if (!userRequest.email) throw new GeneralError("Email cannot be blank");
-   if (!userRequest.password)
-      throw new GeneralError("Password cannot be blank");
-
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
    const usersService = budgeterClient.getUsersCollection();
-   const email = userRequest.email.toLowerCase();
 
-   const existingUser = await usersService.find({ email });
+   const existingUser = await usersService.find({ 
+      "$or" : [
+         { 
+            "$and": [
+               { email: { "$ne": null } },
+               { email: userRequest.email }
+            ]
+         },
+         { 
+            "$and": [
+               { phoneNumber: { "$ne": null } },
+               { phoneNumber: userRequest.phoneNumber }
+            ]
+         }
+      ]
+   });
    if (existingUser) throw new AlreadyExistsError();
 
    let newUser: Partial<User> = {
       firstName: userRequest.firstName,
       lastName: userRequest.lastName,
-      email: email,
+      email: userRequest.email,
+      phoneNumber: userRequest.phoneNumber,
       isAdmin: userRequest.isAdmin,
       isMfaVerified: false,
       notificationPreferences: {

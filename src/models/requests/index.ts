@@ -14,6 +14,7 @@ export interface AdminUserRequest {
    firstName: string;
    lastName: string;
    email?: string;
+   phoneNumber?: string;
    isAdmin: boolean;
    password: string;
 }
