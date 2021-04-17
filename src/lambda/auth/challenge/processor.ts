@@ -1,13 +1,12 @@
 import { NotFoundError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
 import { ChallengeBody } from ".";
-import { sendEmail } from "services/external/aws/ses";
-import { getEmailConfirmationCodeView } from "views/email-confirmation-code";
-import { getPasswordResetView } from "views/password-reset";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import {
    generateOneTimeCode
 } from "services/internal/security/oneTimeCode";
+import { sendVerification } from "services/internal/verification";
+import { User } from "models/data/user";
 
 export const processChallenge = async (
    challengeBody: ChallengeBody
@@ -40,28 +39,15 @@ export const processChallenge = async (
    const oneTimeCode = generateOneTimeCode(user._id, challengeBody.type);
    await oneTimeCodeService.create(oneTimeCode.code);
 
-   // Type type field (ideally will entirely be controlled by the mobile app)
+   // The type field (ideally will entirely be controlled by the mobile app)
    // should tell us what type of email we will be sending.
    // All the templates are stored in src/views folder
-   if (challengeBody.type === "mfaVerification") {
-      const emailConfirmationCodeView = getEmailConfirmationCodeView(
-         oneTimeCode.code.code.toString()
-      );
-      await sendEmail(
-         challengeBody.email,
-         "Budgeter - your confirmation code",
-         emailConfirmationCodeView
-      );
-   } else if (challengeBody.type === "passwordReset") {
-      const passwordResetView = getPasswordResetView(
-         oneTimeCode.code.code.toString()
-      );
-      await sendEmail(
-         challengeBody.email,
-         "Budgeter - reset your password",
-         passwordResetView
-      );
-   }
+   const userToChallenge: Partial<User> = {
+      _id: user._id,
+      email: challengeBody.email,
+      phoneNumber: challengeBody.phoneNumber
+   };
+   await sendVerification(userToChallenge, challengeBody.type);
 
    return {
       expires: oneTimeCode.expires,
