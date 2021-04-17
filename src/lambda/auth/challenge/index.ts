@@ -3,11 +3,11 @@ import { handleErrorResponse } from "middleware/errors";
 import {
    isOneOfStr,
    isStr,
-   isValidJSONBody,
-   isValidPhoneNumber
+   isValidJSONBody
 } from "middleware/validators";
 import { OneTimeCodeType } from "models/data/oneTimeCode";
 import { GeneralError } from "models/errors";
+import { parsePhoneNumber } from "services/external/phoneNumber";
 import { processChallenge } from "./processor";
 
 export interface ChallengeBody {
@@ -24,18 +24,29 @@ const validate = (event: APIGatewayProxyEvent): ChallengeBody => {
       ["emailVerification", "passwordReset"],
       true
    ) as OneTimeCodeType;
-   const email = isStr(form, "email", false);
-   const phoneNumber = isStr(form, "phoneNumber", false);
-
-   if (!email && !phoneNumber)
+   let email = isStr(form, "email");
+   let phoneNumber = isStr(form, "phoneNumber");
+   
+   if (email === undefined && phoneNumber === undefined)
       throw new GeneralError("An email or phone number must be provided");
-   if (email !== undefined && email.trim().length === 0)
-      throw new GeneralError("Email cannot be blank");
-   if (phoneNumber !== undefined && !isValidPhoneNumber(phoneNumber))
-      throw new GeneralError("Phone number must be valid");
+   if(email) {
+      if (email === null || email.trim().length === 0)
+         throw new GeneralError("Email cannot be blank");
+      email = email.toLowerCase().trim();
+      phoneNumber = null;
+   }
+   if(phoneNumber) {
+      if (phoneNumber === null || phoneNumber.trim().length === 0)
+         throw new GeneralError("Phone number cannot be blank");
+      const parsedPhoneNumber = parsePhoneNumber(phoneNumber);
+      if (!parsedPhoneNumber.isValid)
+         throw new GeneralError("Phone number is not valid");
+      phoneNumber = parsedPhoneNumber.internationalFormat;
+      email = null;
+   }
 
    return {
-      email: email !== undefined ? email.toLowerCase().trim() : undefined,
+      email,
       phoneNumber,
       type
    };
