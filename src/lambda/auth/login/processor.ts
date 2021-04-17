@@ -9,9 +9,7 @@ import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
 import { generateHash } from "services/internal/security/hash";
 import { LoginBody } from ".";
-import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
-import { getNewAccountConfirmationView } from "views/new-account-confirmation";
-import { sendEmail } from "services/external/aws/ses";
+import { sendVerification } from "services/internal/verification";
 
 export const processLogin = async (
    loginBody: LoginBody
@@ -26,7 +24,6 @@ export const processLogin = async (
    const usersService = budgeterClient.getUsersCollection();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
    const refreshTokenService = budgeterClient.getRefreshTokenCollection();
-   const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
 
    const email = loginBody.email.toLowerCase();
 
@@ -46,27 +43,12 @@ export const processLogin = async (
    // by sending a verification email. If executed properly, the challengeConfirmation endpoint will get invoked.
    // If not then the token will naturally expire, and our clearTokens job will delete it
    if (!user.isMfaVerified) {
-      // Create OTC
-      const result = generateOneTimeCode(user._id, "mfaVerification");
-      await oneTimeCodeService.create(result.code);
-
-      // Send email verification with the confirmation code
-      const accountConfirmationView = getNewAccountConfirmationView(
-         result.code.code.toString()
-      );
-      await sendEmail(
-         email,
-         "Budgeter - verify your email",
-         accountConfirmationView
-      );
+      const confirmationCode = await sendVerification(user, "userVerification");
 
       // Return Key identifier
       return {
          status: 202,
-         response: {
-            expires: result.expires,
-            key: result.code.key
-         }
+         response: confirmationCode
       };
    }
 
