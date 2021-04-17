@@ -5,9 +5,7 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 import { User } from "models/data/user";
 import { UserAuth } from "models/data/userAuth";
 import { generateHash } from "services/internal/security/hash";
-import { IVerification } from "services/internal/verification/iVerification";
-import EmailVerification from "services/internal/verification/email";
-import PhoneNumberVerification from "services/internal/verification/phoneNumber";
+import { sendVerification } from "services/internal/verification";
 
 export const processRegister = async (
    registerBody: RegisterBody
@@ -56,15 +54,5 @@ export const processRegister = async (
    // We are going to send the user an email or phone number with the generated one time code
    // If the user gets the message, then there will be a request for verification
    // in the challengeConfirmation endpoint
-   let verification: IVerification;
-   let emailOrPhone: string;
-   if (user.email) {
-      verification = new EmailVerification();
-      emailOrPhone = user.email;
-   }
-   if (user.phoneNumber) {
-      verification = new PhoneNumberVerification();
-      emailOrPhone = user.phoneNumber;
-   }
-   return verification.sendVerification(user._id, emailOrPhone);
+   return sendVerification(user, "newUserVerification");
 };
