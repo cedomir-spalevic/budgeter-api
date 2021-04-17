@@ -4,16 +4,18 @@ import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
 import { IVerification } from "./iVerification";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { sendTextMessage } from "services/external/aws/sns";
+import { OneTimeCodeType } from "models/data/oneTimeCode";
 
 class PhoneNumberVerification implements IVerification {
-   async sendVerification(userId: ObjectId, phoneNumber: string): Promise<ConfirmationResponse> {
+   async sendVerification(userId: ObjectId, phoneNumber: string, type: OneTimeCodeType): Promise<ConfirmationResponse> {
       const budgeterClient = await BudgeterMongoClient.getInstance();
       const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
 
-      const oneTimeCode = generateOneTimeCode(userId, "phoneNumberVerification");
+      const oneTimeCode = generateOneTimeCode(userId, type);
+      const code = oneTimeCode.code.code.toString();
       await oneTimeCodeService.create(oneTimeCode.code);
-
-      const message = `${oneTimeCode.code.code.toString()} is your Budgeter confirmation code`;
+      
+      const message = `${code} is your Budgeter confirmation code`;
       await sendTextMessage(phoneNumber, message);
 
       return {
