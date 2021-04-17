@@ -35,7 +35,7 @@ export const isAdminAuthorized = async (
 export const isAPIKeyAuthorized = async (
    event: StepFunctionBatchJobRequest
 ): Promise<void> => {
-   const apiKey = event.Input.apiKey;
+   const apiKey = event.Payload.Input.apiKey;
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const apiKeyService = budgeterClient.getAPIKeyCollection();
 
