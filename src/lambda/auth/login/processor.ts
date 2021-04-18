@@ -1,8 +1,4 @@
-import {
-   GeneralError,
-   NoUserEmailFoundError,
-   UnauthorizedError
-} from "models/errors";
+import { NoUserEmailFoundError, UnauthorizedError } from "models/errors";
 import { AuthResponse, ConfirmationResponse } from "models/responses";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateAccessToken } from "services/internal/security/accessToken";
