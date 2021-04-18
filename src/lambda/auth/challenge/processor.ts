@@ -35,9 +35,6 @@ export const processChallenge = async (
       );
    }
 
-   const oneTimeCode = generateOneTimeCode(user._id, challengeBody.type);
-   await oneTimeCodeService.create(oneTimeCode.code);
-
    // The type field (ideally will entirely be controlled by the mobile app)
    // should tell us what type of email we will be sending.
    // All the templates are stored in src/views folder
@@ -46,10 +43,10 @@ export const processChallenge = async (
       email: challengeBody.email,
       phoneNumber: challengeBody.phoneNumber
    };
-   await sendVerification(userToChallenge, challengeBody.type);
+   const confirmationResponse = await sendVerification(userToChallenge, challengeBody.type);
 
    return {
-      expires: oneTimeCode.expires,
-      key: oneTimeCode.code.key
+      expires: confirmationResponse.expires,
+      key: confirmationResponse.key
    };
 };
