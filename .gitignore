@@ -7,16 +7,10 @@ jspm_packages
 
 # ENV variables
 .env
+.aws.env
 
 # Serverless
 .serverless
 
 # Webpack
 .webpack
-
-# VSccode
-.vscode
-
-# AWS SAM Template
-sam-template.yaml
-sam.yaml

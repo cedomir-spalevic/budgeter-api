@@ -3,7 +3,7 @@
    "version": "1.0.0",
    "description": "Budgeter API",
    "scripts": {
-      "dev": "serverless offline start",
+      "dev": "serverless offline start --stage dev",
       "build": "npm run build:format && npm run build:lint",
       "build:lint": "eslint . --ext .ts",
       "build:format": "prettier --write ./src",
@@ -23,6 +23,7 @@
    "dependencies": {
       "aws-sdk": "^2.799.0",
       "jsonwebtoken": "^8.5.1",
+      "libphonenumber-js": "^1.9.16",
       "mongodb": "^3.6.3",
       "mongodb-client-encryption": "^1.2.3",
       "uuid": "^8.3.0"
@@ -40,7 +41,7 @@
       "eslint-loader": "^4.0.2",
       "nodemon": "^2.0.4",
       "prettier": "^2.2.1",
-      "serverless": "2.1",
+      "serverless": "2.35",
       "serverless-bundle": "^4.2.2",
       "serverless-dotenv-plugin": "^3.0.0",
       "serverless-offline": "^6.9.0",

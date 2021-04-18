@@ -34,7 +34,8 @@ export const processGetMany = async (
          firstName: x.firstName,
          lastName: x.lastName,
          email: x.email,
-         emailVerified: x.isEmailVerified,
+         phoneNumber: x.phoneNumber,
+         isMfaVerified: x.isMfaVerified,
          createdOn: x.createdOn,
          modifiedOn: x.modifiedOn
       }))
@@ -57,7 +58,8 @@ export const processGetSingle = async (
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      emailVerified: user.isEmailVerified,
+      phoneNumber: user.phoneNumber,
+      isMfaVerified: user.isMfaVerified,
       createdOn: user.createdOn,
       modifiedOn: user.modifiedOn
    };

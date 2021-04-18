@@ -1,68 +1,53 @@
-import { GeneralError } from "models/errors";
+import { NotFoundError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
 import { ChallengeBody } from ".";
-import { sendEmail } from "services/external/aws/ses";
-import { getEmailConfirmationCodeView } from "views/email-confirmation-code";
-import { getPasswordResetView } from "views/password-reset";
-import { isValidEmail } from "middleware/validators";
 import BudgeterMongoClient from "services/external/mongodb/client";
-import {
-   generateOneTimeCode,
-   generateRandomOneTimeCode
-} from "services/internal/security/oneTimeCode";
+import { sendVerification } from "services/internal/verification";
+import { User } from "models/data/user";
 
 export const processChallenge = async (
    challengeBody: ChallengeBody
 ): Promise<ConfirmationResponse> => {
-   if (!challengeBody.email) throw new GeneralError("Email cannot be blank");
-
-   const email = challengeBody.email.toLowerCase();
    const budgeterClient = await BudgeterMongoClient.getInstance();
-   const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
    const usersService = budgeterClient.getUsersCollection();
 
-   // Check if there exists a user with the given email address
-   // If the user does not exist and a VALID email was provided, then we want to return a fake key and expiration time
-   // That way we're not exactly presenting whether or not a users email exists to a possible social engineering attack
-   const user = await usersService.find({ email });
+   // Check if there exists a user with the given email address OR phone number
+   const user = await usersService.find({
+      $or: [
+         {
+            $and: [{ email: { $ne: null } }, { email: challengeBody.email }]
+         },
+         {
+            $and: [
+               { phoneNumber: { $ne: null } },
+               { phoneNumber: challengeBody.phoneNumber }
+            ]
+         }
+      ]
+   });
    if (!user) {
-      const validEmail = isValidEmail(email);
-      if (!validEmail) throw new GeneralError("Email is not valid");
-      const randomOneTimeCode = generateRandomOneTimeCode();
-      return {
-         expires: randomOneTimeCode.expires,
-         key: randomOneTimeCode.key
-      };
+      throw new NotFoundError(
+         `No user found with the provided ${
+            challengeBody.email ? "email" : "phone number"
+         }`
+      );
    }
 
-   const oneTimeCode = generateOneTimeCode(user._id, challengeBody.type);
-   await oneTimeCodeService.create(oneTimeCode.code);
-
-   // Type type field (ideally will entirely be controlled by the mobile app)
+   // The type field (ideally will entirely be controlled by the mobile app)
    // should tell us what type of email we will be sending.
    // All the templates are stored in src/views folder
-   if (challengeBody.type === "emailVerification") {
-      const emailConfirmationCodeView = getEmailConfirmationCodeView(
-         oneTimeCode.code.code.toString()
-      );
-      await sendEmail(
-         email,
-         "Budgeter - your confirmation code",
-         emailConfirmationCodeView
-      );
-   } else if (challengeBody.type === "passwordReset") {
-      const passwordResetView = getPasswordResetView(
-         oneTimeCode.code.code.toString()
-      );
-      await sendEmail(
-         email,
-         "Budgeter - reset your password",
-         passwordResetView
-      );
-   }
+   const userToChallenge: Partial<User> = {
+      _id: user._id,
+      email: challengeBody.email,
+      phoneNumber: challengeBody.phoneNumber
+   };
+   const confirmationResponse = await sendVerification(
+      userToChallenge,
+      challengeBody.type
+   );
 
    return {
-      expires: oneTimeCode.expires,
-      key: oneTimeCode.code.key
+      expires: confirmationResponse.expires,
+      key: confirmationResponse.key
    };
 };

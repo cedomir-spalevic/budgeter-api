@@ -31,7 +31,7 @@ export const processPasswordReset = async (
    if (!oneTimeCode) throw new UnauthorizedError();
 
    const user = await usersService.getById(oneTimeCode.userId.toHexString());
-   user.isEmailVerified = true;
+   user.isMfaVerified = true;
    await usersService.update(user);
 
    const userAuth: Partial<UserAuth> = {

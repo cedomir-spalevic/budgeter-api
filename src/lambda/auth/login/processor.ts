@@ -1,17 +1,11 @@
-import {
-   GeneralError,
-   NoUserEmailFoundError,
-   UnauthorizedError
-} from "models/errors";
+import { NoUserEmailFoundError, UnauthorizedError } from "models/errors";
 import { AuthResponse, ConfirmationResponse } from "models/responses";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
 import { generateHash } from "services/internal/security/hash";
 import { LoginBody } from ".";
-import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
-import { getNewAccountConfirmationView } from "views/new-account-confirmation";
-import { sendEmail } from "services/external/aws/ses";
+import { sendVerification } from "services/internal/verification";
 
 export const processLogin = async (
    loginBody: LoginBody
@@ -19,18 +13,24 @@ export const processLogin = async (
    status: number;
    response: AuthResponse | ConfirmationResponse;
 }> => {
-   if (!loginBody.email) throw new GeneralError("Email cannot be blank");
-   if (!loginBody.password) throw new GeneralError("Password cannot be blank");
-
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
    const refreshTokenService = budgeterClient.getRefreshTokenCollection();
-   const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
 
-   const email = loginBody.email.toLowerCase();
-
-   const user = await usersService.find({ email });
+   const user = await usersService.find({
+      $or: [
+         {
+            $and: [{ email: { $ne: null } }, { email: loginBody.email }]
+         },
+         {
+            $and: [
+               { phoneNumber: { $ne: null } },
+               { phoneNumber: loginBody.phoneNumber }
+            ]
+         }
+      ]
+   });
    if (!user) throw new NoUserEmailFoundError();
 
    // We only want to check if the hashed password exists in the DB
@@ -45,28 +45,13 @@ export const processLogin = async (
    // If the users email is not verified, then we want to force them to verify
    // by sending a verification email. If executed properly, the challengeConfirmation endpoint will get invoked.
    // If not then the token will naturally expire, and our clearTokens job will delete it
-   if (!user.isEmailVerified) {
-      // Create OTC
-      const result = generateOneTimeCode(user._id, "emailVerification");
-      await oneTimeCodeService.create(result.code);
-
-      // Send email verification with the confirmation code
-      const accountConfirmationView = getNewAccountConfirmationView(
-         result.code.code.toString()
-      );
-      await sendEmail(
-         email,
-         "Budgeter - verify your email",
-         accountConfirmationView
-      );
+   if (!user.isMfaVerified) {
+      const confirmationCode = await sendVerification(user, "userVerification");
 
       // Return Key identifier
       return {
          status: 202,
-         response: {
-            expires: result.expires,
-            key: result.code.key
-         }
+         response: confirmationCode
       };
    }
 

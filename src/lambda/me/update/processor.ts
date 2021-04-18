@@ -46,7 +46,8 @@ export const processUpdateUser = async (
       firstName: updatedUser.firstName,
       lastName: updatedUser.lastName,
       email: updatedUser.email,
-      emailVerified: updatedUser.isEmailVerified,
+      phoneNumber: updatedUser.phoneNumber,
+      isMfaVerified: updatedUser.isMfaVerified,
       createdOn: updatedUser.createdOn,
       modifiedOn: updatedUser.modifiedOn,
       device: {
