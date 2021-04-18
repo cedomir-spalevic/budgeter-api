@@ -2,7 +2,6 @@ import { NotFoundError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
 import { ChallengeBody } from ".";
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
 import { sendVerification } from "services/internal/verification";
 import { User } from "models/data/user";
 
@@ -10,7 +9,6 @@ export const processChallenge = async (
    challengeBody: ChallengeBody
 ): Promise<ConfirmationResponse> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
-   const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
    const usersService = budgeterClient.getUsersCollection();
 
    // Check if there exists a user with the given email address OR phone number
@@ -43,7 +41,10 @@ export const processChallenge = async (
       email: challengeBody.email,
       phoneNumber: challengeBody.phoneNumber
    };
-   const confirmationResponse = await sendVerification(userToChallenge, challengeBody.type);
+   const confirmationResponse = await sendVerification(
+      userToChallenge,
+      challengeBody.type
+   );
 
    return {
       expires: confirmationResponse.expires,
