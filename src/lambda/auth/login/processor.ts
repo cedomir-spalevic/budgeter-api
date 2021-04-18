@@ -17,17 +17,24 @@ export const processLogin = async (
    status: number;
    response: AuthResponse | ConfirmationResponse;
 }> => {
-   if (!loginBody.email) throw new GeneralError("Email cannot be blank");
-   if (!loginBody.password) throw new GeneralError("Password cannot be blank");
-
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
    const refreshTokenService = budgeterClient.getRefreshTokenCollection();
 
-   const email = loginBody.email.toLowerCase();
-
-   const user = await usersService.find({ email });
+   const user = await usersService.find({
+      $or: [
+         {
+            $and: [{ email: { $ne: null } }, { email: loginBody.email }]
+         },
+         {
+            $and: [
+               { phoneNumber: { $ne: null } },
+               { phoneNumber: loginBody.phoneNumber }
+            ]
+         }
+      ]
+   });
    if (!user) throw new NoUserEmailFoundError();
 
    // We only want to check if the hashed password exists in the DB

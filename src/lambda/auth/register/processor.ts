@@ -17,10 +17,13 @@ export const processRegister = async (
    const existingUser = await usersService.find({
       $or: [
          {
-            email: registerBody.email
+            $and: [{ email: { $ne: null } }, { email: registerBody.email }]
          },
          {
-            phoneNumber: registerBody.phoneNumber
+            $and: [
+               { phoneNumber: { $ne: null } },
+               { phoneNumber: registerBody.phoneNumber }
+            ]
          }
       ]
    });
