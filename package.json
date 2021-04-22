@@ -11,6 +11,7 @@
       "clean:dist": "rimraf dist",
       "clean:clear-cache": "npm cache clean --force",
       "build": "npm-run-all build:*",
+      "build:validate": "tsc --noEmit",
       "build:lint": "eslint . --ext .ts",
       "build:format": "prettier --write ./src",
       "build:test": "jest",
