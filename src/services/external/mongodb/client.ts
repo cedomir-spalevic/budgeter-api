@@ -30,6 +30,8 @@ class BudgeterMongoClient {
       return BudgeterMongoClient.instance;
    }
 
+   public close = () => this._client.close();
+
    public getAPIKeyCollection = () =>
       new BudgeterEntityCollection<APIKey>(
          this._db.collection<APIKey>("apiKeys")
