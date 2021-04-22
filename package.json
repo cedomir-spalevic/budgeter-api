@@ -10,7 +10,7 @@
       "clean:webpack": "rimraf .webpack",
       "clean:dist": "rimraf dist",
       "clean:clear-cache": "npm cache clean --force",
-      "build": "npm run build:format && npm run build:lint",
+      "build": "npm-run-all build:*",
       "build:lint": "eslint . --ext .ts",
       "build:format": "prettier --write ./src",
       "build:test": "jest",
