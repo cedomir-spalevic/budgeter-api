@@ -6,7 +6,10 @@ export interface ChallengeConfirmationBody {
    code: number;
 }
 
-export const validate = (key: string, form: Form): ChallengeConfirmationBody => {
+export const validate = (
+   key: string,
+   form: Form
+): ChallengeConfirmationBody => {
    key = isGuid(key);
    const code = isNumber(form, "code", true);
 

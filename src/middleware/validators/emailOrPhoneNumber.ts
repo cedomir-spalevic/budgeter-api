@@ -28,5 +28,5 @@ export const validateEmailOrPhoneNumber = (input: Input): Input => {
    }
    if (!email) email = null;
    if (!phoneNumber) phoneNumber = null;
-   return { email, phoneNumber }
-}
+   return { email, phoneNumber };
+};

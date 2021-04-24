@@ -18,7 +18,10 @@ export const validate = (form: Form): ChallengeBody => {
    ) as OneTimeCodeType;
    const emailInput = isStr(form, "email");
    const phoneNumberInput = isStr(form, "phoneNumber");
-   const { email, phoneNumber } = validateEmailOrPhoneNumber({ email: emailInput, phoneNumber: phoneNumberInput });
+   const { email, phoneNumber } = validateEmailOrPhoneNumber({
+      email: emailInput,
+      phoneNumber: phoneNumberInput
+   });
 
    return {
       email,

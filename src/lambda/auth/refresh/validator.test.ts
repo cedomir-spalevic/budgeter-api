@@ -8,6 +8,6 @@ test("Invalid refresh token", () => {
       const form: Form = {
          refreshToken: null
       };
-      validate(form)
+      validate(form);
    }).toThrowError(new GeneralError("refreshToken must be a string"));
-})
+});

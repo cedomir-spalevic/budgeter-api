@@ -114,7 +114,6 @@ export const isValidPhoneNumber = (phoneNumber: string): boolean => {
 
 export const isGuid = (guid: string): string => {
    const result = validateGuid(guid);
-   if(!result)
-      throw new GeneralError("Invalid Id");
+   if (!result) throw new GeneralError("Invalid Id");
    return guid;
-}
+};

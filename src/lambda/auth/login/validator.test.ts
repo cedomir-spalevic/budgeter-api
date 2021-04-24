@@ -9,9 +9,9 @@ test("Empty email", () => {
          email: null,
          password: "123"
       };
-      validate(form)
-   }).toThrowError(new GeneralError("Email cannot be blank"))
-})
+      validate(form);
+   }).toThrowError(new GeneralError("Email cannot be blank"));
+});
 
 test("Empty phone number", () => {
    expect(() => {
@@ -19,18 +19,18 @@ test("Empty phone number", () => {
          phoneNumber: null,
          password: "123"
       };
-      validate(form)
+      validate(form);
    }).toThrowError(new GeneralError("Phone number cannot be blank"));
-})
+});
 
 test("Empty password", () => {
    expect(() => {
       const form: Form = {
          phoneNumber: "123"
       };
-      validate(form)
+      validate(form);
    }).toThrowError(new GeneralError("password is required"));
-})
+});
 
 test("Invalid phone number", () => {
    expect(() => {
@@ -38,9 +38,9 @@ test("Invalid phone number", () => {
          phoneNumber: "123",
          password: "123"
       };
-      validate(form)
+      validate(form);
    }).toThrowError(new GeneralError("Phone number is not valid"));
-})
+});
 
 test("Valid form with phone number", () => {
    const form: Form = {
@@ -48,8 +48,8 @@ test("Valid form with phone number", () => {
       password: "123"
    };
    const result = validate(form);
-   expect(result).not.toBeNull()
-})
+   expect(result).not.toBeNull();
+});
 
 test("Valid form with email", () => {
    const form: Form = {
@@ -57,5 +57,5 @@ test("Valid form with email", () => {
       password: "123"
    };
    const result = validate(form);
-   expect(result).not.toBeNull()
-})
+   expect(result).not.toBeNull();
+});

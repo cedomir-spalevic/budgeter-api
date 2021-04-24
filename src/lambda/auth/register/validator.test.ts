@@ -10,9 +10,9 @@ test("Missing first name", () => {
          email: "",
          password: ""
       };
-      validate(form)
+      validate(form);
    }).toThrowError(new GeneralError("firstName is required"));
-})
+});
 
 test("Missing last name", () => {
    expect(() => {
@@ -21,6 +21,6 @@ test("Missing last name", () => {
          email: "",
          password: ""
       };
-      validate(form)
+      validate(form);
    }).toThrowError(new GeneralError("lastName is required"));
-})
+});

@@ -16,7 +16,10 @@ export const validate = (form: Form): RegisterBody => {
    const emailInput = isStr(form, "email");
    const phoneNumberInput = isStr(form, "phoneNumber");
    const password = isStr(form, "password", true);
-   const { email, phoneNumber } = validateEmailOrPhoneNumber({ email: emailInput, phoneNumber: phoneNumberInput });
+   const { email, phoneNumber } = validateEmailOrPhoneNumber({
+      email: emailInput,
+      phoneNumber: phoneNumberInput
+   });
 
    return {
       firstName,

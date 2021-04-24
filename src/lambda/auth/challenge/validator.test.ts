@@ -9,9 +9,9 @@ test("Empty email", () => {
          email: null,
          type: "userVerification"
       };
-      validate(form)
-   }).toThrowError(new GeneralError("Email cannot be blank"))
-})
+      validate(form);
+   }).toThrowError(new GeneralError("Email cannot be blank"));
+});
 
 test("Empty phone number", () => {
    expect(() => {
@@ -19,9 +19,9 @@ test("Empty phone number", () => {
          phoneNumber: null,
          type: "userVerification"
       };
-      validate(form)
+      validate(form);
    }).toThrowError(new GeneralError("Phone number cannot be blank"));
-})
+});
 
 test("Invalid phone number", () => {
    expect(() => {
@@ -29,9 +29,9 @@ test("Invalid phone number", () => {
          phoneNumber: "123",
          type: "userVerification"
       };
-      validate(form)
+      validate(form);
    }).toThrowError(new GeneralError("Phone number is not valid"));
-})
+});
 
 test("userVerification type", () => {
    expect(() => {
@@ -39,9 +39,9 @@ test("userVerification type", () => {
          email: "cedomir.spalevic@gmail.com",
          type: "userVerification"
       };
-      return validate(form)
+      return validate(form);
    }).not.toBeNull();
-})
+});
 
 test("passwordReset type", () => {
    expect(() => {
@@ -49,9 +49,9 @@ test("passwordReset type", () => {
          email: "cedomir.spalevic@gmail.com",
          type: "passwordReset"
       };
-      return validate(form)
+      return validate(form);
    }).not.toBeNull();
-})
+});
 
 test("incorrect type", () => {
    expect(() => {
@@ -59,15 +59,15 @@ test("incorrect type", () => {
          phoneNumber: "123",
          type: "test"
       };
-      validate(form)
-   }).toThrowError(GeneralError)
-})
+      validate(form);
+   }).toThrowError(GeneralError);
+});
 
 test("missing type", () => {
    expect(() => {
       const form: Form = {
          phoneNumber: ""
-      }
+      };
       validate(form);
    }).toThrowError(new GeneralError("type is required"));
-})
+});

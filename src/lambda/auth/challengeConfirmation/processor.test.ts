@@ -6,6 +6,6 @@ import { processChallengeConfirmation } from "./processor";
 test("Invalid key", () => {
    expect(async () => {
       const key = v4();
-      await processChallengeConfirmation({ key, code: 123456 })
+      await processChallengeConfirmation({ key, code: 123456 });
    }).rejects.toBeInstanceOf(UnauthorizedError);
-})
+});
