@@ -8,8 +8,12 @@ import {
    isNumber,
    isOneOfStr,
    isStr,
+   isValidDayOfMonth,
+   isValidDayOfWeek,
    isValidEmail,
-   isValidPhoneNumber
+   isValidMonth,
+   isValidPhoneNumber,
+   isValidYear
 } from ".";
 import { ObjectId } from "mongodb";
 
@@ -224,3 +228,75 @@ test("Valid phone number", () => {
 test("Valid phone number", () => {
    expect(isValidPhoneNumber("630-915-2350")).toBeTruthy();
 });
+
+test("Valid day of week", () => {
+   expect(isValidDayOfWeek({ day: 4 }, "day")).toBeTruthy()
+})
+
+test("Valid day of week", () => {
+   expect(isValidDayOfWeek({ day: 0 }, "day")).toBe(0)
+})
+
+test("Valid day of week", () => {
+   expect(isValidDayOfWeek({ day: 6 }, "day")).toBe(6)
+})
+
+test("Invalid day of week", () => {
+   expect(() => isValidDayOfWeek({ day: -1 }, "day")).toThrowError(GeneralError);
+})
+
+test("Invalid day of week", () => {
+   expect(() => isValidDayOfWeek({ day: 7 }, "day")).toThrowError(GeneralError);
+})
+
+test("Valid day of month", () => {
+   expect(isValidDayOfMonth({ day: 27 }, "day")).toBeTruthy()
+})
+
+test("Valid day of month", () => {
+   expect(isValidDayOfMonth({ day: 1 }, "day")).toBeTruthy()
+})
+
+test("Valid day of month", () => {
+   expect(isValidDayOfMonth({ day: 31 }, "day")).toBeTruthy()
+})
+
+test("Invalid day of month", () => {
+   expect(() => isValidDayOfMonth({ day: 32 }, "day")).toThrowError(GeneralError);
+})
+
+test("Invalid day of month", () => {
+   expect(() => isValidDayOfMonth({ day: -1 }, "day")).toThrowError(GeneralError);
+})
+
+test("Valid month", () => {
+   expect(isValidMonth({ month: 0 }, "month")).toBe(0)
+})
+
+test("Valid month", () => {
+   expect(isValidMonth({ month: 11 }, "month")).toBe(11)
+})
+
+test("Valid month", () => {
+   expect(isValidMonth({ month: 6 }, "month")).toBe(6)
+})
+
+test("Invalid month", () => {
+   expect(() => isValidMonth({ month: 12 }, "month")).toThrowError(GeneralError);
+})
+
+test("Invalid month", () => {
+   expect(() => isValidMonth({ month: -1 }, "month")).toThrowError(GeneralError);
+})
+
+test("Valid year", () => {
+   expect(isValidYear({ year: 2021 }, "year")).toBe(2021)
+})
+
+test("Invalid year", () => {
+   expect(() => isValidYear({ year: 1 }, "year")).toThrowError(GeneralError);
+})
+
+test("Invalid year", () => {
+   expect(() => isValidYear({ year: 20211 }, "year")).toThrowError(GeneralError)
+})

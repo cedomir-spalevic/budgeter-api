@@ -117,3 +117,31 @@ export const isGuid = (guid: string): string => {
    if (!result) throw new GeneralError("Invalid Id");
    return guid;
 };
+
+export const isValidDayOfWeek = (form: Form, name: string, required = false): number => {
+   const num = isNumber(form, name, required);
+   if(num < 0 || num > 6)
+      throw new GeneralError(`${name} must be between 0-6`);
+   return num;
+}
+
+export const isValidDayOfMonth = (form: Form, name: string, required = false): number => {
+   const num = isNumber(form, name, required);
+   if(num < 1 || num > 31)
+      throw new GeneralError(`${name} must be between 1-31`);
+   return num;
+}
+
+export const isValidMonth = (form: Form, name: string, required = false): number => {
+   const num = isNumber(form, name, required);
+   if(num < 0 || num > 11)
+      throw new GeneralError(`${name} must be between 0-11`);
+   return num;
+}
+
+export const isValidYear = (form: Form, name: string, required = false): number => {
+   const num = isNumber(form, name, required);
+   if(!/^\d{4}$/.test(num.toString()))
+      throw new GeneralError(`${name} is not a valid year`);
+   return num;
+}
