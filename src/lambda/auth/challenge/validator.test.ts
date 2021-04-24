@@ -10,7 +10,9 @@ test("Empty email", () => {
          type: "userVerification"
       };
       validate(form);
-   }).toThrowError(new GeneralError("Email cannot be blank"));
+   }).toThrowError(
+      new GeneralError("An email or phone number must be provided")
+   );
 });
 
 test("Empty phone number", () => {
@@ -20,7 +22,9 @@ test("Empty phone number", () => {
          type: "userVerification"
       };
       validate(form);
-   }).toThrowError(new GeneralError("Phone number cannot be blank"));
+   }).toThrowError(
+      new GeneralError("An email or phone number must be provided")
+   );
 });
 
 test("Invalid phone number", () => {

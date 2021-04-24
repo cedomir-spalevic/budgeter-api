@@ -10,15 +10,23 @@ interface Input {
 export const validateEmailOrPhoneNumber = (input: Input): Input => {
    let email = input.email;
    let phoneNumber = input.phoneNumber;
-   if (email === undefined && phoneNumber === undefined)
+   if (
+      (!email && !phoneNumber) ||
+      (email &&
+         email.trim().length === 0 &&
+         phoneNumber &&
+         phoneNumber.trim().length === 0) ||
+      (!email && phoneNumber && phoneNumber.trim().length === 0) ||
+      (email && email.trim().length === 0 && !phoneNumber)
+   )
       throw new GeneralError("An email or phone number must be provided");
-   if (email !== undefined) {
+   if (email) {
       if (email === null || email.trim().length === 0)
          throw new GeneralError("Email cannot be blank");
       if (!isValidEmail(email)) throw new GeneralError("Email is not valid");
       email = email.toLowerCase().trim();
    }
-   if (phoneNumber !== undefined) {
+   if (phoneNumber) {
       if (phoneNumber === null || phoneNumber.trim().length === 0)
          throw new GeneralError("Phone number cannot be blank");
       const parsedPhoneNumber = parsePhoneNumber(phoneNumber);
