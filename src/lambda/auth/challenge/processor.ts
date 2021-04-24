@@ -1,9 +1,9 @@
 import { NotFoundError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
-import { ChallengeBody } from ".";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { sendVerification } from "services/internal/verification";
 import { User } from "models/data/user";
+import { ChallengeBody } from "./validator";
 
 export const processChallenge = async (
    challengeBody: ChallengeBody

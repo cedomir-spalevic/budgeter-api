@@ -2,10 +2,8 @@ import { GeneralError, InvalidJSONBodyError } from "models/errors";
 import { ObjectId } from "mongodb";
 import { isISOStr } from "services/internal/datetime";
 import { isValidPhoneNumber as glibIsValidPhoneNumber } from "libphonenumber-js";
-
-interface Form {
-   [name: string]: string | number | boolean | null | undefined;
-}
+import { Form } from "models/requests";
+import { validate as validateGuid } from "uuid";
 
 export const isNumber = (
    form: Form,
@@ -113,3 +111,10 @@ export const isValidEmail = (email: string): boolean => {
 export const isValidPhoneNumber = (phoneNumber: string): boolean => {
    return glibIsValidPhoneNumber(phoneNumber, "US");
 };
+
+export const isGuid = (guid: string): string => {
+   const result = validateGuid(guid);
+   if(!result)
+      throw new GeneralError("Invalid Id");
+   return guid;
+}

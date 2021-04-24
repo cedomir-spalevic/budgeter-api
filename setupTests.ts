@@ -6,6 +6,6 @@ beforeAll(async (done) => {
 })
 afterAll(async (done) => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
-   budgeterClient.close();
+   await budgeterClient.close();
    done();
 })

@@ -30,7 +30,9 @@ class BudgeterMongoClient {
       return BudgeterMongoClient.instance;
    }
 
-   public close = () => this._client.close();
+   public close = async () => {
+      await this._client.close();
+   }
 
    public getAPIKeyCollection = () =>
       new BudgeterEntityCollection<APIKey>(

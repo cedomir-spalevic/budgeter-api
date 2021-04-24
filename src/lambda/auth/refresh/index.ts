@@ -1,23 +1,15 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { processRefresh } from "./processor";
 import { handleErrorResponse } from "middleware/errors";
-import { isStr, isValidJSONBody } from "middleware/validators";
-
-export interface RefreshBody {
-   refreshToken: string;
-}
-
-const validate = (event: APIGatewayProxyEvent): RefreshBody => {
-   const form = isValidJSONBody(event.body);
-   const refreshToken = isStr(form, "refreshToken", true);
-   return { refreshToken };
-};
+import { isValidJSONBody } from "middleware/validators";
+import { validate } from "./validator";
 
 export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const refreshBody = validate(event);
+      const form = isValidJSONBody(event.body);
+      const refreshBody = validate(form);
       const response = await processRefresh(refreshBody);
       return {
          statusCode: 200,

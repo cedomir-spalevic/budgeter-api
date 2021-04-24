@@ -15,6 +15,7 @@
       "build:lint": "eslint . --ext .ts",
       "build:format": "prettier --write ./src",
       "build:test": "jest",
+      "test:watch": "jest --watch --maxWorkers=4",
       "login": "serverless login",
       "deploy": "serverless deploy"
    },

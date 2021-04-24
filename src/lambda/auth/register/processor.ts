@@ -1,11 +1,11 @@
 import { AlreadyExistsError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
-import { RegisterBody } from ".";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { User } from "models/data/user";
 import { UserAuth } from "models/data/userAuth";
 import { generateHash } from "services/internal/security/hash";
 import { sendVerification } from "services/internal/verification";
+import { RegisterBody } from "./validator";
 
 export const processRegister = async (
    registerBody: RegisterBody
