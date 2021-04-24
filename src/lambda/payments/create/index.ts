@@ -2,10 +2,10 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import {
-   isNumber,
-   isOneOfStr,
-   isStr,
-   isValidJSONBody
+   validateNumber,
+   validateIsOneOfStr,
+   validateStr,
+   validateJSONBody
 } from "middleware/validators";
 import { Payment } from "models/data/payment";
 import { Recurrence, recurrenceTypes } from "models/data/recurrence";
@@ -15,14 +15,14 @@ const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<Partial<Payment>> => {
    const userId = await isAuthorized(event);
-   const form = isValidJSONBody(event.body);
-   const title = isStr(form, "title", true);
-   const amount = isNumber(form, "amount", true);
-   const initialDay = isNumber(form, "initialDay", true);
-   const initialDate = isNumber(form, "initialDate", true);
-   const initialMonth = isNumber(form, "initialMonth", true);
-   const initialYear = isNumber(form, "initialYear", true);
-   const recurrence = isOneOfStr(
+   const form = validateJSONBody(event.body);
+   const title = validateStr(form, "title", true);
+   const amount = validateNumber(form, "amount", true);
+   const initialDay = validateNumber(form, "initialDay", true);
+   const initialDate = validateNumber(form, "initialDate", true);
+   const initialMonth = validateNumber(form, "initialMonth", true);
+   const initialYear = validateNumber(form, "initialYear", true);
+   const recurrence = validateIsOneOfStr(
       form,
       "recurrence",
       recurrenceTypes,

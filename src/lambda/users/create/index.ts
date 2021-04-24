@@ -1,7 +1,11 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAdminAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
-import { isBool, isStr, isValidJSONBody } from "middleware/validators";
+import {
+   validateBool,
+   validateStr,
+   validateJSONBody
+} from "middleware/validators";
 import { GeneralError } from "models/errors";
 import { AdminUserRequest } from "models/requests";
 import { parsePhoneNumber } from "services/external/phoneNumber";
@@ -11,13 +15,13 @@ const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<AdminUserRequest> => {
    await isAdminAuthorized(event);
-   const form = isValidJSONBody(event.body);
-   const firstName = isStr(form, "firstName", true);
-   const lastName = isStr(form, "lastName", true);
-   let email = isStr(form, "email");
-   let phoneNumber = isStr(form, "phoneNumber");
-   const isAdmin = isBool(form, "isAdmin", true);
-   const password = isStr(form, "password", true);
+   const form = validateJSONBody(event.body);
+   const firstName = validateStr(form, "firstName", true);
+   const lastName = validateStr(form, "lastName", true);
+   let email = validateStr(form, "email");
+   let phoneNumber = validateStr(form, "phoneNumber");
+   const isAdmin = validateBool(form, "isAdmin", true);
+   const password = validateStr(form, "password", true);
 
    if (email === undefined && phoneNumber === undefined)
       throw new GeneralError("An email or phone number must be provided");

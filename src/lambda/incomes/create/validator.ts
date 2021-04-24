@@ -1,26 +1,24 @@
 import { Form } from "models/requests";
 import {
-   isNumber,
-   isOneOfStr,
-   isStr,
-   isValidDayOfMonth,
-   isValidDayOfWeek,
-   isValidMonth,
-   isValidYear
+   validateNumber,
+   validateIsOneOfStr,
+   validateStr,
+   validateDayOfMonth,
+   validateDayOfWeek,
+   validateMonth,
+   validateYear
 } from "middleware/validators";
 import { Income } from "models/data/income";
 import { Recurrence, recurrenceTypes } from "models/data/recurrence";
 
-export const validate = (
-   form: Form
-): Partial<Income> => {
-   const title = isStr(form, "title", true);
-   const amount = isNumber(form, "amount", true);
-   const initialDay = isValidDayOfWeek(form, "initialDay", true);
-   const initialDate = isValidDayOfMonth(form, "initialDate", true);
-   const initialMonth = isValidMonth(form, "initialMonth", true);
-   const initialYear = isValidYear(form, "initialYear", true);
-   const recurrence = isOneOfStr(
+export const validate = (form: Form): Partial<Income> => {
+   const title = validateStr(form, "title", true);
+   const amount = validateNumber(form, "amount", true);
+   const initialDay = validateDayOfWeek(form, "initialDay", true);
+   const initialDate = validateDayOfMonth(form, "initialDate", true);
+   const initialMonth = validateMonth(form, "initialMonth", true);
+   const initialYear = validateYear(form, "initialYear", true);
+   const recurrence = validateIsOneOfStr(
       form,
       "recurrence",
       recurrenceTypes,

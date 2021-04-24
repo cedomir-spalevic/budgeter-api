@@ -1,4 +1,4 @@
-import { isStr } from "middleware/validators";
+import { validateStr } from "middleware/validators";
 import { Form } from "models/requests";
 
 export interface RefreshBody {
@@ -6,6 +6,6 @@ export interface RefreshBody {
 }
 
 export const validate = (form: Form): RefreshBody => {
-   const refreshToken = isStr(form, "refreshToken", true);
+   const refreshToken = validateStr(form, "refreshToken", true);
    return { refreshToken };
 };

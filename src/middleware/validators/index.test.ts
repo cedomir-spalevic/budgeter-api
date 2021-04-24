@@ -2,18 +2,18 @@ import { GeneralError } from "models/errors";
 import { test, expect } from "@jest/globals";
 import { Form } from "models/requests";
 import {
-   isBool,
-   isDate,
-   isId,
-   isNumber,
-   isOneOfStr,
-   isStr,
-   isValidDayOfMonth,
-   isValidDayOfWeek,
+   validateBool,
+   validateDate,
+   validateObjectId,
+   validateNumber,
+   validateIsOneOfStr,
+   validateStr,
+   validateDayOfMonth,
+   validateDayOfWeek,
    isValidEmail,
-   isValidMonth,
+   validateMonth,
    isValidPhoneNumber,
-   isValidYear
+   validateYear
 } from ".";
 import { ObjectId } from "mongodb";
 
@@ -22,14 +22,14 @@ test("Invalid number", () => {
       const form: Form = {
          age: "11"
       };
-      isNumber(form, "age");
+      validateNumber(form, "age");
    }).toThrowError(new GeneralError("age must be a number"));
 });
 
 test("Required number", () => {
    expect(() => {
       const form: Form = {};
-      isNumber(form, "age", true);
+      validateNumber(form, "age", true);
    }).toThrowError(new GeneralError("age is required"));
 });
 
@@ -37,7 +37,7 @@ test("Valid number", () => {
    const form: Form = {
       age: 11
    };
-   const age = isNumber(form, "age");
+   const age = validateNumber(form, "age");
    expect(age).toBe(11);
 });
 
@@ -46,14 +46,14 @@ test("Invalid string", () => {
       const form: Form = {
          name: 10
       };
-      isStr(form, "name");
+      validateStr(form, "name");
    }).toThrowError(new GeneralError("name must be a string"));
 });
 
 test("Required string", () => {
    expect(() => {
       const form: Form = {};
-      isStr(form, "name", true);
+      validateStr(form, "name", true);
    }).toThrowError(new GeneralError("name is required"));
 });
 
@@ -61,7 +61,7 @@ test("Valid string", () => {
    const form: Form = {
       name: "Charlie"
    };
-   const name = isStr(form, "name");
+   const name = validateStr(form, "name");
    expect(name).toBe("Charlie");
 });
 
@@ -70,7 +70,7 @@ test("Invalid specific values of strings", () => {
       const form: Form = {
          type: "wrong"
       };
-      isOneOfStr(form, "type", ["valid", "invalid"]);
+      validateIsOneOfStr(form, "type", ["valid", "invalid"]);
    }).toThrowError(
       new GeneralError("type must have a value of 'valid' or 'invalid'")
    );
@@ -80,7 +80,7 @@ test("Valid specific values of strings", () => {
    const form: Form = {
       type: "valid"
    };
-   const type = isOneOfStr(form, "type", ["valid", "invalid"]);
+   const type = validateIsOneOfStr(form, "type", ["valid", "invalid"]);
    expect(type).toBe("valid");
 });
 
@@ -88,14 +88,14 @@ test("Valid specific values of strings", () => {
    const form: Form = {
       type: "invalid"
    };
-   const type = isOneOfStr(form, "type", ["valid", "invalid"]);
+   const type = validateIsOneOfStr(form, "type", ["valid", "invalid"]);
    expect(type).toBe("invalid");
 });
 
 test("Required specific values of strings", () => {
    expect(() => {
       const form: Form = {};
-      isOneOfStr(form, "type", ["valid", "invalid"], true);
+      validateIsOneOfStr(form, "type", ["valid", "invalid"], true);
    }).toThrowError(new GeneralError("type is required"));
 });
 
@@ -104,14 +104,14 @@ test("Invalid Id", () => {
       const form: Form = {
          id: "123"
       };
-      isId(form, "id");
+      validateObjectId(form, "id");
    }).toThrowError(new GeneralError("id is not valid"));
 });
 
 test("Required Id", () => {
    expect(() => {
       const form: Form = {};
-      isId(form, "id", true);
+      validateObjectId(form, "id", true);
    }).toThrowError(new GeneralError("id is required"));
 });
 
@@ -119,7 +119,7 @@ test("Valid Id", () => {
    const form: Form = {
       id: "607b9ee8b9aaa54d221579fa"
    };
-   const id = isId(form, "id");
+   const id = validateObjectId(form, "id");
    expect(id).toStrictEqual(new ObjectId("607b9ee8b9aaa54d221579fa"));
 });
 
@@ -128,7 +128,7 @@ test("Invalid date", () => {
       const form: Form = {
          date: "123"
       };
-      isDate(form, "date");
+      validateDate(form, "date");
    }).toThrowError(new GeneralError("date must be in ISO format"));
 });
 
@@ -137,14 +137,14 @@ test("Invalid date", () => {
       const form: Form = {
          date: "2021-04-18T024.896+00:00"
       };
-      isDate(form, "date");
+      validateDate(form, "date");
    }).toThrowError(new GeneralError("date must be in ISO format"));
 });
 
 test("Required date", () => {
    expect(() => {
       const form: Form = {};
-      isDate(form, "date", true);
+      validateDate(form, "date", true);
    }).toThrowError(new GeneralError("date is required"));
 });
 
@@ -152,7 +152,7 @@ test("Valid date", () => {
    const form: Form = {
       date: "2021-04-18T02:52:24.896"
    };
-   const d = isDate(form, "date", true);
+   const d = validateDate(form, "date", true);
    expect(d).toStrictEqual(new Date("2021-04-18T02:52:24.896"));
 });
 
@@ -161,7 +161,7 @@ test("Invalid bool", () => {
       const form: Form = {
          valid: "false"
       };
-      isBool(form, "valid");
+      validateBool(form, "valid");
    }).toThrowError(new GeneralError("valid must be a boolean"));
 });
 
@@ -169,7 +169,7 @@ test("Valid bool", () => {
    const form: Form = {
       valid: true
    };
-   const valid = isBool(form, "valid", true);
+   const valid = validateBool(form, "valid", true);
    expect(valid).toBe(true);
 });
 
@@ -230,73 +230,87 @@ test("Valid phone number", () => {
 });
 
 test("Valid day of week", () => {
-   expect(isValidDayOfWeek({ day: 4 }, "day")).toBeTruthy()
-})
+   expect(validateDayOfWeek({ day: 4 }, "day")).toBeTruthy();
+});
 
 test("Valid day of week", () => {
-   expect(isValidDayOfWeek({ day: 0 }, "day")).toBe(0)
-})
+   expect(validateDayOfWeek({ day: 0 }, "day")).toBe(0);
+});
 
 test("Valid day of week", () => {
-   expect(isValidDayOfWeek({ day: 6 }, "day")).toBe(6)
-})
+   expect(validateDayOfWeek({ day: 6 }, "day")).toBe(6);
+});
 
 test("Invalid day of week", () => {
-   expect(() => isValidDayOfWeek({ day: -1 }, "day")).toThrowError(GeneralError);
-})
+   expect(() => validateDayOfWeek({ day: -1 }, "day")).toThrowError(
+      GeneralError
+   );
+});
 
 test("Invalid day of week", () => {
-   expect(() => isValidDayOfWeek({ day: 7 }, "day")).toThrowError(GeneralError);
-})
+   expect(() => validateDayOfWeek({ day: 7 }, "day")).toThrowError(
+      GeneralError
+   );
+});
 
 test("Valid day of month", () => {
-   expect(isValidDayOfMonth({ day: 27 }, "day")).toBeTruthy()
-})
+   expect(validateDayOfMonth({ day: 27 }, "day")).toBeTruthy();
+});
 
 test("Valid day of month", () => {
-   expect(isValidDayOfMonth({ day: 1 }, "day")).toBeTruthy()
-})
+   expect(validateDayOfMonth({ day: 1 }, "day")).toBeTruthy();
+});
 
 test("Valid day of month", () => {
-   expect(isValidDayOfMonth({ day: 31 }, "day")).toBeTruthy()
-})
+   expect(validateDayOfMonth({ day: 31 }, "day")).toBeTruthy();
+});
 
 test("Invalid day of month", () => {
-   expect(() => isValidDayOfMonth({ day: 32 }, "day")).toThrowError(GeneralError);
-})
+   expect(() => validateDayOfMonth({ day: 32 }, "day")).toThrowError(
+      GeneralError
+   );
+});
 
 test("Invalid day of month", () => {
-   expect(() => isValidDayOfMonth({ day: -1 }, "day")).toThrowError(GeneralError);
-})
+   expect(() => validateDayOfMonth({ day: -1 }, "day")).toThrowError(
+      GeneralError
+   );
+});
 
 test("Valid month", () => {
-   expect(isValidMonth({ month: 0 }, "month")).toBe(0)
-})
+   expect(validateMonth({ month: 0 }, "month")).toBe(0);
+});
 
 test("Valid month", () => {
-   expect(isValidMonth({ month: 11 }, "month")).toBe(11)
-})
+   expect(validateMonth({ month: 11 }, "month")).toBe(11);
+});
 
 test("Valid month", () => {
-   expect(isValidMonth({ month: 6 }, "month")).toBe(6)
-})
+   expect(validateMonth({ month: 6 }, "month")).toBe(6);
+});
 
 test("Invalid month", () => {
-   expect(() => isValidMonth({ month: 12 }, "month")).toThrowError(GeneralError);
-})
+   expect(() => validateMonth({ month: 12 }, "month")).toThrowError(
+      GeneralError
+   );
+});
 
 test("Invalid month", () => {
-   expect(() => isValidMonth({ month: -1 }, "month")).toThrowError(GeneralError);
-})
+   expect(() => validateMonth({ month: -1 }, "month")).toThrowError(
+      GeneralError
+   );
+});
 
 test("Valid year", () => {
-   expect(isValidYear({ year: 2021 }, "year")).toBe(2021)
-})
+   expect(validateYear({ year: 2021 }, "year")).toBe(2021);
+});
 
 test("Invalid year", () => {
-   expect(() => isValidYear({ year: 1 }, "year")).toThrowError(GeneralError);
-})
+   expect(() => validateYear({ year: 1 }, "year")).toThrowError(GeneralError);
+});
 
 test("Invalid year", () => {
-   expect(() => isValidYear({ year: 20211 }, "year")).toThrowError(GeneralError)
-})
+   expect(() => validateYear({ year: 20211 }, "year")).toThrowError(
+      GeneralError
+   );
+});

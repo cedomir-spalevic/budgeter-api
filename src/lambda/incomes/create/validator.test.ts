@@ -15,9 +15,7 @@ test("Invalid title", () => {
          recurrence: "daily"
       };
       validate(form);
-   }).toThrowError(
-      new GeneralError("title must be a string")
-   );
+   }).toThrowError(new GeneralError("title must be a string"));
 });
 
 test("Required title", () => {
@@ -31,7 +29,5 @@ test("Required title", () => {
          recurrence: "daily"
       };
       validate(form);
-   }).toThrowError(
-      new GeneralError("title is required")
-   );
-})
+   }).toThrowError(new GeneralError("title is required"));
+});

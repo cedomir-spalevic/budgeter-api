@@ -1,5 +1,5 @@
 import { Form } from "models/requests";
-import { isStr } from "middleware/validators";
+import { validateStr } from "middleware/validators";
 import { validateEmailOrPhoneNumber } from "middleware/validators/emailOrPhoneNumber";
 
 export interface RegisterBody {
@@ -11,11 +11,11 @@ export interface RegisterBody {
 }
 
 export const validate = (form: Form): RegisterBody => {
-   const firstName = isStr(form, "firstName", true);
-   const lastName = isStr(form, "lastName", true);
-   const emailInput = isStr(form, "email");
-   const phoneNumberInput = isStr(form, "phoneNumber");
-   const password = isStr(form, "password", true);
+   const firstName = validateStr(form, "firstName", true);
+   const lastName = validateStr(form, "lastName", true);
+   const emailInput = validateStr(form, "email");
+   const phoneNumberInput = validateStr(form, "phoneNumber");
+   const password = validateStr(form, "password", true);
    const { email, phoneNumber } = validateEmailOrPhoneNumber({
       email: emailInput,
       phoneNumber: phoneNumberInput

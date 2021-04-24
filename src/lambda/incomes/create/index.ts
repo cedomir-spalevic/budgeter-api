@@ -1,9 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
-import {
-   isValidJSONBody
-} from "middleware/validators";
+import { validateJSONBody } from "middleware/validators";
 import { processCreateIncome } from "./processor";
 import { validate } from "./validator";
 
@@ -12,7 +10,7 @@ export const handler = async (
 ): Promise<APIGatewayProxyResult> => {
    try {
       const userId = await isAuthorized(event);
-      const form = isValidJSONBody(event.body);
+      const form = validateJSONBody(event.body);
       const incomeBody = validate(form);
       incomeBody.userId = userId;
       const response = await processCreateIncome(incomeBody);
