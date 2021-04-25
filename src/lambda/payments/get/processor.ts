@@ -1,4 +1,5 @@
-import { Payment, PublicPayment } from "models/data/payment";
+import { PublicBudgetItem } from "models/data/budgetItem";
+import { Payment } from "models/data/payment";
 import { NotFoundError } from "models/errors";
 import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
@@ -8,7 +9,7 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 export const processGetMany = async (
    userId: ObjectId,
    queryStringParameters: GetListQueryStringParameters
-): Promise<GetResponse<PublicPayment>> => {
+): Promise<GetResponse<PublicBudgetItem>> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
@@ -52,7 +53,7 @@ export const processGetMany = async (
 export const processGetSingle = async (
    userId: ObjectId,
    paymentId: ObjectId
-): Promise<PublicPayment> => {
+): Promise<PublicBudgetItem> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 

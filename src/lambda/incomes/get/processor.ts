@@ -1,4 +1,5 @@
-import { Income, PublicIncome } from "models/data/income";
+import { PublicBudgetItem } from "models/data/budgetItem";
+import { Income } from "models/data/income";
 import { NotFoundError } from "models/errors";
 import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
@@ -8,7 +9,7 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 export const processGetMany = async (
    userId: ObjectId,
    queryStringParameters: GetListQueryStringParameters
-): Promise<GetResponse<PublicIncome>> => {
+): Promise<GetResponse<PublicBudgetItem>> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
 
@@ -52,7 +53,7 @@ export const processGetMany = async (
 export const processGetSingle = async (
    userId: ObjectId,
    incomeId: ObjectId
-): Promise<PublicIncome> => {
+): Promise<PublicBudgetItem> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
 
