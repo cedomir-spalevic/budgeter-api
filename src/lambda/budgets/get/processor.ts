@@ -47,12 +47,17 @@ const getIncomes = async (request: GetBudgetsBody): Promise<BudgetIncome[]> => {
                { recurrence: "monthly" },
                { initialMonth: month, recurrence: "yearly" }
             ]
+         },
+         {
+            initialYear: { $lte: year }
          }
       ]
    });
 
    const budgetIncomes: BudgetIncome[] = [];
    incomes.forEach((income) => {
+      if(income.initialYear === year && income.initialMonth > month)
+         return;
       let dueToday: boolean, totalAmount: number, numberOfOccurrences: number;
       if (
          income.recurrence === "oneTime" ||
@@ -128,12 +133,17 @@ const getPayments = async (
                { recurrence: "monthly" },
                { initialMonth: month, recurrence: "yearly" }
             ]
+         },
+         { 
+            initialYear: { $lte: year }
          }
       ]
    });
 
    const budgetPayments: BudgetPayment[] = [];
    payments.forEach((payment) => {
+      if(payment.initialYear === year && payment.initialMonth > month)
+         return;
       let dueToday: boolean, totalAmount: number, numberOfOccurrences: number;
       if (
          payment.recurrence === "oneTime" ||
