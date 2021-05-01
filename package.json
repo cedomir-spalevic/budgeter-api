@@ -77,9 +77,6 @@
       ],
       "setupFiles": [
          "dotenv/config"
-      ],
-      "setupFilesAfterEnv": [
-         "../setupTests.ts"
       ]
    }
 }
