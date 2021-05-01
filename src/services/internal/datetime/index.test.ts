@@ -19,25 +19,29 @@ test("30 days in April, 2021", () => {
 });
 
 test("Biweekly occurrences of Monday in February, 2021", () => {
-   expect(getBiweeklyOccurrenceLength(1, 1, 2021)).toBe(2);
+   expect(getBiweeklyOccurrenceLength(2021, 1, 1)).toBe(2);
 });
 
 test("Biweekly occurrences of Monday in February, 2020 (Leap year)", () => {
-   expect(getBiweeklyOccurrenceLength(1, 1, 2020)).toBe(2);
+   expect(getBiweeklyOccurrenceLength(2020, 1, 1)).toBe(2);
 });
 
 test("Biweekly occurrences of Saturday in May, 2020", () => {
-   expect(getBiweeklyOccurrenceLength(6, 4, 2020)).toBe(3);
+   expect(getBiweeklyOccurrenceLength(2020, 4, 6)).toBe(3);
 });
 
 test("Weekly occurrences of Saturday in May, 2020", () => {
-   expect(getWeeklyOccurrenceLength(6, 4, 2020)).toBe(5);
+   expect(getWeeklyOccurrenceLength(2020, 4, 6)).toBe(5);
 });
 
 test("Weekly occurrences of Wednesday in July, 2011", () => {
-   expect(getWeeklyOccurrenceLength(3, 6, 2011)).toBe(4);
+   expect(getWeeklyOccurrenceLength(2011, 6, 3)).toBe(4);
 });
 
 test("Weekly occurrences of Wednesday in February, 2012", () => {
-   expect(getWeeklyOccurrenceLength(3, 1, 2012)).toBe(5);
+   expect(getWeeklyOccurrenceLength(2012, 1, 3)).toBe(5);
+});
+
+test("Weekly occurrences of Wednesday in April, 2021 after April 10th", () => {
+   expect(getWeeklyOccurrenceLength(2021, 3, 3, 10)).toBe(3);
 });
