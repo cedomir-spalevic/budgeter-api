@@ -24,50 +24,62 @@ export const isISOStr = (value: string): RegExpMatchArray => {
 /**
  * Example:
  * Get number of Sundays that appeared in January 2021
- * getWeeklyOcurrenceLength(0, 0, 2021)
+ * getWeeklyOccurrenceLength(2021, 0, 0)
  * Result: 5
- * @param dayOfWeek
- * @param month
+ *
+ * Get number of Sunday that appeared in January 2021 starting January 10th
+ * getWeeklyOccurrenceLength(2021, 0, 0, 10)
+ * Result: 5
  * @param year
+ * @param month
+ * @param dayOfWeek
+ * @param dayOfMonth
  */
 export const getWeeklyOccurrenceLength = (
-   dayOfWeek: number,
+   year: number,
    month: number,
-   year: number
+   dayOfWeek: number,
+   dayOfMonth = 1
 ): number => {
    let counter = 0;
-   const monthToUse = new Date(year, month, 1);
-   while (monthToUse.getMonth() === month) {
-      if (monthToUse.getDay() === dayOfWeek) {
+   const specifiedDate = new Date(year, month, dayOfMonth);
+   while (specifiedDate.getDay() !== dayOfWeek)
+      specifiedDate.setDate(specifiedDate.getDate() + 1);
+   while (specifiedDate.getMonth() === month) {
+      if (specifiedDate.getDay() === dayOfWeek) {
          counter += 1;
-         monthToUse.setDate(monthToUse.getDate() + 7);
+         specifiedDate.setDate(specifiedDate.getDate() + 7);
          continue;
       }
-      monthToUse.setDate(monthToUse.getDate() + 1);
+      specifiedDate.setDate(specifiedDate.getDate() + 1);
    }
    return counter;
 };
 
 /**
  * Get number of biweekly occurrences of a day of week in a certain month
- * @param dayOfWeek
- * @param month
  * @param year
+ * @param month
+ * @param dayOfWeek
+ * @param dayOfMonth
  */
 export const getBiweeklyOccurrenceLength = (
-   dayOfWeek: number,
+   year: number,
    month: number,
-   year: number
+   dayOfWeek: number,
+   dayOfMonth = 1
 ): number => {
    let counter = 0;
-   const monthToUse = new Date(year, month, 1);
-   while (monthToUse.getMonth() === month) {
-      if (monthToUse.getDay() === dayOfWeek) {
+   const specifiedDate = new Date(year, month, dayOfMonth);
+   while (specifiedDate.getDay() !== dayOfWeek)
+      specifiedDate.setDate(specifiedDate.getDate() + 1);
+   while (specifiedDate.getMonth() === month) {
+      if (specifiedDate.getDay() === dayOfWeek) {
          counter += 1;
-         monthToUse.setDate(monthToUse.getDate() + 14);
+         specifiedDate.setDate(specifiedDate.getDate() + 14);
          continue;
       }
-      monthToUse.setDate(monthToUse.getDate() + 1);
+      specifiedDate.setDate(specifiedDate.getDate() + 1);
    }
    return counter;
 };

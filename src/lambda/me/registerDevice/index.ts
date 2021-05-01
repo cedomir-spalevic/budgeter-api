@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
-import { isStr, isValidJSONBody } from "middleware/validators";
+import { validateStr, validateJSONBody } from "middleware/validators";
 import { GeneralError } from "models/errors";
 import { processRegisterDevice } from "./processor";
 import { handleErrorResponse } from "middleware/errors";
@@ -16,11 +16,11 @@ const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<RegisterDeviceBody> => {
    const userId = await isAuthorized(event);
-   const form = isValidJSONBody(event.body);
-   const device = isStr(form, "device", true);
+   const form = validateJSONBody(event.body);
+   const device = validateStr(form, "device", true);
    if (device !== "ios" && device !== "android")
       throw new GeneralError("Device must be ios or android");
-   const token = isStr(form, "token", true);
+   const token = validateStr(form, "token", true);
 
    return { userId, device, token };
 };

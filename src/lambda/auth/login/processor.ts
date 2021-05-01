@@ -4,8 +4,8 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
 import { generateHash } from "services/internal/security/hash";
-import { LoginBody } from ".";
 import { sendVerification } from "services/internal/verification";
+import { LoginBody } from "./validator";
 
 export const processLogin = async (
    loginBody: LoginBody

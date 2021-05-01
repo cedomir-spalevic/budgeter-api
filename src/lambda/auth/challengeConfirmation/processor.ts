@@ -1,9 +1,9 @@
 import { UnauthorizedError } from "models/errors";
 import { AuthResponse } from "models/responses";
-import { ChallengeConfirmationBody } from ".";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
+import { ChallengeConfirmationBody } from "./validator";
 
 export const processChallengeConfirmation = async (
    challengeConfirmationBody: ChallengeConfirmationBody

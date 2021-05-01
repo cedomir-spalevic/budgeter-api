@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
 import { getPathParameterId } from "middleware/url";
-import { isStr, isValidJSONBody } from "middleware/validators";
+import { validateStr, validateJSONBody } from "middleware/validators";
 import { processPasswordReset } from "./processor";
 
 export interface PasswordResetBody {
@@ -11,8 +11,8 @@ export interface PasswordResetBody {
 
 const validate = (event: APIGatewayProxyEvent): PasswordResetBody => {
    const key = getPathParameterId("key", event.pathParameters);
-   const form = isValidJSONBody(event.body);
-   const password = isStr(form, "password", true);
+   const form = validateJSONBody(event.body);
+   const password = validateStr(form, "password", true);
 
    return { key, password };
 };

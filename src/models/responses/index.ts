@@ -1,5 +1,4 @@
-import { BudgetIncome } from "models/data/income";
-import { BudgetPayment } from "models/data/payment";
+import { PublicBudgetItemWithInfo } from "models/data/budgetItem";
 
 export interface ConfirmationResponse {
    expires: number;
@@ -18,6 +17,6 @@ export interface GetResponse<T> {
 }
 
 export interface GetBudgetResponse {
-   incomes: BudgetIncome[];
-   payments: BudgetPayment[];
+   incomes: PublicBudgetItemWithInfo[];
+   payments: PublicBudgetItemWithInfo[];
 }

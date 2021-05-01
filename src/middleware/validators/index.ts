@@ -2,12 +2,10 @@ import { GeneralError, InvalidJSONBodyError } from "models/errors";
 import { ObjectId } from "mongodb";
 import { isISOStr } from "services/internal/datetime";
 import { isValidPhoneNumber as glibIsValidPhoneNumber } from "libphonenumber-js";
+import { Form } from "models/requests";
+import { validate as validateUuid } from "uuid";
 
-interface Form {
-   [name: string]: string | number | boolean | null | undefined;
-}
-
-export const isNumber = (
+export const validateNumber = (
    form: Form,
    name: string,
    required = false
@@ -23,7 +21,11 @@ export const isNumber = (
    return form[name] as number;
 };
 
-export const isStr = (form: Form, name: string, required = false): string => {
+export const validateStr = (
+   form: Form,
+   name: string,
+   required = false
+): string => {
    if (required) {
       if (!(name in form)) throw new GeneralError(`${name} is required`);
       if (typeof form[name] !== "string")
@@ -35,13 +37,13 @@ export const isStr = (form: Form, name: string, required = false): string => {
    return form[name] as string;
 };
 
-export const isOneOfStr = (
+export const validateIsOneOfStr = (
    form: Form,
    name: string,
    oneOfValues: string[],
    required = false
 ): string => {
-   const value = isStr(form, name, required);
+   const value = validateStr(form, name, required);
    if (required) {
       if (oneOfValues.indexOf(value) === -1)
          throw new GeneralError(
@@ -60,8 +62,12 @@ export const isOneOfStr = (
    return value;
 };
 
-export const isId = (form: Form, name: string, required = false): ObjectId => {
-   const id = isStr(form, name, required);
+export const validateObjectId = (
+   form: Form,
+   name: string,
+   required = false
+): ObjectId => {
+   const id = validateStr(form, name, required);
    if (required) {
       if (!id) throw new GeneralError(`${name} is required`);
       if (!ObjectId.isValid(id)) throw new GeneralError(`${name} is not valid`);
@@ -72,8 +78,12 @@ export const isId = (form: Form, name: string, required = false): ObjectId => {
    return new ObjectId(id);
 };
 
-export const isDate = (form: Form, name: string, required = false): Date => {
-   const date = isStr(form, name, required);
+export const validateDate = (
+   form: Form,
+   name: string,
+   required = false
+): Date => {
+   const date = validateStr(form, name, required);
    if (required) {
       if (!(name in form)) throw new GeneralError(`${name} is required`);
       if (!isISOStr(date))
@@ -86,7 +96,11 @@ export const isDate = (form: Form, name: string, required = false): Date => {
    return new Date(date);
 };
 
-export const isBool = (form: Form, name: string, required = false): boolean => {
+export const validateBool = (
+   form: Form,
+   name: string,
+   required = false
+): boolean => {
    if (required) {
       if (!(name in form)) throw new GeneralError(`${name} is required`);
       if (typeof form[name] !== "boolean")
@@ -98,7 +112,7 @@ export const isBool = (form: Form, name: string, required = false): boolean => {
    return form[name] as boolean;
 };
 
-export const isValidJSONBody = (value: string): Form => {
+export const validateJSONBody = (value: string): Form => {
    if (!value) throw new InvalidJSONBodyError();
    const body = JSON.parse(value);
    if (!body) throw new InvalidJSONBodyError();
@@ -112,4 +126,54 @@ export const isValidEmail = (email: string): boolean => {
 
 export const isValidPhoneNumber = (phoneNumber: string): boolean => {
    return glibIsValidPhoneNumber(phoneNumber, "US");
+};
+
+export const validateGuid = (guid: string): string => {
+   const result = validateUuid(guid);
+   if (!result) throw new GeneralError("Invalid Id");
+   return guid;
+};
+
+export const validateDayOfWeek = (
+   form: Form,
+   name: string,
+   required = false
+): number => {
+   const num = validateNumber(form, name, required);
+   if (num < 0 || num > 6)
+      throw new GeneralError(`${name} must be between 0-6`);
+   return num;
+};
+
+export const validateDayOfMonth = (
+   form: Form,
+   name: string,
+   required = false
+): number => {
+   const num = validateNumber(form, name, required);
+   if (num < 1 || num > 31)
+      throw new GeneralError(`${name} must be between 1-31`);
+   return num;
+};
+
+export const validateMonth = (
+   form: Form,
+   name: string,
+   required = false
+): number => {
+   const num = validateNumber(form, name, required);
+   if (num < 0 || num > 11)
+      throw new GeneralError(`${name} must be between 0-11`);
+   return num;
+};
+
+export const validateYear = (
+   form: Form,
+   name: string,
+   required = false
+): number => {
+   const num = validateNumber(form, name, required);
+   if (!/^\d{4}$/.test(num.toString()))
+      throw new GeneralError(`${name} is not a valid year`);
+   return num;
 };

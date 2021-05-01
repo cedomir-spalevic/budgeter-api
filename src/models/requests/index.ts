@@ -1,3 +1,7 @@
+export interface Form {
+   [name: string]: string | number | boolean | null | undefined;
+}
+
 export interface GetListQueryStringParameters {
    limit: number;
    skip: number;

@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import { getPathParameter, getListQueryStringParameters } from "middleware/url";
-import { PublicIncome } from "models/data/income";
+import { PublicBudgetItem } from "models/data/budgetItem";
 import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
 import { ObjectId } from "mongodb";
@@ -42,7 +42,7 @@ export const handler = async (
 ): Promise<APIGatewayProxyResult> => {
    try {
       const getIncomesBody = await validate(event);
-      let response: GetResponse<PublicIncome> | PublicIncome;
+      let response: GetResponse<PublicBudgetItem> | PublicBudgetItem;
       if (getIncomesBody.queryStrings)
          response = await processGetMany(
             getIncomesBody.userId,

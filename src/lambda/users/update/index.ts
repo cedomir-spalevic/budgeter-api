@@ -2,7 +2,11 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAdminAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import { getPathParameter } from "middleware/url";
-import { isBool, isStr, isValidJSONBody } from "middleware/validators";
+import {
+   validateBool,
+   validateStr,
+   validateJSONBody
+} from "middleware/validators";
 import { AdminUserRequest } from "models/requests";
 import { ObjectId } from "mongodb";
 import { processUpdateUser } from "./processor";
@@ -17,11 +21,11 @@ const validate = async (
 ): Promise<AdminUpdateUserRequestBody> => {
    await isAdminAuthorized(event);
    const userId = getPathParameter("userId", event.pathParameters);
-   const form = isValidJSONBody(event.body);
-   const firstName = isStr(form, "firstName");
-   const lastName = isStr(form, "lastName");
-   const isAdmin = isBool(form, "isAdmin");
-   const password = isStr(form, "password");
+   const form = validateJSONBody(event.body);
+   const firstName = validateStr(form, "firstName");
+   const lastName = validateStr(form, "lastName");
+   const isAdmin = validateBool(form, "isAdmin");
+   const password = validateStr(form, "password");
 
    return {
       userId,

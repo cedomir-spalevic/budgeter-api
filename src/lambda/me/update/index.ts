@@ -1,7 +1,11 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
-import { isBool, isStr, isValidJSONBody } from "middleware/validators";
+import {
+   validateBool,
+   validateStr,
+   validateJSONBody
+} from "middleware/validators";
 import { User } from "models/data/user";
 import { processUpdateUser } from "./processor";
 
@@ -9,11 +13,15 @@ const validate = async (
    event: APIGatewayProxyEvent
 ): Promise<Partial<User>> => {
    const userId = await isAuthorized(event);
-   const form = isValidJSONBody(event.body);
-   const firstName = isStr(form, "firstName", false);
-   const lastName = isStr(form, "lastName", false);
-   const incomeNotifications = isBool(form, "incomeNotifications", false);
-   const paymentNotifications = isBool(form, "paymentNotifications", false);
+   const form = validateJSONBody(event.body);
+   const firstName = validateStr(form, "firstName", false);
+   const lastName = validateStr(form, "lastName", false);
+   const incomeNotifications = validateBool(form, "incomeNotifications", false);
+   const paymentNotifications = validateBool(
+      form,
+      "paymentNotifications",
+      false
+   );
 
    return {
       _id: userId,

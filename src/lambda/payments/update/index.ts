@@ -3,10 +3,10 @@ import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
 import { getPathParameter } from "middleware/url";
 import {
-   isNumber,
-   isOneOfStr,
-   isStr,
-   isValidJSONBody
+   validateNumber,
+   validateIsOneOfStr,
+   validateStr,
+   validateJSONBody
 } from "middleware/validators";
 import { Payment } from "models/data/payment";
 import { Recurrence, recurrenceTypes } from "models/data/recurrence";
@@ -17,14 +17,14 @@ const validate = async (
 ): Promise<Partial<Payment>> => {
    const userId = await isAuthorized(event);
    const paymentId = getPathParameter("paymentId", event.pathParameters);
-   const form = isValidJSONBody(event.body);
-   const title = isStr(form, "title");
-   const amount = isNumber(form, "amount");
-   const initialDay = isNumber(form, "initialDay");
-   const initialDate = isNumber(form, "initialDate");
-   const initialMonth = isNumber(form, "initialMonth");
-   const initialYear = isNumber(form, "initialYear");
-   const recurrence = isOneOfStr(
+   const form = validateJSONBody(event.body);
+   const title = validateStr(form, "title");
+   const amount = validateNumber(form, "amount");
+   const initialDay = validateNumber(form, "initialDay");
+   const initialDate = validateNumber(form, "initialDate");
+   const initialMonth = validateNumber(form, "initialMonth");
+   const initialYear = validateNumber(form, "initialYear");
+   const recurrence = validateIsOneOfStr(
       form,
       "recurrence",
       recurrenceTypes

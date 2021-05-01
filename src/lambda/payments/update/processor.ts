@@ -1,10 +1,11 @@
-import { PublicPayment, Payment } from "models/data/payment";
+import { PublicBudgetItem } from "models/data/budgetItem";
+import { Payment } from "models/data/payment";
 import { NotFoundError } from "models/errors";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
 export const processUpdatePayment = async (
    partiallyUpdatedPayment: Partial<Payment>
-): Promise<PublicPayment> => {
+): Promise<PublicBudgetItem> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
