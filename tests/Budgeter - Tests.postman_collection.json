@@ -1,0 +1,1062 @@
+{
+	"info": {
+		"_postman_id": "3b86707c-5a86-40fe-aab3-95e501157cbd",
+		"name": "Budgeter - Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Unauthorized",
+			"item": [
+				{
+					"name": "Unauthorized Budgets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/budgets?date=1&month=4&year=2021",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"budgets"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "1"
+								},
+								{
+									"key": "month",
+									"value": "4"
+								},
+								{
+									"key": "year",
+									"value": "2021"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unathorized Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unauthorized Incomes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/incomes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"incomes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unauthorized Payments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unauthorized Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "12345",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"me"
+							]
+						},
+						"description": "# Possible Responses\r\n\r\n> 200 - Successful\r\n```\r\n{\r\n    \"firstName\": \"Charlie\",\r\n    \"lastName\": \"Spalevic\",\r\n    \"email\": \"cedomir.spalevic@gmail.com\",\r\n    \"emailVerified\": true,\r\n    \"createdOn\": \"2021-01-16T16:30:49.413Z\",\r\n    \"modifiedOn\": \"2021-01-16T16:31:37.298Z\",\r\n    \"device\": {\r\n        \"os\": null\r\n    }\r\n}\r\n```\r\n> 401 - Unauthorized\r\n> 500 - Interval Server Error"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has an Access Token\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"accessToken\");\r",
+									"});\r",
+									"pm.test(\"Response to have a Refresh Token\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"refreshToken\");\r",
+									"});\r",
+									"pm.test(\"Response to have an Expires limit\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"expires\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"accessToken\", jsonData.accessToken);\r",
+									"pm.environment.set(\"refreshToken\", jsonData.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"cedomir0527@gmail.com\",\r\n    \"password\": \"MTIzNDU2IUE=\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "# Possible Responses\r\n\r\n> 200 - Login successful\r\n```\r\n{\r\n    \"accessToken\": \"...\",\r\n    \"refreshToken\": \"...\",\r\n    \"expires\": 900000 \r\n}\r\n```\r\n> 202 - User has not verified their email\r\n```\r\n{\r\n    \"key\": \"...\",\r\n    \"expires\": 300000\r\n}\r\n```\r\n> 400 - Bad Request\r\n```\r\n# Example body\r\n{\r\n    \"message\": \"email is required\"\r\n}\r\n```\r\n> 401 - Incorrect password\r\n> 500 - Interval Server Error"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has an Access Token\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"accessToken\");\r",
+									"});\r",
+									"pm.test(\"Response to have a Refresh Token\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"refreshToken\");\r",
+									"});\r",
+									"pm.test(\"Response to have an Expires limit\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"expires\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"accessToken\", jsonData.accessToken);\r",
+									"pm.environment.set(\"refreshToken\", jsonData.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\": \"{{refreshToken}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/refresh",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "# Possible Responses\r\n\r\n> 200 - Refresh successfull\r\n```\r\n{\r\n    \"accessToken\": \"...\",\r\n    \"refreshToken\": \"...\",\r\n    \"expires\": 900000 \r\n}\r\n```\r\n> 400 - Bad Request\r\n```\r\n# Example body\r\n{\r\n    \"message\": \"email is required\"\r\n}\r\n```\r\n> 401 - Invalid or expired refresh token (need to log in again)\r\n> 500 - Interval Server Error"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Unauthorized Admin",
+			"item": [
+				{
+					"name": "Get Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Authorized",
+			"item": [
+				{
+					"name": "Get Budgets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has Incomes\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"incomes\");\r",
+									"});\r",
+									"pm.test(\"Response has Payments\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"payments\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/budgets?date=1&month=4&year=2021",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"budgets"
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "1"
+								},
+								{
+									"key": "month",
+									"value": "4"
+								},
+								{
+									"key": "year",
+									"value": "2021"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has First name\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"firstName\");\r",
+									"});\r",
+									"pm.test(\"Response has Last name\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"lastName\");\r",
+									"});\r",
+									"pm.test(\"Response has Email\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"email\");\r",
+									"});\r",
+									"pm.test(\"Email is cedomir0527@gmail.com\", () => {\r",
+									"    pm.expect(jsonData[\"email\"]).to.be.equal(\"cedomir0527@gmail.com\");\r",
+									"});\r",
+									"pm.test(\"Response has Phone number\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"phoneNumber\");\r",
+									"});\r",
+									"pm.test(\"Response has Notification preferences\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"notificationPreferences\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"me"
+							]
+						},
+						"description": "# Possible Responses\r\n\r\n> 200 - Successful\r\n```\r\n{\r\n    \"firstName\": \"Charlie\",\r\n    \"lastName\": \"Spalevic\",\r\n    \"email\": \"cedomir.spalevic@gmail.com\",\r\n    \"emailVerified\": true,\r\n    \"createdOn\": \"2021-01-16T16:30:49.413Z\",\r\n    \"modifiedOn\": \"2021-01-16T16:31:37.298Z\",\r\n    \"device\": {\r\n        \"os\": null\r\n    }\r\n}\r\n```\r\n> 401 - Unauthorized\r\n> 500 - Interval Server Error"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Income",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has Id\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"id\");\r",
+									"});\r",
+									"pm.test(\"Response has Title\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"title\");\r",
+									"});\r",
+									"pm.test(\"Title is Netflix\", () => {\r",
+									"    pm.expect(jsonData[\"title\"]).to.be.equal(\"Netflix\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"incomeId\", jsonData[\"id\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Netflix\",\r\n    \"amount\": 500,\r\n    \"initialDay\": 6,\r\n    \"initialDate\": 1,\r\n    \"initialMonth\": 9,\r\n    \"initialYear\": 2021,\r\n    \"recurrence\": \"oneTime\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/incomes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"incomes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Incomes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has Count\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"count\");\r",
+									"});\r",
+									"pm.test(\"Response has values\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"values\");\r",
+									"});\r",
+									"pm.test(\"There is a value with a title of Netflix\", () => {\r",
+									"    pm.expect(jsonData[\"values\"].findIndex(x => x.title === \"Netflix\")).to.not.be.equal(-1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/incomes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"incomes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Income",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has Id\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"id\");\r",
+									"});\r",
+									"pm.test(\"Response has Title\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"title\");\r",
+									"});\r",
+									"pm.test(\"Title is 'Netflix 2'\", () => {\r",
+									"    pm.expect(jsonData[\"title\"]).to.be.equal(\"Netflix 2\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Netflix 2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/incomes/{{incomeId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"incomes",
+								"{{incomeId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Income Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/incomes/6004656dda516706cfb5839f",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"incomes",
+								"6004656dda516706cfb5839f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Income",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/incomes/{{incomeId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"incomes",
+								"{{incomeId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Incomes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has Count\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"count\");\r",
+									"});\r",
+									"pm.test(\"Response has values\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"values\");\r",
+									"});\r",
+									"pm.test(\"There is no value with a title of Netflix\", () => {\r",
+									"    pm.expect(jsonData[\"values\"].findIndex(x => x.title === \"Netflix\")).to.be.equal(-1);\r",
+									"});\r",
+									"pm.test(\"There is no value with a title of Netflix 2\", () => {\r",
+									"    pm.expect(jsonData[\"values\"].findIndex(x => x.title === \"Netflix 2\")).to.be.equal(-1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/incomes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"incomes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has Id\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"id\");\r",
+									"});\r",
+									"pm.test(\"Response has Title\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"title\");\r",
+									"});\r",
+									"pm.test(\"Title is Netflix\", () => {\r",
+									"    pm.expect(jsonData[\"title\"]).to.be.equal(\"Netflix\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"paymentId\", jsonData[\"id\"]);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Netflix\",\r\n    \"amount\": 500,\r\n    \"initialDay\": 6,\r\n    \"initialDate\": 1,\r\n    \"initialMonth\": 9,\r\n    \"initialYear\": 2021,\r\n    \"recurrence\": \"oneTime\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/payments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has Count\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"count\");\r",
+									"});\r",
+									"pm.test(\"Response has values\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"values\");\r",
+									"});\r",
+									"pm.test(\"There is a value with a title of Netflix\", () => {\r",
+									"    pm.expect(jsonData[\"values\"].findIndex(x => x.title === \"Netflix\")).to.not.be.equal(-1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Payment Copy",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/payments/6004656dda516706cfb5839f",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payments",
+								"6004656dda516706cfb5839f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has Id\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"id\");\r",
+									"});\r",
+									"pm.test(\"Response has Title\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"title\");\r",
+									"});\r",
+									"pm.test(\"Title is 'Netflix 2'\", () => {\r",
+									"    pm.expect(jsonData[\"title\"]).to.be.equal(\"Netflix 2\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Netflix 2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/payments/{{paymentId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payments",
+								"{{paymentId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Payment Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payments/6004656dda516706cfb5839f",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payments",
+								"6004656dda516706cfb5839f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response has Count\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"count\");\r",
+									"});\r",
+									"pm.test(\"Response has values\", () => {\r",
+									"    pm.expect(jsonData).to.have.property(\"values\");\r",
+									"});\r",
+									"pm.test(\"There is no value with a title of Netflix\", () => {\r",
+									"    pm.expect(jsonData[\"values\"].findIndex(x => x.title === \"Netflix\")).to.be.equal(-1);\r",
+									"});\r",
+									"pm.test(\"There is no value with a title of Netflix 2\", () => {\r",
+									"    pm.expect(jsonData[\"values\"].findIndex(x => x.title === \"Netflix 2\")).to.be.equal(-1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payments/{{paymentId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payments",
+								"{{paymentId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
