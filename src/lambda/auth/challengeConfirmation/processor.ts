@@ -23,19 +23,20 @@ export const processChallengeConfirmation = async (
    oneTimeCode.completed = true;
    oneTimeCode = await oneTimeCodeService.update(oneTimeCode);
 
+   const user = await usersService.getById(oneTimeCode.userId.toHexString());
    if (
       oneTimeCode.type === "userVerification" ||
       oneTimeCode.type === "newUserVerification"
    ) {
-      const user = await usersService.getById(oneTimeCode.userId.toHexString());
       user.isMfaVerified = true;
       await usersService.update(user);
    }
 
-   const refreshToken = generateRefreshToken(oneTimeCode.userId);
+   const refreshToken = generateRefreshToken(oneTimeCode.userId, user.isAdmin);
    const accessToken = generateAccessToken(
       oneTimeCode.userId.toHexString(),
-      refreshToken.token
+      refreshToken.token,
+      user.isAdmin
    );
 
    await refreshTokenService.create(refreshToken);

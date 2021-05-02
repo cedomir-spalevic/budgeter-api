@@ -19,7 +19,8 @@ export const processRefresh = async (
 
    const accessToken = generateAccessToken(
       refreshToken.userId.toHexString(),
-      refreshToken.token
+      refreshToken.token,
+      refreshToken.isAdmin
    );
 
    return {
