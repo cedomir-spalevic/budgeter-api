@@ -55,10 +55,11 @@ export const processLogin = async (
       };
    }
 
-   const refreshToken = generateRefreshToken(user._id);
+   const refreshToken = generateRefreshToken(user._id, user.isAdmin);
    const accessToken = generateAccessToken(
       user._id.toHexString(),
-      refreshToken.token
+      refreshToken.token,
+      user.isAdmin
    );
 
    await refreshTokenService.create(refreshToken);

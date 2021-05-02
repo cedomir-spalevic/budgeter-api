@@ -23,6 +23,7 @@ jobs:
            run: |
               cat > .env << EOF
               JWT_KEY=${{ secrets.JWT_KEY }}
+              JWT_ADMIN_KEY=${{ secrets.JWT_ADMIN_KEY }}
               MONGO_CONNECTION_STRING=${{ secrets.MONGO_CONNECTION_STRING }}
               AWS_PLATFORM_APPLICATION_IOS=${{ secrets.AWS_PLATFORM_APPLICATION_IOS }}
               AWS_PLATFORM_APPLICATION_ANDROID=${{ secrets.AWS_PLATFORM_APPLICATION_ANDROID }}

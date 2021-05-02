@@ -13,7 +13,7 @@ export const isAuthorized = async (
    if (!token) throw new UnauthorizedError();
 
    token = token.replace("Bearer ", "");
-   const decodedToken = decodeAccessToken(token);
+   const decodedToken = decodeAccessToken(token, false);
    if (!decodedToken.userId || !ObjectId.isValid(decodedToken.userId))
       throw new UnauthorizedError();
    return new ObjectId(decodedToken.userId);
@@ -26,7 +26,7 @@ export const isAdminAuthorized = async (
    if (!token) throw new UnauthorizedError();
 
    token = token.replace("Bearer ", "");
-   const decodedToken = decodeAccessToken(token);
+   const decodedToken = decodeAccessToken(token, true);
    if (!decodedToken.userId || !ObjectId.isValid(decodedToken.userId))
       throw new UnauthorizedError();
    return new ObjectId(decodedToken.userId);

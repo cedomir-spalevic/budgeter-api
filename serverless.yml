@@ -14,6 +14,7 @@ provider:
    deploymentPrefix:
    environment:
       JWT_KEY: ${env:JWT_KEY}
+      JWT_ADMIN_KEY: ${env:JWT_ADMIN_KEY}
       AWS_PLATFORM_APPLICATION_IOS: ${env:AWS_PLATFORM_APPLICATION_IOS}
       AWS_SNS_TOPIC: ${env:AWS_SNS_TOPIC}
       MONGO_CONNECTION_STRING: ${env:MONGO_CONNECTION_STRING}
