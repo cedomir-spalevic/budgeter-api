@@ -869,3 +869,45 @@ describe("An income for $3200 every 2 weeks starting Friday April 30th, 2021", (
       expect(budgetItems[0].totalAmount).toBe(3200);
    });
 });
+
+describe("An income for $0.05 due daily starting May 10th, 2021", () => {
+   const items: IBudgetItem[] = [
+      {
+         _id: new ObjectId(),
+         userId: new ObjectId(),
+         createdOn: new Date(),
+         modifiedOn: new Date(),
+         title: "",
+         amount: .05,
+         initialDay: 1,
+         initialDate: 10,
+         initialMonth: 4,
+         initialYear: 2021,
+         recurrence: "daily"
+      }
+   ];
+   test("It should not be due May 9", () => {
+      const budgetItems = getBudgetItems(items, {
+         date: 9,
+         month: 4,
+         year: 2021
+      });
+      expect(budgetItems[0].dueToday).toBe(false)
+   })
+   test("It should be due May 10", () => {
+      const budgetItems = getBudgetItems(items, {
+         date: 10,
+         month: 4,
+         year: 2021
+      });
+      expect(budgetItems[0].dueToday).toBe(true)
+   })
+   test("It should be due May 11", () => {
+      const budgetItems = getBudgetItems(items, {
+         date: 11,
+         month: 4,
+         year: 2021
+      });
+      expect(budgetItems[0].dueToday).toBe(true)
+   })
+});

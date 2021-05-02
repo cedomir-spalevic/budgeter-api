@@ -45,7 +45,7 @@ export const getBudgetItems = (
             return;
          const daysInMonth = getNumberOfDaysInMonth(month, year);
          dueToday =
-            month === item.initialMonth ? date === item.initialDate : true;
+            month === item.initialMonth ? date >= item.initialDate : true;
          numberOfOccurrences =
             month === item.initialMonth
                ? daysInMonth -
