@@ -48,7 +48,7 @@ export const handler = async (
       const paymentBody = await validate(event);
       const response = await processCreatePayment(paymentBody);
       return {
-         statusCode: 200,
+         statusCode: 201,
          body: JSON.stringify(response)
       };
    } catch (error) {

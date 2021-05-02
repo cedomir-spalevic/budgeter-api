@@ -15,7 +15,7 @@ export const handler = async (
       incomeBody.userId = userId;
       const response = await processCreateIncome(incomeBody);
       return {
-         statusCode: 200,
+         statusCode: 201,
          body: JSON.stringify(response)
       };
    } catch (error) {
