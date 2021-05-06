@@ -6,7 +6,6 @@ import { FilterQuery, FindOneOptions, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
 export const processGetMany = async (
-   adminId: ObjectId,
    queryStringParameters: GetListQueryStringParameters
 ): Promise<GetResponse<AdminPublicUser>> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
@@ -43,7 +42,6 @@ export const processGetMany = async (
 };
 
 export const processGetSingle = async (
-   adminId: ObjectId,
    userId: ObjectId
 ): Promise<AdminPublicUser> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();

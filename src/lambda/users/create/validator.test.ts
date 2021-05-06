@@ -8,7 +8,8 @@ test("Missing first name", () => {
       const form: Form = {
          lastName: "",
          email: "",
-         password: ""
+         password: "",
+         isAdmin: false
       };
       validate(form);
    }).toThrowError(new GeneralError("firstName is required"));
@@ -19,7 +20,8 @@ test("Missing last name", () => {
       const form: Form = {
          firstName: "",
          email: "",
-         password: ""
+         password: "",
+         isAdmin: false
       };
       validate(form);
    }).toThrowError(new GeneralError("lastName is required"));
@@ -30,7 +32,8 @@ test("Missing Password", () => {
       const form: Form = {
          firstName: "Charlie",
          lastName: "Spalevic",
-         email: "cedomir.spalevic@gmail.com"
+         email: "cedomir.spalevic@gmail.com",
+         isAdmin: false
       };
       validate(form);
    }).toThrowError(new GeneralError("password is required"));
@@ -42,7 +45,8 @@ test("Empty Password", () => {
          firstName: "Charlie",
          lastName: "Spalevic",
          email: "cedomir.spalevic@gmail.com",
-         password: ""
+         password: "",
+         isAdmin: false
       };
       validate(form);
    }).toThrowError(new GeneralError("password is required"));
@@ -54,7 +58,8 @@ test("Valid form with email", () => {
          firstName: "Charlie",
          lastName: "Spalevic",
          email: "cedomir.spalevic@gmail.com",
-         password: "123"
+         password: "123",
+         isAdmin: false
       };
       validate(form);
    }).not.toThrowError();
@@ -66,13 +71,26 @@ test("Valid form with phone number", () => {
          firstName: "Charlie",
          lastName: "Spalevic",
          phoneNumber: "6309152350",
-         password: "123"
+         password: "123",
+         isAdmin: false
       };
       validate(form);
    }).not.toThrowError();
 });
 
 test("Missing email or phone number", () => {
+   expect(() => {
+      const form: Form = {
+         firstName: "Charlie",
+         lastName: "Spalevic",
+         password: "123",
+         isAdmin: false
+      };
+      validate(form);
+   }).toThrowError();
+});
+
+test("Missing isAdmin", () => {
    expect(() => {
       const form: Form = {
          firstName: "Charlie",

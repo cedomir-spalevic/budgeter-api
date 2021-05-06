@@ -1,29 +1,16 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAdminAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
-import { getPathParameter } from "middleware/url";
-import { ObjectId } from "mongodb";
 import { processDeleteUser } from "./processor";
-
-export interface DeleteUserBody {
-   adminId: ObjectId;
-   userId: ObjectId;
-}
-
-const validate = async (
-   event: APIGatewayProxyEvent
-): Promise<DeleteUserBody> => {
-   const adminId = await isAdminAuthorized(event);
-   const userId = getPathParameter("userId", event.pathParameters);
-   return { adminId, userId };
-};
+import { validate } from "./validator";
 
 export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const deleteUserBody = await validate(event);
-      await processDeleteUser(deleteUserBody);
+      await isAdminAuthorized(event);
+      const userId = await validate(event.pathParameters);
+      await processDeleteUser(userId);
       return {
          statusCode: 200,
          body: ""

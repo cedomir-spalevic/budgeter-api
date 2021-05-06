@@ -1,35 +1,16 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
-import { getBudgetQueryStringParameters } from "middleware/url";
-import { GetBudgetQueryStringParameters } from "models/requests";
-import { ObjectId } from "mongodb";
 import { getBudget } from "./processor";
-
-export interface GetBudgetsBody {
-   userId: ObjectId;
-   queryStrings: GetBudgetQueryStringParameters;
-}
-
-const validate = async (
-   event: APIGatewayProxyEvent
-): Promise<GetBudgetsBody> => {
-   const userId = await isAuthorized(event);
-   const queryStrings = getBudgetQueryStringParameters(
-      event.queryStringParameters
-   );
-   return {
-      userId,
-      queryStrings
-   };
-};
+import { validate } from "./validator";
 
 export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const getBudgetsBody = await validate(event);
-      const response = await getBudget(getBudgetsBody);
+      const userId = await isAuthorized(event);
+      const getBudgetsBody = validate(event.queryStringParameters);
+      const response = await getBudget(userId, getBudgetsBody);
       return {
          statusCode: 200,
          body: JSON.stringify(response)

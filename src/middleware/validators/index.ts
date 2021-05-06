@@ -15,7 +15,7 @@ export const validateNumber = (
       if (typeof form[name] !== "number")
          throw new GeneralError(`${name} must be a number`);
    } else {
-      if (form[name] && typeof form[name] !== "number")
+      if (form[name] !== undefined && typeof form[name] !== "number")
          throw new GeneralError(`${name} must be a number`);
    }
    return form[name] as number;
@@ -31,7 +31,7 @@ export const validateStr = (
       if (typeof form[name] !== "string")
          throw new GeneralError(`${name} must be a string`);
    } else {
-      if (form[name] && typeof form[name] !== "string")
+      if (form[name] !== undefined && typeof form[name] !== "string")
          throw new GeneralError(`${name} must be a string`);
    }
    return form[name] as string;
@@ -52,7 +52,7 @@ export const validateIsOneOfStr = (
                .join(" or ")}`
          );
    } else {
-      if (value && oneOfValues.indexOf(value) === -1)
+      if (value !== undefined && oneOfValues.indexOf(value) === -1)
          throw new GeneralError(
             `${name} must have a value of ${oneOfValues
                .map((x) => `'${x}'`)
@@ -106,7 +106,7 @@ export const validateBool = (
       if (typeof form[name] !== "boolean")
          throw new GeneralError(`${name} must be a boolean`);
    } else {
-      if (form[name] && typeof form[name] !== "boolean")
+      if (form[name] !== undefined && typeof form[name] !== "boolean")
          throw new GeneralError(`${name} must be a boolean`);
    }
    return form[name] as boolean;
@@ -141,7 +141,7 @@ export const validateDayOfWeek = (
 ): number => {
    const num = validateNumber(form, name, required);
    if (num < 0 || num > 6)
-      throw new GeneralError(`${name} must be between 0-6`);
+      throw new GeneralError(`${name} must be between 0 and 6`);
    return num;
 };
 
@@ -152,7 +152,7 @@ export const validateDayOfMonth = (
 ): number => {
    const num = validateNumber(form, name, required);
    if (num < 1 || num > 31)
-      throw new GeneralError(`${name} must be between 1-31`);
+      throw new GeneralError(`${name} must be between 1 and 31`);
    return num;
 };
 
@@ -163,7 +163,7 @@ export const validateMonth = (
 ): number => {
    const num = validateNumber(form, name, required);
    if (num < 0 || num > 11)
-      throw new GeneralError(`${name} must be between 0-11`);
+      throw new GeneralError(`${name} must be between 0 and 11`);
    return num;
 };
 
@@ -174,6 +174,6 @@ export const validateYear = (
 ): number => {
    const num = validateNumber(form, name, required);
    if (!/^\d{4}$/.test(num.toString()))
-      throw new GeneralError(`${name} is not a valid year`);
+      throw new GeneralError(`${name} is not valid`);
    return num;
 };
