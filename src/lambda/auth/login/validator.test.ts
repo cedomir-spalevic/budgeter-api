@@ -10,9 +10,7 @@ test("Empty email", () => {
          password: "123"
       };
       validate(form);
-   }).toThrowError(
-      new GeneralError("An email or phone number must be provided")
-   );
+   }).toThrowError(new GeneralError("email must be a string"));
 });
 
 test("Empty phone number", () => {
@@ -22,9 +20,7 @@ test("Empty phone number", () => {
          password: "123"
       };
       validate(form);
-   }).toThrowError(
-      new GeneralError("An email or phone number must be provided")
-   );
+   }).toThrowError(new GeneralError("phoneNumber must be a string"));
 });
 
 test("Empty password", () => {

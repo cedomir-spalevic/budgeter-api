@@ -10,9 +10,7 @@ test("Empty email", () => {
          type: "userVerification"
       };
       validate(form);
-   }).toThrowError(
-      new GeneralError("An email or phone number must be provided")
-   );
+   }).toThrowError(new GeneralError("email must be a string"));
 });
 
 test("Empty phone number", () => {
@@ -22,9 +20,7 @@ test("Empty phone number", () => {
          type: "userVerification"
       };
       validate(form);
-   }).toThrowError(
-      new GeneralError("An email or phone number must be provided")
-   );
+   }).toThrowError(new GeneralError("phoneNumber must be a string"));
 });
 
 test("Invalid phone number", () => {
@@ -74,4 +70,15 @@ test("missing type", () => {
       };
       validate(form);
    }).toThrowError(new GeneralError("type is required"));
+});
+
+test("email and phone number", () => {
+   expect(() => {
+      const form: Form = {
+         email: "cedomir.spalevic@gmail.com",
+         phoneNumber: null,
+         type: "userVerification"
+      };
+      return validate(form);
+   }).not.toBeNull();
 });

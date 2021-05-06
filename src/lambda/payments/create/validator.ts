@@ -8,11 +8,11 @@ import {
    validateMonth,
    validateYear
 } from "middleware/validators";
-import { Income } from "models/data/income";
+import { Payment } from "models/data/payment";
 import { Recurrence, recurrenceTypes } from "models/data/recurrence";
 import { GeneralError } from "models/errors";
 
-export const validate = (form: Form): Partial<Income> => {
+export const validate = (form: Form): Partial<Payment> => {
    const title = validateStr(form, "title", true);
    if (!title) throw new GeneralError("title is required");
    if (title.length > 100)

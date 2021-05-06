@@ -1,56 +1,26 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { isAuthorized } from "middleware/auth";
 import { handleErrorResponse } from "middleware/errors";
-import { getPathParameter, getListQueryStringParameters } from "middleware/url";
 import { PublicBudgetItem } from "models/data/budgetItem";
-import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
-import { ObjectId } from "mongodb";
 import { processGetMany, processGetSingle } from "./processor";
-
-export interface GetIncomesBody {
-   userId: ObjectId;
-   queryStrings?: GetListQueryStringParameters;
-   pathParameters?: { incomeId: ObjectId };
-}
-
-const validate = async (
-   event: APIGatewayProxyEvent
-): Promise<GetIncomesBody> => {
-   const userId = await isAuthorized(event);
-   if (event.pathParameters === null) {
-      const queryStrings = getListQueryStringParameters(
-         event.queryStringParameters
-      );
-      return {
-         userId,
-         queryStrings
-      };
-   } else {
-      const incomeId = getPathParameter("incomeId", event.pathParameters);
-      return {
-         userId,
-         pathParameters: {
-            incomeId
-         }
-      };
-   }
-};
+import { validate } from "./validator";
 
 export const handler = async (
    event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
    try {
-      const getIncomesBody = await validate(event);
+      const userId = await isAuthorized(event);
+      const getIncomesBody = await validate({
+         queryStrings: event.queryStringParameters,
+         pathParameters: event.pathParameters
+      });
       let response: GetResponse<PublicBudgetItem> | PublicBudgetItem;
       if (getIncomesBody.queryStrings)
-         response = await processGetMany(
-            getIncomesBody.userId,
-            getIncomesBody.queryStrings
-         );
+         response = await processGetMany(userId, getIncomesBody.queryStrings);
       else
          response = await processGetSingle(
-            getIncomesBody.userId,
+            userId,
             getIncomesBody.pathParameters.incomeId
          );
       return {

@@ -1,18 +1,19 @@
-import { DeleteIncomeBody } from ".";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { NotFoundError } from "models/errors";
+import { ObjectId } from "mongodb";
 
 export const processDeleteIncome = async (
-   deleteIncomeBody: DeleteIncomeBody
+   userId: ObjectId,
+   incomeId: ObjectId
 ): Promise<void> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
 
    const income = await incomesService.find({
-      userId: deleteIncomeBody.userId,
-      _id: deleteIncomeBody.incomeId
+      userId: userId,
+      _id: incomeId
    });
    if (!income) throw new NotFoundError("No Income found with the given Id");
 
-   await incomesService.delete(deleteIncomeBody.incomeId);
+   await incomesService.delete(incomeId);
 };

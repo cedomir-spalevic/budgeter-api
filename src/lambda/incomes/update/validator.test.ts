@@ -1,7 +1,35 @@
 import { GeneralError } from "models/errors";
-import { validate } from "./validator";
+import { validateForm, validatePathParameter } from "./validator";
 import { test, expect } from "@jest/globals";
 import { Form } from "models/requests";
+import { ObjectId } from "mongodb";
+import { APIGatewayProxyEventPathParameters } from "aws-lambda";
+
+test("Empty incomeId", () => {
+   expect(() => {
+      const pathParameters: APIGatewayProxyEventPathParameters = {
+         incomeId: ""
+      };
+      validatePathParameter(pathParameters);
+   }).toThrowError(new GeneralError("Invalid Id"));
+});
+
+test("Invalid incomeId", () => {
+   expect(() => {
+      const pathParameters: APIGatewayProxyEventPathParameters = {
+         incomeId: "!!!"
+      };
+      validatePathParameter(pathParameters);
+   }).toThrowError(new GeneralError("Invalid Id"));
+});
+
+test("Valid", () => {
+   const objectId = new ObjectId().toHexString();
+   const pathParameters: APIGatewayProxyEventPathParameters = {
+      incomeId: objectId
+   };
+   expect(validatePathParameter(pathParameters).toHexString()).toBe(objectId);
+});
 
 test("Invalid title", () => {
    expect(() => {
@@ -14,7 +42,7 @@ test("Invalid title", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("title must be a string"));
 });
 
@@ -29,7 +57,7 @@ test("Empty title", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError();
 });
 
@@ -44,22 +72,8 @@ test("Title too long", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError();
-});
-
-test("Required title", () => {
-   expect(() => {
-      const form: Form = {
-         amount: 10,
-         initialDay: 10,
-         initialDate: 27,
-         initialMonth: 3,
-         initialYear: 2012,
-         recurrence: "daily"
-      };
-      validate(form);
-   }).toThrowError(new GeneralError("title is required"));
 });
 
 test("Invalid initialDay", () => {
@@ -73,7 +87,7 @@ test("Invalid initialDay", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialDay must be between 0 and 6"));
 });
 
@@ -88,7 +102,7 @@ test("Invalid initialDay", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialDay must be between 0 and 6"));
 });
 
@@ -103,7 +117,7 @@ test("initialDay is not a number", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialDay must be a number"));
 });
 
@@ -118,7 +132,7 @@ test("Invalid initialDate", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialDate must be between 1 and 31"));
 });
 
@@ -133,7 +147,7 @@ test("Invalid initialDate", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialDate must be between 1 and 31"));
 });
 
@@ -148,7 +162,7 @@ test("initialDate is not a number", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialDate must be a number"));
 });
 
@@ -163,7 +177,7 @@ test("Invalid initialMonth", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialMonth must be between 0 and 11"));
 });
 
@@ -178,7 +192,7 @@ test("Invalid initialMonth", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialMonth must be between 0 and 11"));
 });
 
@@ -193,7 +207,7 @@ test("initialMonth not a number", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialMonth must be a number"));
 });
 
@@ -208,7 +222,7 @@ test("invalid initialYear", () => {
          initialYear: -1,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialYear is not valid"));
 });
 
@@ -223,7 +237,7 @@ test("invalid initialYear", () => {
          initialYear: 123,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialYear is not valid"));
 });
 
@@ -238,7 +252,7 @@ test("invalid initialYear", () => {
          initialYear: 12345,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialYear is not valid"));
 });
 
@@ -253,7 +267,7 @@ test("invalid initialYear", () => {
          initialYear: -123,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialYear is not valid"));
 });
 
@@ -268,7 +282,7 @@ test("initialYear not a number", () => {
          initialYear: "12345",
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(new GeneralError("initialYear must be a number"));
 });
 
@@ -283,7 +297,7 @@ test("invalid recurrence", () => {
          initialYear: 2021,
          recurrence: ""
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(
       new GeneralError(
          "recurrence must have a value of 'oneTime' or 'daily' or 'weekly' or 'biweekly' or 'monthly' or 'yearly'"
@@ -302,7 +316,7 @@ test("invalid recurrence", () => {
          initialYear: 2021,
          recurrence: "ONETIME"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(
       new GeneralError(
          "recurrence must have a value of 'oneTime' or 'daily' or 'weekly' or 'biweekly' or 'monthly' or 'yearly'"
@@ -321,7 +335,7 @@ test("invalid recurrence", () => {
          initialYear: 2021,
          recurrence: "onetime"
       };
-      validate(form);
+      validateForm(form);
    }).toThrowError(
       new GeneralError(
          "recurrence must have a value of 'oneTime' or 'daily' or 'weekly' or 'biweekly' or 'monthly' or 'yearly'"
@@ -340,7 +354,7 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "oneTime"
       };
-      validate(form);
+      validateForm(form);
    }).not.toThrowError();
 });
 
@@ -355,7 +369,7 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "daily"
       };
-      validate(form);
+      validateForm(form);
    }).not.toThrowError();
 });
 
@@ -370,7 +384,7 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "weekly"
       };
-      validate(form);
+      validateForm(form);
    }).not.toThrowError();
 });
 
@@ -385,7 +399,7 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "biweekly"
       };
-      validate(form);
+      validateForm(form);
    }).not.toThrowError();
 });
 
@@ -400,7 +414,7 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "monthly"
       };
-      validate(form);
+      validateForm(form);
    }).not.toThrowError();
 });
 
@@ -415,6 +429,6 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "yearly"
       };
-      validate(form);
+      validateForm(form);
    }).not.toThrowError();
 });
