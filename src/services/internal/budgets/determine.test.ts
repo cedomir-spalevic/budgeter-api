@@ -878,7 +878,7 @@ describe("An income for $0.05 due daily starting May 10th, 2021", () => {
          createdOn: new Date(),
          modifiedOn: new Date(),
          title: "",
-         amount: .05,
+         amount: 0.05,
          initialDay: 1,
          initialDate: 10,
          initialMonth: 4,
@@ -892,22 +892,22 @@ describe("An income for $0.05 due daily starting May 10th, 2021", () => {
          month: 4,
          year: 2021
       });
-      expect(budgetItems[0].dueToday).toBe(false)
-   })
+      expect(budgetItems[0].dueToday).toBe(false);
+   });
    test("It should be due May 10", () => {
       const budgetItems = getBudgetItems(items, {
          date: 10,
          month: 4,
          year: 2021
       });
-      expect(budgetItems[0].dueToday).toBe(true)
-   })
+      expect(budgetItems[0].dueToday).toBe(true);
+   });
    test("It should be due May 11", () => {
       const budgetItems = getBudgetItems(items, {
          date: 11,
          month: 4,
          year: 2021
       });
-      expect(budgetItems[0].dueToday).toBe(true)
-   })
+      expect(budgetItems[0].dueToday).toBe(true);
+   });
 });
