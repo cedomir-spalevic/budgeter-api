@@ -13,7 +13,7 @@ export const isAuthorized = async (
    if (!token) throw new UnauthorizedError();
 
    token = token.replace("Bearer ", "");
-   const decodedToken = decodeAccessToken(token, false);
+   const decodedToken = decodeAccessToken(token);
    if (!decodedToken.userId || !ObjectId.isValid(decodedToken.userId))
       throw new UnauthorizedError();
    return new ObjectId(decodedToken.userId);
@@ -22,14 +22,12 @@ export const isAuthorized = async (
 export const isAdminAuthorized = async (
    event: APIGatewayProxyEvent
 ): Promise<ObjectId> => {
-   let token = event.headers["Authorization"];
-   if (!token) throw new UnauthorizedError();
-
-   token = token.replace("Bearer ", "");
-   const decodedToken = decodeAccessToken(token, true);
-   if (!decodedToken.userId || !ObjectId.isValid(decodedToken.userId))
-      throw new UnauthorizedError();
-   return new ObjectId(decodedToken.userId);
+   const userId = await isAuthorized(event);
+   const budgeterClient = await BudgeterMongoClient.getInstance();
+   const usersService = await budgeterClient.getUsersCollection();
+   const user = await usersService.getById(userId.toHexString());
+   if (!user || !user.isAdmin) throw new UnauthorizedError();
+   return userId;
 };
 
 export const isAPIKeyAuthorized = async (

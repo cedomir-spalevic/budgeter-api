@@ -32,11 +32,10 @@ export const processChallengeConfirmation = async (
       await usersService.update(user);
    }
 
-   const refreshToken = generateRefreshToken(oneTimeCode.userId, user.isAdmin);
+   const refreshToken = generateRefreshToken(oneTimeCode.userId);
    const accessToken = generateAccessToken(
       oneTimeCode.userId.toHexString(),
-      refreshToken.token,
-      user.isAdmin
+      refreshToken.token
    );
 
    await refreshTokenService.create(refreshToken);

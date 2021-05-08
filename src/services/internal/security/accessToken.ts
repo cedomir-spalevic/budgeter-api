@@ -7,8 +7,7 @@ import { TokenVerificationError } from "models/errors";
  */
 export const generateAccessToken = (
    userId: string,
-   refreshToken: string,
-   isAdmin: boolean
+   refreshToken: string
 ): { token: string; expires: number } => {
    const now = Date.now();
    const expires = now + 1000 * 60 * 15; // Expires in 15 minutes
@@ -17,29 +16,21 @@ export const generateAccessToken = (
       userId,
       refreshToken
    };
-   const token = jwt.sign(
-      payload,
-      isAdmin ? process.env.JWT_ADMIN_KEY : process.env.JWT_KEY,
-      {
-         algorithm: "HS256",
-         expiresIn: "15 mins"
-      }
-   );
+   const token = jwt.sign(payload, process.env.JWT_KEY, {
+      algorithm: "HS256",
+      expiresIn: "15 mins"
+   });
    return { token, expires: expires - now };
 };
 
 /**
  * Try to decode Access Token
  */
-export const decodeAccessToken = (token: string, isAdmin: boolean): Token => {
+export const decodeAccessToken = (token: string): Token => {
    try {
-      return jwt.verify(
-         token,
-         isAdmin ? process.env.JWT_ADMIN_KEY : process.env.JWT_KEY,
-         {
-            algorithms: ["HS256"]
-         }
-      ) as Token;
+      return jwt.verify(token, process.env.JWT_KEY, {
+         algorithms: ["HS256"]
+      }) as Token;
    } catch (error) {
       throw new TokenVerificationError();
    }
