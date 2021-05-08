@@ -1,12 +1,15 @@
 import { User } from "models/data/user";
+import { GetBudgetQueryStringParameters } from "models/requests";
 import { publishToEndpoint } from "services/external/aws/sns";
 import BudgeterMongoClient from "services/external/mongodb/client";
+import { getBudgetItems } from "services/internal/budgets/determine";
+import { getQuery } from "services/internal/budgets/query";
 
 const today = new Date();
-const day = today.getDay();
 const date = today.getDate();
 const month = today.getMonth();
 const year = today.getFullYear();
+const queryParams: GetBudgetQueryStringParameters = { date, month, year };
 const numberFormat = new Intl.NumberFormat("en-us", {
    style: "currency",
    currency: "USD"
@@ -34,34 +37,13 @@ export const processPaymentNotifications = async (): Promise<void> => {
 const notifyUser = async (user: User): Promise<void> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
-
-   const payments = await paymentsService.findMany({
-      $and: [
-         { userId: user._id },
-         {
-            $or: [
-               {
-                  initialMonth: month,
-                  initialYear: year,
-                  initialDate: date,
-                  recurrence: "oneTime"
-               },
-               { recurrence: "daily" },
-               { initialDay: day, recurrence: "weekly" },
-               { initialDay: day, recurrence: "biweekly" },
-               { initialDate: date, recurrence: "monthly" },
-               {
-                  initialMonth: month,
-                  initialDate: date,
-                  recurrence: "yearly"
-               }
-            ]
-         }
-      ]
-   });
+   
+   const query = getQuery(user._id, queryParams);
+   const payments = await paymentsService.findMany(query);
+   const dueTodayItems = getBudgetItems(payments, queryParams).filter(x => x.dueToday);
 
    await Promise.all(
-      payments.map((x) =>
+      dueTodayItems.map((x) =>
          publishToEndpoint(
             user.device.platformApplicationEndpointArn,
             `${x.title} due today for ${numberFormat.format(x.amount)}`
