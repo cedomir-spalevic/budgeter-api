@@ -107,7 +107,7 @@ export const getBudgetItems = (
          totalAmount = item.amount * numberOfOccurrences;
       }
       publicBudgetItems.push({
-         id: item._id.toHexString(),
+         id: (typeof item._id === "string" ? item._id : item._id.toHexString()),
          title: item.title,
          amount: item.amount,
          initialDay: item.initialDay,
