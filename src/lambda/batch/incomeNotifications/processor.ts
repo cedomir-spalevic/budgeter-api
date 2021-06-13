@@ -37,10 +37,12 @@ export const processIncomeNotifications = async (): Promise<void> => {
 const notifyUser = async (user: User): Promise<void> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
-   
+
    const query = getQuery(user._id, queryParams);
    const incomes = await incomesService.findMany(query);
-   const dueTodayItems = getBudgetItems(incomes, queryParams).filter(x => x.dueToday);
+   const dueTodayItems = getBudgetItems(incomes, queryParams).filter(
+      (x) => x.dueToday
+   );
 
    await Promise.all(
       dueTodayItems.map((x) =>

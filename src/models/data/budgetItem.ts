@@ -2,6 +2,8 @@ import { ObjectId } from "mongodb";
 import { IEntity } from "./ientity";
 import { Recurrence } from "./recurrence";
 
+export type BudgetType = "income" | "payment";
+
 export interface IBudgetItem extends IEntity {
    userId: ObjectId;
    title: string;

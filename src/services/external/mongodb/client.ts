@@ -18,7 +18,10 @@ class BudgeterMongoClient {
    static instance: BudgeterMongoClient;
 
    constructor() {
-      this._client = new MongoClient(process.env.MONGO_CONNECTION_STRING, mongoClientOptions);
+      this._client = new MongoClient(
+         process.env.MONGO_CONNECTION_STRING,
+         mongoClientOptions
+      );
    }
 
    private async connect(): Promise<void> {
