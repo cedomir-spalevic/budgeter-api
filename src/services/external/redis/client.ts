@@ -5,7 +5,10 @@ class BudgeterRedisClient {
    static instance: BudgeterRedisClient;
 
    private async connect(): Promise<void> {
-      this._client = redis.createClient("redis://127.0.0.1:6379");
+      this._client = redis.createClient(parseInt(process.env.REDIS_SERVER_PORT, 10), process.env.REDIS_SERVER_HOST, {
+         auth_pass: process.env.REDIS_SERVER_PWD,
+         return_buffers: true
+      });
    }
 
    static async getInstance(): Promise<BudgeterRedisClient> {

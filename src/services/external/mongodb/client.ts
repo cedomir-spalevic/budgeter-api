@@ -5,12 +5,8 @@ import { Payment } from "models/data/payment";
 import { RefreshToken } from "models/data/refreshToken";
 import { User } from "models/data/user";
 import { UserAuth } from "models/data/userAuth";
-import { Db, MongoClient, MongoClientOptions } from "mongodb";
+import { Db, MongoClient } from "mongodb";
 import { BudgeterEntityCollection } from "./entityCollection";
-
-const mongoClientOptions: MongoClientOptions = {
-   useUnifiedTopology: true
-};
 
 class BudgeterMongoClient {
    private _db: Db;
@@ -20,7 +16,7 @@ class BudgeterMongoClient {
    constructor() {
       this._client = new MongoClient(
          process.env.MONGO_CONNECTION_STRING,
-         mongoClientOptions
+         { useUnifiedTopology: true }
       );
    }
 

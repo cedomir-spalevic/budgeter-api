@@ -12,8 +12,8 @@ export const getBudget = async (
    request: GetBudgetsBody
 ): Promise<GetBudgetResponse> => {
    const response = await Promise.all([
-      getIncomes(userId, request),
-      getPayments(userId, request)
+      await getIncomes(userId, request),
+      await getPayments(userId, request)
    ]);
 
    return {
