@@ -19,6 +19,9 @@ provider:
       AWS_SNS_TOPIC: ${env:AWS_SNS_TOPIC}
       MONGO_CONNECTION_STRING: ${env:MONGO_CONNECTION_STRING}
       BUDGETER_API_KEY: ${env:BUDGETER_API_KEY}
+      REDIS_SERVER_HOST: ${env:REDIS_SERVER_HOST}
+      REDIS_SERVER_PORT: ${env:REDIS_SERVER_PORT}
+      REDIS_SERVER_PWD: ${env:REDIS_SERVER_PWD}
 
 # For serverless-bundle to remove dead code
 package:

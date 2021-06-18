@@ -6,7 +6,8 @@ class BudgeterRedisClient {
 
    private async connect(): Promise<void> {
       this._client = redis.createClient(parseInt(process.env.REDIS_SERVER_PORT, 10), process.env.REDIS_SERVER_HOST, {
-         auth_pass: process.env.REDIS_SERVER_PWD,
+         // Decode base64. PWD is base64 encoded because of dotenv special characters
+         auth_pass: Buffer.from(process.env.REDIS_SERVER_PWD, "base64").toString(), 
          return_buffers: true
       });
    }
