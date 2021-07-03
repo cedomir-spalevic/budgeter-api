@@ -5,18 +5,9 @@ import BudgeterRedisClient from "services/external/redis/client";
 
 class UserBudgetCachingStrategy {
    private _type: string;
-   static instance: UserBudgetCachingStrategy;
 
    constructor(type: BudgetType) {
       this._type = type === "income" ? "income" : "payment";
-   }
-
-   static getInstance(type: BudgetType): UserBudgetCachingStrategy {
-      if (!UserBudgetCachingStrategy.instance)
-         UserBudgetCachingStrategy.instance = new UserBudgetCachingStrategy(
-            type
-         );
-      return UserBudgetCachingStrategy.instance;
    }
 
    private buildKey = (
@@ -33,7 +24,9 @@ class UserBudgetCachingStrategy {
    ): Promise<IBudgetItem[] | null> => {
       const redisClient = await BudgeterRedisClient.getInstance();
       const key = this.buildKey(userId, queryParams);
+      console.log(key);
       const response = await redisClient.get(key);
+      console.log(JSON.parse(response));
       if (!response) return null;
       return JSON.parse(response) as IBudgetItem[];
    };
@@ -42,22 +35,19 @@ class UserBudgetCachingStrategy {
       userId: ObjectId,
       queryParams: GetBudgetQueryStringParameters,
       value: IBudgetItem[]
-   ) => {
+   ): Promise<"OK"> => {
       const redisClient = await BudgeterRedisClient.getInstance();
       const key = this.buildKey(userId, queryParams);
       return redisClient.set(key, JSON.stringify(value));
    };
 
-   public delete = async (
-      userId: ObjectId,
-      queryParams: GetBudgetQueryStringParameters
-   ) => {
+   public delete = async (userId: ObjectId): Promise<void> => {
       const redisClient = await BudgeterRedisClient.getInstance();
-      const key = this.buildKey(userId, queryParams);
-      return redisClient.delete(key);
+      const matchingKey = `${userId.toHexString()}-${this._type}-budget-*`;
+      const keys = await redisClient.find(matchingKey);
+      console.log(keys);
+      keys.forEach((k) => redisClient.delete(k));
    };
 }
 
-export default {
-   getInstance: UserBudgetCachingStrategy.getInstance
-};
+export default UserBudgetCachingStrategy;

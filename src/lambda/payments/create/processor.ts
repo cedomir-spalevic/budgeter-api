@@ -1,6 +1,7 @@
 import { PublicBudgetItem } from "models/data/budgetItem";
 import { Payment } from "models/data/payment";
 import BudgeterMongoClient from "services/external/mongodb/client";
+import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 
 export const processCreatePayment = async (
    payment: Partial<Payment>
@@ -9,6 +10,9 @@ export const processCreatePayment = async (
    const paymentsService = budgeterClient.getPaymentsCollection();
 
    payment = await paymentsService.create(payment);
+
+   const cachingStrategy = new UserBudgetCachingStrategy("payment");
+   cachingStrategy.delete(payment.userId);
 
    return {
       id: payment._id.toHexString(),

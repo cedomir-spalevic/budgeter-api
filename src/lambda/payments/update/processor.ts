@@ -2,6 +2,7 @@ import { PublicBudgetItem } from "models/data/budgetItem";
 import { Payment } from "models/data/payment";
 import { NotFoundError } from "models/errors";
 import BudgeterMongoClient from "services/external/mongodb/client";
+import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 
 export const processUpdatePayment = async (
    partiallyUpdatedPayment: Partial<Payment>
@@ -54,6 +55,9 @@ export const processUpdatePayment = async (
       existingPayment.recurrence = partiallyUpdatedPayment.recurrence;
 
    const updatedPayment = await paymentsService.update(existingPayment);
+
+   const cachingStrategy = new UserBudgetCachingStrategy("payment");
+   cachingStrategy.delete(existingPayment.userId);
 
    return {
       id: updatedPayment._id.toHexString(),

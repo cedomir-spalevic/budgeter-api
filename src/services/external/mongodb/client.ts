@@ -14,10 +14,9 @@ class BudgeterMongoClient {
    static instance: BudgeterMongoClient;
 
    constructor() {
-      this._client = new MongoClient(
-         process.env.MONGO_CONNECTION_STRING,
-         { useUnifiedTopology: true }
-      );
+      this._client = new MongoClient(process.env.MONGO_CONNECTION_STRING, {
+         useUnifiedTopology: true
+      });
    }
 
    private async connect(): Promise<void> {

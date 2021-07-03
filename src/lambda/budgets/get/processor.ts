@@ -26,7 +26,7 @@ const getIncomes = async (
    userId: ObjectId,
    request: GetBudgetsBody
 ): Promise<PublicBudgetItemWithInfo[]> => {
-   const cachingStrategy = UserBudgetCachingStrategy.getInstance("income");
+   const cachingStrategy = new UserBudgetCachingStrategy("income");
    let incomes = await cachingStrategy.get(userId, request.queryStrings);
    if (!incomes) {
       const budgeterClient = await BudgeterMongoClient.getInstance();
@@ -42,7 +42,7 @@ const getPayments = async (
    userId: ObjectId,
    request: GetBudgetsBody
 ): Promise<PublicBudgetItemWithInfo[]> => {
-   const cachingStrategy = UserBudgetCachingStrategy.getInstance("payment");
+   const cachingStrategy = new UserBudgetCachingStrategy("payment");
    let payments = await cachingStrategy.get(userId, request.queryStrings);
    if (!payments) {
       const budgeterClient = await BudgeterMongoClient.getInstance();

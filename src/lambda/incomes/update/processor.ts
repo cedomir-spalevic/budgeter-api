@@ -2,6 +2,7 @@ import { PublicBudgetItem } from "models/data/budgetItem";
 import { Income } from "models/data/income";
 import { NotFoundError } from "models/errors";
 import BudgeterMongoClient from "services/external/mongodb/client";
+import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 
 export const processUpdateIncome = async (
    partiallyUpdatedIncome: Partial<Income>
@@ -54,6 +55,9 @@ export const processUpdateIncome = async (
       existingIncome.recurrence = partiallyUpdatedIncome.recurrence;
 
    const updatedIncome = await incomesService.update(existingIncome);
+
+   const cachingStrategy = new UserBudgetCachingStrategy("income");
+   cachingStrategy.delete(existingIncome.userId);
 
    return {
       id: updatedIncome._id.toHexString(),
