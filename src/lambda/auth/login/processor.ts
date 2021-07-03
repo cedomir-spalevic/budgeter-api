@@ -7,12 +7,14 @@ import { generateHash } from "services/internal/security/hash";
 import { sendVerification } from "services/internal/verification";
 import { LoginBody } from "./validator";
 
-export const processLogin = async (
-   loginBody: LoginBody
-): Promise<{
+export interface LoginResponse {
    status: number;
    response: AuthResponse | ConfirmationResponse;
-}> => {
+}
+
+export const processLogin = async (
+   loginBody: LoginBody
+): Promise<LoginResponse> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
