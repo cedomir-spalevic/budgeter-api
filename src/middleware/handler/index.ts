@@ -30,16 +30,18 @@ class Handler {
       return route;
    }
 
-   private defaultRequestTransformer(event: APIGatewayProxyEvent): Form {
+   private defaultRequestTransformer = (event: APIGatewayProxyEvent): Form => {
       return validateJSONBody(event.body);
-   }
+   };
 
-   private defaultResponseTransformer(response: any): APIGatewayProxyResult { 
+   private defaultResponseTransformer = (
+      response: any
+   ): APIGatewayProxyResult => {
       return {
          statusCode: this.defaultResponseStatusCode,
          body: JSON.stringify(response)
-      }
-   }
+      };
+   };
 
    use(route: HandlerRoute | AnyHandlerRoute): Handler {
       this.routes.push(this.getAsyncRoute(route));
@@ -68,10 +70,10 @@ class Handler {
 
    go(): LambdaRoute {
       return async (event: APIGatewayProxyEvent) => {
-         return await new Promise((resolve) => {
+         return new Promise((resolve) => {
             waterfall(
                [
-                  apply(this.requestTransformerRoute, event), 
+                  apply(this.requestTransformerRoute, event),
                   ...this.routes.slice(1),
                   this.responseTransformerRoute
                ],

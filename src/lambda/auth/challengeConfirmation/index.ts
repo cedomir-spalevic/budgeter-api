@@ -1,25 +1,20 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { handleErrorResponse } from "middleware/errors";
+import { APIGatewayProxyEvent } from "aws-lambda";
 import { getPathParameterId } from "middleware/url";
 import { validateJSONBody } from "middleware/validators";
 import { processChallengeConfirmation } from "./processor";
-import { validate } from "./validator";
+import { ChallengeConfirmationRequest, validate } from "./validator";
+import { middy } from "middleware/handler";
 
-export const handler = async (
+const requestTransformer = (
    event: APIGatewayProxyEvent
-): Promise<APIGatewayProxyResult> => {
-   try {
-      const key = getPathParameterId("key", event.pathParameters);
-      const form = validateJSONBody(event.body);
-      const challengeConfirmationBody = validate(key, form);
-      const response = await processChallengeConfirmation(
-         challengeConfirmationBody
-      );
-      return {
-         statusCode: 200,
-         body: JSON.stringify(response)
-      };
-   } catch (error) {
-      return handleErrorResponse(error);
-   }
+): ChallengeConfirmationRequest => {
+   const key = getPathParameterId("key", event.pathParameters);
+   const form = validateJSONBody(event.body);
+   return { key, form };
 };
+
+export const handler = middy()
+   .useRequestTransformer(requestTransformer)
+   .use(validate)
+   .use(processChallengeConfirmation)
+   .go();

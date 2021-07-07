@@ -5,17 +5,23 @@ import { Form } from "models/requests";
 
 test("Invalid key", () => {
    expect(() => {
-      const form: Form = {
-         code: 123456
+      const request = {
+         key: "",
+         form: {
+            code: 123456
+         }
       };
-      validate("", form);
+      validate(request);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
 
 test("Missing code", () => {
    expect(() => {
-      const form: Form = {};
-      validate("534fe04e-b3f5-4b54-bab5-16315d6d0f0a", form);
+      const request = {
+         key: "534fe04e-b3f5-4b54-bab5-16315d6d0f0a",
+         form: {}
+      };
+      validate(request);
    }).toThrowError(new GeneralError("code is required"));
 });
 
@@ -24,15 +30,22 @@ test("Invalid code", () => {
       const form: Form = {
          code: null
       };
-      validate("534fe04e-b3f5-4b54-bab5-16315d6d0f0a", form);
+      const request = {
+         key: "534fe04e-b3f5-4b54-bab5-16315d6d0f0a",
+         form
+      };
+      validate(request);
    }).toThrowError(new GeneralError("code must be a number"));
 });
 
 test("Valid form", () => {
    expect(() => {
-      const form: Form = {
-         code: 123456
+      const request = {
+         key: "534fe04e-b3f5-4b54-bab5-16315d6d0f0a",
+         form: {
+            code: 123456
+         }
       };
-      return validate("534fe04e-b3f5-4b54-bab5-16315d6d0f0a", form);
+      return validate(request);
    }).not.toBeNull();
 });

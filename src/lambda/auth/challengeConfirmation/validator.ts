@@ -1,17 +1,21 @@
 import { validateGuid, validateNumber } from "middleware/validators";
 import { Form } from "models/requests";
 
+export interface ChallengeConfirmationRequest {
+   key: string;
+   form: Form;
+}
+
 export interface ChallengeConfirmationBody {
    key: string;
    code: number;
 }
 
 export const validate = (
-   key: string,
-   form: Form
+   request: ChallengeConfirmationRequest
 ): ChallengeConfirmationBody => {
-   key = validateGuid(key);
-   const code = validateNumber(form, "code", true);
+   const key = validateGuid(request.key);
+   const code = validateNumber(request.form, "code", true);
 
    return { key, code };
 };
