@@ -1,13 +1,25 @@
 import { GeneralError } from "models/errors";
 import { validate } from "./validator";
 import { test, expect } from "@jest/globals";
-import { Form } from "models/requests";
+import { BudgeterRequest } from "middleware/handler";
+
+let request: BudgeterRequest = {
+   auth: {
+      isAuthenticated: false
+   },
+   pathParameters: {},
+   queryStrings: {},
+   body: {}
+}
 
 test("Invalid refresh token", () => {
    expect(() => {
-      const form: Form = {
-         refreshToken: null
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            refreshToken: null
+         }
+      }
+      validate(request);
    }).toThrowError(new GeneralError("refreshToken must be a string"));
 });

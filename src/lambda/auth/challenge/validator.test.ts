@@ -1,84 +1,117 @@
 import { GeneralError } from "models/errors";
 import { validate } from "./validator";
 import { test, expect } from "@jest/globals";
-import { Form } from "models/requests";
+import { BudgeterRequest } from "middleware/handler";
+
+let request: BudgeterRequest = {
+   auth: {
+      isAuthenticated: false
+   },
+   pathParameters: {},
+   queryStrings: {},
+   body: {}
+}
 
 test("Empty email", () => {
    expect(() => {
-      const form: Form = {
-         email: null,
-         type: "userVerification"
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            email: null,
+            type: "userVerification"
+         }
+      }
+      validate(request);
    }).toThrowError(new GeneralError("email must be a string"));
 });
 
 test("Empty phone number", () => {
    expect(() => {
-      const form: Form = {
-         phoneNumber: null,
-         type: "userVerification"
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            phoneNumber: null,
+            type: "userVerification"
+         }
+      }
+      validate(request);
    }).toThrowError(new GeneralError("phoneNumber must be a string"));
 });
 
 test("Invalid phone number", () => {
    expect(() => {
-      const form: Form = {
-         phoneNumber: "123",
-         type: "userVerification"
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            phoneNumber: "123",
+            type: "userVerification"
+         }
+      }
+      validate(request);
    }).toThrowError(new GeneralError("Phone number is not valid"));
 });
 
 test("userVerification type", () => {
    expect(() => {
-      const form: Form = {
-         email: "cedomir.spalevic@gmail.com",
-         type: "userVerification"
-      };
-      return validate(form);
+      request = {
+         ...request,
+         body: {
+            email: "cedomir.spalevic@gmail.com",
+            type: "userVerification"
+         }
+      }
+      return validate(request);
    }).not.toBeNull();
 });
 
 test("passwordReset type", () => {
    expect(() => {
-      const form: Form = {
-         email: "cedomir.spalevic@gmail.com",
-         type: "passwordReset"
-      };
-      return validate(form);
+      request = {
+         ...request,
+         body: {
+            email: "cedomir.spalevic@gmail.com",
+            type: "passwordReset"
+         }
+      }
+      return validate(request);
    }).not.toBeNull();
 });
 
 test("incorrect type", () => {
    expect(() => {
-      const form: Form = {
-         phoneNumber: "123",
-         type: "test"
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            phoneNumber: "123",
+            type: "test"
+         }
+      }
+      validate(request);
    }).toThrowError(GeneralError);
 });
 
 test("missing type", () => {
    expect(() => {
-      const form: Form = {
-         phoneNumber: ""
+      request = {
+         ...request,
+         body: {
+            phoneNumber: ""
+         }
       };
-      validate(form);
+      validate(request);
    }).toThrowError(new GeneralError("type is required"));
 });
 
 test("email and phone number", () => {
    expect(() => {
-      const form: Form = {
-         email: "cedomir.spalevic@gmail.com",
-         phoneNumber: null,
-         type: "userVerification"
-      };
-      return validate(form);
+      request = {
+         ...request,
+         body: {
+            email: "cedomir.spalevic@gmail.com",
+            phoneNumber: null,
+            type: "userVerification"
+         }
+      }
+      return validate(request);
    }).not.toBeNull();
 });

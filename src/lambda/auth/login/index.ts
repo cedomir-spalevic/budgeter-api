@@ -6,7 +6,6 @@ import { middy } from "middleware/handler";
 const responseTransformer = (
    response: LoginResponse
 ): APIGatewayProxyResult => {
-   console.log(this);
    return {
       statusCode: response.status,
       body: JSON.stringify(response.response)
@@ -14,6 +13,7 @@ const responseTransformer = (
 };
 
 export const handler = middy()
+   .useJsonBodyParser()
    .use(validate)
    .use(processLogin)
    .useResponseTransformer(responseTransformer)

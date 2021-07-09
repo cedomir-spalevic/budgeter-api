@@ -1,6 +1,6 @@
+import { BudgeterRequest } from "middleware/handler";
 import { validateStr } from "middleware/validators";
 import { validateEmailOrPhoneNumber } from "middleware/validators/emailOrPhoneNumber";
-import { Form } from "models/requests";
 
 export interface LoginBody {
    email?: string;
@@ -8,10 +8,11 @@ export interface LoginBody {
    password: string;
 }
 
-export const validate = (form: Form): LoginBody => {
-   const emailInput = validateStr(form, "email");
-   const phoneNumberInput = validateStr(form, "phoneNumber");
-   const password = validateStr(form, "password", true);
+export const validate = (request: BudgeterRequest): LoginBody => {
+   const { body } = request;
+   const emailInput = validateStr(body, "email");
+   const phoneNumberInput = validateStr(body, "phoneNumber");
+   const password = validateStr(body, "password", true);
    const { email, phoneNumber } = validateEmailOrPhoneNumber({
       email: emailInput,
       phoneNumber: phoneNumberInput

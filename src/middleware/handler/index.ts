@@ -1,37 +1,71 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyEventPathParameters, APIGatewayProxyEventQueryStringParameters, APIGatewayProxyResult } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
 import { apply, asyncify, waterfall } from "async";
 import { validateJSONBody } from "middleware/validators";
 import { Form } from "models/requests";
+import { ObjectId } from "mongodb";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-type HandlerRoute = (...args: any[]) => Promise<any>;
-type AnyHandlerRoute = (...args: any[]) => any;
+type AsyncRoute<Req = any, Res = any> = (...args: Req[]) => Promise<Res>;
+type SyncRoute<Req = any, Res = any> = (...args: Req[]) => Res;
+
+export interface BudgeterRequest {
+   auth: BudgeterRequestAuth;
+   pathParameters: APIGatewayProxyEventPathParameters;
+   queryStrings: APIGatewayProxyEventQueryStringParameters;
+   body: Form;
+}
+
+export interface BudgeterRequestAuth {
+   isAuthenticated: boolean;
+   userId?: ObjectId;
+}
 
 type LambdaRoute = (event: APIGatewayProxyEvent) => Promise<any>;
 
 class Handler {
-   private requestTransformerRoute: HandlerRoute;
-   private responseTransformerRoute: HandlerRoute;
    private defaultResponseStatusCode: number;
-   private routes: HandlerRoute[];
-   private errorRoute: HandlerRoute;
+   private parseJsonBody: boolean;
+   private routes: AsyncRoute[];
+   private errorRoute: AsyncRoute<Error, APIGatewayProxyResult>;
+   private authRoute: AsyncRoute<APIGatewayProxyEvent, BudgeterRequestAuth>;
+   private requestTransformerRoute: AsyncRoute<APIGatewayProxyEvent, BudgeterRequest>;
+   private responseTransformerRoute: AsyncRoute<any, APIGatewayProxyResult>;
 
    constructor() {
-      this.requestTransformerRoute = asyncify(this.defaultRequestTransformer);
-      this.responseTransformerRoute = asyncify(this.defaultResponseTransformer);
       this.defaultResponseStatusCode = 200;
+      this.parseJsonBody = false;
       this.routes = [];
       this.errorRoute = handleErrorResponse;
+      this.authRoute = undefined;
+      this.requestTransformerRoute = asyncify(this.defaultRequestTransformer);
+      this.responseTransformerRoute = asyncify(this.defaultResponseTransformer);
    }
 
-   private getAsyncRoute(route: HandlerRoute | AnyHandlerRoute): HandlerRoute {
+   private getAsyncRoute(route: AsyncRoute | SyncRoute): AsyncRoute {
       if (route.constructor.name === "Function") return asyncify(route);
       return route;
    }
 
-   private defaultRequestTransformer = (event: APIGatewayProxyEvent): Form => {
-      return validateJSONBody(event.body);
+   private defaultRequestTransformer = async (event: APIGatewayProxyEvent): Promise<BudgeterRequest> => {
+      let auth: BudgeterRequestAuth = {
+         isAuthenticated: false
+      };
+      let body: Form = {};
+
+      if(this.authRoute) {
+         auth = await this.authRoute(event);
+      }
+      if(this.parseJsonBody) {
+         body = validateJSONBody(event.body);
+      }
+
+      return {
+         auth,
+         pathParameters: event.pathParameters,
+         queryStrings: event.queryStringParameters,
+         body
+      }
    };
 
    private defaultResponseTransformer = (
@@ -43,22 +77,32 @@ class Handler {
       };
    };
 
-   use(route: HandlerRoute | AnyHandlerRoute): Handler {
+   useJsonBodyParser(): Handler {
+      this.parseJsonBody = true;
+      return this;
+   }
+
+   use(route: AsyncRoute | SyncRoute): Handler {
       this.routes.push(this.getAsyncRoute(route));
       return this;
    }
 
-   useError(errorRoute: HandlerRoute): Handler {
-      this.errorRoute = errorRoute;
+   useError(errorRoute: AsyncRoute<Error, APIGatewayProxyResult> | SyncRoute<Error, APIGatewayProxyResult>): Handler {
+      this.errorRoute = this.getAsyncRoute(errorRoute);
       return this;
    }
 
-   useRequestTransformer(route: HandlerRoute | AnyHandlerRoute): Handler {
+   useAuth(authRoute: AsyncRoute<APIGatewayProxyEvent, BudgeterRequestAuth> | SyncRoute<APIGatewayProxyEvent, BudgeterRequestAuth>): Handler {
+      this.authRoute = this.getAsyncRoute(authRoute);
+      return this;
+   }
+
+   useRequestTransformer(route: AsyncRoute<APIGatewayProxyEvent, BudgeterRequest> | SyncRoute<APIGatewayProxyEvent, BudgeterRequest>): Handler {
       this.requestTransformerRoute = this.getAsyncRoute(route);
       return this;
    }
 
-   useResponseTransformer(route: HandlerRoute | AnyHandlerRoute): Handler {
+   useResponseTransformer(route: AsyncRoute<any, APIGatewayProxyResult> | SyncRoute<any, APIGatewayProxyResult>): Handler {
       this.responseTransformerRoute = this.getAsyncRoute(route);
       return this;
    }
@@ -74,7 +118,7 @@ class Handler {
             waterfall(
                [
                   apply(this.requestTransformerRoute, event),
-                  ...this.routes.slice(1),
+                  ...this.routes,
                   this.responseTransformerRoute
                ],
                (error, result) => {

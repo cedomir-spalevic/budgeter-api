@@ -5,6 +5,19 @@ import { decodeAccessToken } from "services/internal/security/accessToken";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateHash } from "services/internal/security/hash";
 import { StepFunctionBatchJobRequest } from "models/requests";
+import { BudgeterRequestAuth } from "middleware/handler";
+
+export const adminAuth = async (event: APIGatewayProxyEvent): Promise<BudgeterRequestAuth> => {
+   const userId = await isAuthorized(event);
+   const budgeterClient = await BudgeterMongoClient.getInstance();
+   const usersService = await budgeterClient.getUsersCollection();
+   const user = await usersService.getById(userId.toHexString());
+   if (!user || !user.isAdmin) throw new UnauthorizedError();
+   return {
+      isAuthenticated: true,
+      userId
+   }
+}
 
 export const isAuthorized = async (
    event: APIGatewayProxyEvent

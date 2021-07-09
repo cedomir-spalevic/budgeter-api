@@ -1,11 +1,12 @@
+import { BudgeterRequest } from "middleware/handler";
 import { validateStr } from "middleware/validators";
-import { Form } from "models/requests";
 
 export interface RefreshBody {
    refreshToken: string;
 }
 
-export const validate = (form: Form): RefreshBody => {
-   const refreshToken = validateStr(form, "refreshToken", true);
+export const validate = (request: BudgeterRequest): RefreshBody => {
+   const { body } = request;
+   const refreshToken = validateStr(body, "refreshToken", true);
    return { refreshToken };
 };

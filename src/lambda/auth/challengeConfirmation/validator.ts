@@ -1,10 +1,6 @@
+import { BudgeterRequest } from "middleware/handler";
+import { getPathParameterId } from "middleware/url";
 import { validateGuid, validateNumber } from "middleware/validators";
-import { Form } from "models/requests";
-
-export interface ChallengeConfirmationRequest {
-   key: string;
-   form: Form;
-}
 
 export interface ChallengeConfirmationBody {
    key: string;
@@ -12,10 +8,12 @@ export interface ChallengeConfirmationBody {
 }
 
 export const validate = (
-   request: ChallengeConfirmationRequest
+   request: BudgeterRequest
 ): ChallengeConfirmationBody => {
-   const key = validateGuid(request.key);
-   const code = validateNumber(request.form, "code", true);
+   const { pathParameters, body } = request;
+   const pathKey = getPathParameterId("key", pathParameters);
+   const key = validateGuid(pathKey);
+   const code = validateNumber(body, "code", true);
 
    return { key, code };
 };

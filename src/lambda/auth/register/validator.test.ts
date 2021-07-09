@@ -1,84 +1,114 @@
 import { GeneralError } from "models/errors";
 import { validate } from "./validator";
 import { test, expect } from "@jest/globals";
-import { Form } from "models/requests";
+import { BudgeterRequest } from "middleware/handler";
+
+let request: BudgeterRequest = {
+   auth: {
+      isAuthenticated: false
+   },
+   pathParameters: {},
+   queryStrings: {},
+   body: {}
+}
 
 test("Missing first name", () => {
    expect(() => {
-      const form: Form = {
-         lastName: "",
-         email: "",
-         password: ""
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            lastName: "",
+            email: "",
+            password: ""
+         }
+      }
+      validate(request);
    }).toThrowError(new GeneralError("firstName is required"));
 });
 
 test("Missing last name", () => {
    expect(() => {
-      const form: Form = {
-         firstName: "",
-         email: "",
-         password: ""
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            firstName: "",
+            email: "",
+            password: ""
+         }
+      }
+      validate(request);
    }).toThrowError(new GeneralError("lastName is required"));
 });
 
 test("Missing Password", () => {
    expect(() => {
-      const form: Form = {
-         firstName: "Charlie",
-         lastName: "Spalevic",
-         email: "cedomir.spalevic@gmail.com"
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            firstName: "Charlie",
+            lastName: "Spalevic",
+            email: "cedomir.spalevic@gmail.com"
+         }
+      }
+      validate(request);
    }).toThrowError(new GeneralError("password is required"));
 });
 
 test("Empty Password", () => {
    expect(() => {
-      const form: Form = {
-         firstName: "Charlie",
-         lastName: "Spalevic",
-         email: "cedomir.spalevic@gmail.com",
-         password: ""
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            firstName: "Charlie",
+            lastName: "Spalevic",
+            email: "cedomir.spalevic@gmail.com",
+            password: ""
+         }
+      }
+      validate(request);
    }).toThrowError(new GeneralError("password is required"));
 });
 
-test("Valid form with email", () => {
+test("Valid request with email", () => {
    expect(() => {
-      const form: Form = {
-         firstName: "Charlie",
-         lastName: "Spalevic",
-         email: "cedomir.spalevic@gmail.com",
-         password: "123"
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            firstName: "Charlie",
+            lastName: "Spalevic",
+            email: "cedomir.spalevic@gmail.com",
+            password: "123"
+         }
+      }
+      validate(request);
    }).not.toThrowError();
 });
 
-test("Valid form with phone number", () => {
+test("Valid request with phone number", () => {
    expect(() => {
-      const form: Form = {
-         firstName: "Charlie",
-         lastName: "Spalevic",
-         phoneNumber: "6309152350",
-         password: "123"
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            firstName: "Charlie",
+            lastName: "Spalevic",
+            phoneNumber: "6309152350",
+            password: "123"
+         }
+      }
+      validate(request);
    }).not.toThrowError();
 });
 
 test("Missing email or phone number", () => {
    expect(() => {
-      const form: Form = {
-         firstName: "Charlie",
-         lastName: "Spalevic",
-         password: "123"
-      };
-      validate(form);
+      request = {
+         ...request,
+         body: {
+            firstName: "Charlie",
+            lastName: "Spalevic",
+            password: "123"
+         }
+      }
+      validate(request);
    }).toThrowError();
 });

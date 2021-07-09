@@ -1,9 +1,10 @@
-import { APIGatewayProxyEventPathParameters } from "aws-lambda";
+import { BudgeterRequest } from "middleware/handler";
 import { getPathParameter } from "middleware/url";
 import { ObjectId } from "mongodb";
 
 export const validate = (
-   pathParameters: APIGatewayProxyEventPathParameters
+   request: BudgeterRequest
 ): ObjectId => {
+   const { pathParameters } = request;
    return getPathParameter("apiKeyId", pathParameters);
 };
