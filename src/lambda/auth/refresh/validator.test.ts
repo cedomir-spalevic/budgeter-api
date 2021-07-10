@@ -10,7 +10,7 @@ let request: BudgeterRequest = {
    pathParameters: {},
    queryStrings: {},
    body: {}
-}
+};
 
 test("Invalid refresh token", () => {
    expect(() => {
@@ -19,7 +19,7 @@ test("Invalid refresh token", () => {
          body: {
             refreshToken: null
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("refreshToken must be a string"));
 });

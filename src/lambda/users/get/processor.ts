@@ -1,9 +1,17 @@
+import { GetUserRequest, GetUserResponse } from "./type";
 import { AdminPublicUser, User } from "models/data/user";
 import { NotFoundError } from "models/errors";
 import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
 import { FilterQuery, FindOneOptions, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
+
+export const processGetUser = async (
+   request: GetUserRequest
+): GetUserResponse => {
+   if (request.userId) return processGetSingle(request.userId);
+   return processGetMany(request.queryStrings);
+};
 
 export const processGetMany = async (
    queryStringParameters: GetListQueryStringParameters

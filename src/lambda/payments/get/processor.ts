@@ -5,8 +5,17 @@ import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
 import { FilterQuery, FindOneOptions, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
+import { GetPaymentRequest, GetPaymentResponse } from "./type";
 
-export const processGetMany = async (
+export const processGetPayment = async (
+   request: GetPaymentRequest
+): GetPaymentResponse => {
+   if (request.paymentId)
+      return processGetSingle(request.userId, request.paymentId);
+   return processGetMany(request.userId, request.queryStrings);
+};
+
+const processGetMany = async (
    userId: ObjectId,
    queryStringParameters: GetListQueryStringParameters
 ): Promise<GetResponse<PublicBudgetItem>> => {
@@ -50,7 +59,7 @@ export const processGetMany = async (
    };
 };
 
-export const processGetSingle = async (
+const processGetSingle = async (
    userId: ObjectId,
    paymentId: ObjectId
 ): Promise<PublicBudgetItem> => {

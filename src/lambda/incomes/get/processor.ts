@@ -7,11 +7,13 @@ import { FilterQuery, FindOneOptions, ObjectId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { GetIncomeRequest, GetIncomeResponse } from "./type";
 
-export const processGetIncome = async (request: GetIncomeRequest): GetIncomeResponse => {
-   if(request.incomeId)
+export const processGetIncome = async (
+   request: GetIncomeRequest
+): GetIncomeResponse => {
+   if (request.incomeId)
       return processGetSingle(request.userId, request.incomeId);
    return processGetMany(request.userId, request.queryStrings);
-}
+};
 
 const processGetMany = async (
    userId: ObjectId,

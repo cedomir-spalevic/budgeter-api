@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export interface Form {
    [name: string]: string | number | boolean | null | undefined;
 }
@@ -15,6 +17,7 @@ export interface GetBudgetQueryStringParameters {
 }
 
 export interface AdminUserRequest {
+   userId?: ObjectId;
    firstName: string;
    lastName: string;
    email?: string;

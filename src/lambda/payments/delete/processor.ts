@@ -1,12 +1,12 @@
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { NotFoundError } from "models/errors";
-import { ObjectId } from "mongodb";
 import UserBudgetCachingStrategy from "services/internal/caching/budgets";
+import { DeletePaymentRequest } from "./type";
 
 export const processDeletePayment = async (
-   userId: ObjectId,
-   paymentId: ObjectId
+   request: DeletePaymentRequest
 ): Promise<void> => {
+   const { userId, paymentId } = request;
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 

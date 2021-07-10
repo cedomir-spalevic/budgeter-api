@@ -3,7 +3,9 @@ import { NotFoundError } from "models/errors";
 import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 import { DeleteIncomeRequest } from "./type";
 
-export const processDeleteIncome = async (request: DeleteIncomeRequest): Promise<void> => {
+export const processDeleteIncome = async (
+   request: DeleteIncomeRequest
+): Promise<void> => {
    const { userId, incomeId } = request;
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();

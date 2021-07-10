@@ -6,7 +6,7 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateHash } from "services/internal/security/hash";
 
 export const processCreateUser = async (
-   userRequest: AdminUserRequest
+   request: AdminUserRequest
 ): Promise<AdminPublicUser> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
@@ -15,12 +15,12 @@ export const processCreateUser = async (
    const existingUser = await usersService.find({
       $or: [
          {
-            $and: [{ email: { $ne: null } }, { email: userRequest.email }]
+            $and: [{ email: { $ne: null } }, { email: request.email }]
          },
          {
             $and: [
                { phoneNumber: { $ne: null } },
-               { phoneNumber: userRequest.phoneNumber }
+               { phoneNumber: request.phoneNumber }
             ]
          }
       ]
@@ -28,11 +28,11 @@ export const processCreateUser = async (
    if (existingUser) throw new AlreadyExistsError();
 
    let newUser: Partial<User> = {
-      firstName: userRequest.firstName,
-      lastName: userRequest.lastName,
-      email: userRequest.email,
-      phoneNumber: userRequest.phoneNumber,
-      isAdmin: userRequest.isAdmin,
+      firstName: request.firstName,
+      lastName: request.lastName,
+      email: request.email,
+      phoneNumber: request.phoneNumber,
+      isAdmin: request.isAdmin,
       isMfaVerified: false,
       notificationPreferences: {
          incomeNotifications: false,
@@ -44,7 +44,7 @@ export const processCreateUser = async (
    try {
       const userAuth: Partial<UserAuth> = {
          userId: newUser._id,
-         hash: generateHash(userRequest.password)
+         hash: generateHash(request.password)
       };
       await usersAuthService.create(userAuth);
    } catch (error) {

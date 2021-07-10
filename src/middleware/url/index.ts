@@ -73,7 +73,6 @@ export const validatePathParameterId = (
    return new ObjectId(id);
 };
 
-
 export const getPathParameterId = (
    name: string,
    params: { [name: string]: any } | null

@@ -1,33 +1,22 @@
 import { getListQueryStringParameters, getPathParameter } from "middleware/url";
-import { GetListQueryStringParameters } from "models/requests";
-import { ObjectId } from "mongodb";
-import {
-   APIGatewayProxyEventPathParameters,
-   APIGatewayProxyEventQueryStringParameters
-} from "aws-lambda";
+import { BudgeterRequest } from "middleware/handler";
+import { GetPaymentRequest } from "./type";
 
-export interface GetPaymentsBody {
-   queryStrings?: GetListQueryStringParameters;
-   pathParameters?: { paymentId: ObjectId };
-}
-
-interface Input {
-   queryStrings: APIGatewayProxyEventQueryStringParameters;
-   pathParameters: APIGatewayProxyEventPathParameters;
-}
-
-export const validate = (input: Input): GetPaymentsBody => {
-   if (input.pathParameters === null) {
-      const queryStrings = getListQueryStringParameters(input.queryStrings);
+export const validate = (request: BudgeterRequest): GetPaymentRequest => {
+   const {
+      auth: { userId }
+   } = request;
+   if (request.pathParameters === null) {
+      const queryStrings = getListQueryStringParameters(request.queryStrings);
       return {
+         userId,
          queryStrings
       };
    } else {
-      const paymentId = getPathParameter("paymentId", input.pathParameters);
+      const paymentId = getPathParameter("paymentId", request.pathParameters);
       return {
-         pathParameters: {
-            paymentId
-         }
+         userId,
+         paymentId
       };
    }
 };

@@ -1,4 +1,4 @@
- import { auth } from "middleware/auth";
+import { auth } from "middleware/auth";
 import { processCreateIncome } from "./processor";
 import { validate } from "./validator";
 import { middy } from "middleware/handler";

@@ -10,8 +10,7 @@ import { PasswordResetRequest } from "./type";
 export const processPasswordReset = async (
    request: PasswordResetRequest
 ): Promise<AuthResponse> => {
-   if (!request.password)
-      throw new GeneralError("Password cannot be blank");
+   if (!request.password) throw new GeneralError("Password cannot be blank");
 
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();

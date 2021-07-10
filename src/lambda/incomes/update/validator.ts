@@ -15,7 +15,10 @@ import { Recurrence, recurrenceTypes } from "models/data/recurrence";
 import { GeneralError } from "models/errors";
 
 export const validate = (request: BudgeterRequest): Partial<Income> => {
-   const { auth: { userId }, body } = request;
+   const {
+      auth: { userId },
+      body
+   } = request;
    const incomeId = validatePathParameterId("incomeId", request.pathParameters);
    let title = validateStr(body, "title");
    if (title === "" || title === null) title = undefined;

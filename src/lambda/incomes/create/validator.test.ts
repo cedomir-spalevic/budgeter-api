@@ -10,7 +10,7 @@ const request: BudgeterRequest = {
    pathParameters: {},
    queryStrings: {},
    body: {}
-}
+};
 
 test("Invalid title", () => {
    expect(() => {

@@ -1,86 +1,94 @@
+import { expect, test } from "@jest/globals";
+import { BudgeterRequest } from "middleware/handler";
 import { GeneralError } from "models/errors";
-import { validateForm, validatePathParameter } from "./validator";
-import { test, expect } from "@jest/globals";
-import { Form } from "models/requests";
 import { ObjectId } from "mongodb";
-import { APIGatewayProxyEventPathParameters } from "aws-lambda";
+import { validate } from "./validator";
+
+const request: BudgeterRequest = {
+   auth: {
+      isAuthenticated: false
+   },
+   pathParameters: {},
+   queryStrings: null,
+   body: {}
+};
 
 test("Empty userId", () => {
    expect(() => {
-      const pathParameters: APIGatewayProxyEventPathParameters = {
+      request.pathParameters = {
          userId: ""
       };
-      validatePathParameter(pathParameters);
+      validate(request);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
 
 test("Invalid userId", () => {
    expect(() => {
-      const pathParameters: APIGatewayProxyEventPathParameters = {
+      request.pathParameters = {
          userId: "!!!"
       };
-      validatePathParameter(pathParameters);
+      validate(request);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
 
 test("Valid", () => {
    const objectId = new ObjectId().toHexString();
-   const pathParameters: APIGatewayProxyEventPathParameters = {
+   request.pathParameters = {
       userId: objectId
    };
-   expect(validatePathParameter(pathParameters).toHexString()).toBe(objectId);
+   expect(validate(request).userId.toHexString()).toBe(objectId);
 });
 
 test("Empty Password", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          firstName: "Charlie",
          lastName: "Spalevic",
          email: "cedomir.spalevic@gmail.com",
          password: "",
          isAdmin: false
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("password is required"));
 });
 
 test("Valid form with email", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          firstName: "Charlie",
          lastName: "Spalevic",
          password: "123",
          isAdmin: false
       };
-      validateForm(form);
+      validate(request);
    }).not.toThrowError();
 });
 
 test("Invalid isAdmin", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          isAdmin: "false"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError();
 });
 
 test("Password is blank", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          password: ""
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError();
 });
 
 test("Missing isAdmin", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          firstName: "Charlie",
          lastName: "Spalevic",
          password: "123"
       };
-      validateForm(form);
+      validate(request);
    }).not.toThrowError();
 });

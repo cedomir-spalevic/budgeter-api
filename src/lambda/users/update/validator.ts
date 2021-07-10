@@ -1,24 +1,20 @@
-import { APIGatewayProxyEventPathParameters } from "aws-lambda";
+import { BudgeterRequest } from "middleware/handler";
 import { getPathParameter } from "middleware/url";
 import { validateBool, validateStr } from "middleware/validators";
 import { GeneralError } from "models/errors";
-import { AdminUserRequest, Form } from "models/requests";
-import { ObjectId } from "mongodb";
+import { AdminUserRequest } from "models/requests";
 
-export const validatePathParameter = (
-   pathParameters: APIGatewayProxyEventPathParameters
-): ObjectId => {
-   return getPathParameter("userId", pathParameters);
-};
-
-export const validateForm = (form: Form): AdminUserRequest => {
-   const firstName = validateStr(form, "firstName");
-   const lastName = validateStr(form, "lastName");
-   const isAdmin = validateBool(form, "isAdmin");
-   const password = validateStr(form, "password");
+export const validate = (request: BudgeterRequest): AdminUserRequest => {
+   const { body } = request;
+   const userId = getPathParameter("userId", request.pathParameters);
+   const firstName = validateStr(body, "firstName");
+   const lastName = validateStr(body, "lastName");
+   const isAdmin = validateBool(body, "isAdmin");
+   const password = validateStr(body, "password");
    if (password === "") throw new GeneralError("password is required");
 
    return {
+      userId: userId,
       firstName,
       lastName,
       isAdmin,

@@ -7,4 +7,4 @@ export const handler = middy()
    .useAuth(adminAuth)
    .use(validate)
    .use(processDeleteAPIKey)
-   .go()
+   .go();

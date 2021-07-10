@@ -2,8 +2,12 @@ import { BudgeterRequest } from "middleware/handler";
 import { PublicUser } from "models/data/user";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
-export const processGetMe = async (request: BudgeterRequest): Promise<PublicUser> => {
-   const { auth: { userId } } = request;
+export const processGetMe = async (
+   request: BudgeterRequest
+): Promise<PublicUser> => {
+   const {
+      auth: { userId }
+   } = request;
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const user = await usersService.getById(userId.toHexString());

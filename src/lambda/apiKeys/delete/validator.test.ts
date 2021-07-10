@@ -11,7 +11,7 @@ let request: BudgeterRequest = {
    pathParameters: {},
    queryStrings: {},
    body: {}
-}
+};
 
 test("Empty apiKeyId", () => {
    expect(() => {
@@ -20,7 +20,7 @@ test("Empty apiKeyId", () => {
          pathParameters: {
             apiKeyId: ""
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
@@ -32,7 +32,7 @@ test("Invalid apiKeyId", () => {
          pathParameters: {
             apiKeyId: "!!!"
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
@@ -44,6 +44,6 @@ test("Valid", () => {
       pathParameters: {
          apiKeyId: objectId
       }
-   }
-   expect(validate(request).apiKeyId).toBe(objectId);
+   };
+   expect(validate(request).apiKeyId.toHexString()).toBe(objectId);
 });

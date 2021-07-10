@@ -7,7 +7,9 @@ import { generateHash } from "services/internal/security/hash";
 import { StepFunctionBatchJobRequest } from "models/requests";
 import { BudgeterRequestAuth } from "middleware/handler";
 
-export const adminAuth = async (event: APIGatewayProxyEvent): Promise<BudgeterRequestAuth> => {
+export const adminAuth = async (
+   event: APIGatewayProxyEvent
+): Promise<BudgeterRequestAuth> => {
    const userId = await isAuthorized(event);
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = await budgeterClient.getUsersCollection();
@@ -16,10 +18,12 @@ export const adminAuth = async (event: APIGatewayProxyEvent): Promise<BudgeterRe
    return {
       isAuthenticated: true,
       userId
-   }
-}
+   };
+};
 
-export const auth = async (event: APIGatewayProxyEvent): Promise<BudgeterRequestAuth> => {
+export const auth = async (
+   event: APIGatewayProxyEvent
+): Promise<BudgeterRequestAuth> => {
    let token = event.headers["Authorization"];
    if (!token) throw new UnauthorizedError();
 
@@ -30,8 +34,8 @@ export const auth = async (event: APIGatewayProxyEvent): Promise<BudgeterRequest
    return {
       isAuthenticated: true,
       userId: new ObjectId(decodedToken.userId)
-   }
-}
+   };
+};
 
 export const isAuthorized = async (
    event: APIGatewayProxyEvent

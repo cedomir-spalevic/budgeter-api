@@ -1,31 +1,40 @@
-import { validate } from "./validator";
-import { test, expect } from "@jest/globals";
-import { APIGatewayProxyEventPathParameters } from "aws-lambda";
+import { expect, test } from "@jest/globals";
+import { BudgeterRequest } from "middleware/handler";
 import { GeneralError } from "models/errors";
 import { ObjectId } from "mongodb";
+import { validate } from "./validator";
+
+const request: BudgeterRequest = {
+   auth: {
+      isAuthenticated: false
+   },
+   pathParameters: {},
+   queryStrings: null,
+   body: {}
+};
 
 test("Empty userId", () => {
    expect(() => {
-      const pathParameters: APIGatewayProxyEventPathParameters = {
+      request.pathParameters = {
          userId: ""
       };
-      validate(pathParameters);
+      validate(request);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
 
 test("Invalid apiKeyId", () => {
    expect(() => {
-      const pathParameters: APIGatewayProxyEventPathParameters = {
+      request.pathParameters = {
          userId: "!!!"
       };
-      validate(pathParameters);
+      validate(request);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
 
 test("Valid", () => {
    const objectId = new ObjectId().toHexString();
-   const pathParameters: APIGatewayProxyEventPathParameters = {
+   request.pathParameters = {
       userId: objectId
    };
-   expect(validate(pathParameters).toHexString()).toBe(objectId);
+   expect(validate(request).userId.toHexString()).toBe(objectId);
 });

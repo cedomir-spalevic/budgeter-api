@@ -5,29 +5,21 @@ import {
    APIGatewayProxyEventPathParameters,
    APIGatewayProxyEventQueryStringParameters
 } from "aws-lambda";
+import { GetUserRequest } from "./type";
+import { BudgeterRequest } from "middleware/handler";
 
-export interface GetUsersBody {
-   queryStrings?: GetListQueryStringParameters;
-   pathParameters?: { userId: ObjectId };
-}
-
-interface Input {
-   queryStrings: APIGatewayProxyEventQueryStringParameters;
-   pathParameters: APIGatewayProxyEventPathParameters;
-}
-
-export const validate = (input: Input): GetUsersBody => {
-   if (input.pathParameters === null) {
-      const queryStrings = getListQueryStringParameters(input.queryStrings);
+export const validate = (request: BudgeterRequest): GetUserRequest => {
+   if (request.pathParameters === null) {
+      const queryStrings = getListQueryStringParameters(request.queryStrings);
       return {
+         adminUserId: request.auth.userId,
          queryStrings
       };
    } else {
-      const userId = getPathParameter("userId", input.pathParameters);
+      const userId = getPathParameter("userId", request.pathParameters);
       return {
-         pathParameters: {
-            userId
-         }
+         adminUserId: request.auth.userId,
+         userId
       };
    }
 };

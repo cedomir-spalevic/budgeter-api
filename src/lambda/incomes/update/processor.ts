@@ -1,10 +1,11 @@
 import { PublicBudgetItem } from "models/data/budgetItem";
 import { Income } from "models/data/income";
 import { NotFoundError } from "models/errors";
+import { WithId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 
-const allowedFieldsToUpdate = [
+const allowedFieldsToUpdate: (keyof WithId<Income>)[] = [
    "title",
    "amount",
    "initialDay",
@@ -12,7 +13,7 @@ const allowedFieldsToUpdate = [
    "initialMonth",
    "initialYear",
    "recurrence"
-]
+];
 
 export const processUpdateIncome = async (
    request: Partial<Income>
@@ -20,7 +21,10 @@ export const processUpdateIncome = async (
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
 
-   const existingIncome = await incomesService.find({
+   // Issue with typescript. Otherwise I would not be able to update existingIncome[field] below
+   // because apparently existingIncome comes out as a type of 'never'
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   const existingIncome: any = await incomesService.find({
       userId: request.userId,
       _id: request._id
    });
@@ -28,45 +32,13 @@ export const processUpdateIncome = async (
       throw new NotFoundError("No Income found with the given Id");
 
    // We only want to update the income with the differences. Not replace
-   allowedFieldsToUpdate.forEach(field => {
-      if(request[field] !== undefined && existingIncome[field] !== request[field])
+   allowedFieldsToUpdate.forEach((field: keyof WithId<Income>) => {
+      if (
+         request[field] !== undefined &&
+         existingIncome[field] !== request[field]
+      )
          existingIncome[field] = request[field];
-   })
-   // if (
-   //    partiallyUpdatedIncome.title !== undefined &&
-   //    existingIncome.title !== partiallyUpdatedIncome.title
-   // )
-   //    existingIncome.title = partiallyUpdatedIncome.title;
-   // if (
-   //    partiallyUpdatedIncome.amount !== undefined &&
-   //    existingIncome.amount !== partiallyUpdatedIncome.amount
-   // )
-   //    existingIncome.amount = partiallyUpdatedIncome.amount;
-   // if (
-   //    partiallyUpdatedIncome.initialDay !== undefined &&
-   //    existingIncome.initialDay !== partiallyUpdatedIncome.initialDay
-   // )
-   //    existingIncome.initialDay = partiallyUpdatedIncome.initialDay;
-   // if (
-   //    partiallyUpdatedIncome.initialDate !== undefined &&
-   //    existingIncome.initialDate !== partiallyUpdatedIncome.initialDate
-   // )
-   //    existingIncome.initialDate = partiallyUpdatedIncome.initialDate;
-   // if (
-   //    partiallyUpdatedIncome.initialMonth !== undefined &&
-   //    existingIncome.initialMonth !== partiallyUpdatedIncome.initialMonth
-   // )
-   //    existingIncome.initialMonth = partiallyUpdatedIncome.initialMonth;
-   // if (
-   //    partiallyUpdatedIncome.initialYear !== undefined &&
-   //    existingIncome.initialYear !== partiallyUpdatedIncome.initialYear
-   // )
-   //    existingIncome.initialYear = partiallyUpdatedIncome.initialYear;
-   // if (
-   //    partiallyUpdatedIncome.recurrence !== undefined &&
-   //    existingIncome.recurrence !== partiallyUpdatedIncome.recurrence
-   // )
-   //    existingIncome.recurrence = partiallyUpdatedIncome.recurrence;
+   });
 
    const updatedIncome = await incomesService.update(existingIncome);
 

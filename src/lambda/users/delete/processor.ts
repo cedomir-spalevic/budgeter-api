@@ -1,8 +1,12 @@
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { NotFoundError } from "models/errors";
 import { ObjectId } from "mongodb";
+import { DeleteUserRequest } from "./type";
 
-export const processDeleteUser = async (userId: ObjectId): Promise<void> => {
+export const processDeleteUser = async (
+   request: DeleteUserRequest
+): Promise<void> => {
+   const { userId } = request;
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const usersAuthService = budgeterClient.getUsersAuthCollection();

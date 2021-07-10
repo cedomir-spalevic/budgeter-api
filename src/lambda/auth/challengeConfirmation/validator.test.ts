@@ -10,7 +10,7 @@ let request: BudgeterRequest = {
    pathParameters: {},
    queryStrings: {},
    body: {}
-}
+};
 
 test("Invalid key", () => {
    expect(() => {
@@ -22,7 +22,7 @@ test("Invalid key", () => {
          body: {
             code: 123456
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
@@ -35,7 +35,7 @@ test("Missing code", () => {
             key: "534fe04e-b3f5-4b54-bab5-16315d6d0f0a"
          },
          body: {}
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("code is required"));
 });
@@ -50,7 +50,7 @@ test("Invalid code", () => {
          body: {
             code: null
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("code must be a number"));
 });
@@ -65,7 +65,7 @@ test("Valid form", () => {
          body: {
             code: 123456
          }
-      }
+      };
       return validate(request);
    }).not.toBeNull();
 });

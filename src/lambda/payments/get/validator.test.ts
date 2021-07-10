@@ -1,138 +1,155 @@
-import { validate } from "./validator";
-import { test, expect } from "@jest/globals";
-import {
-   APIGatewayProxyEventPathParameters,
-   APIGatewayProxyEventQueryStringParameters
-} from "aws-lambda";
+import { expect, test } from "@jest/globals";
+import { BudgeterRequest } from "middleware/handler";
 import { GeneralError } from "models/errors";
 import { ObjectId } from "mongodb";
+import { validate } from "./validator";
+
+const getByIdRequest: BudgeterRequest = {
+   auth: {
+      isAuthenticated: false
+   },
+   pathParameters: {},
+   queryStrings: null,
+   body: {}
+};
+const nullRequest: BudgeterRequest = {
+   auth: {
+      isAuthenticated: true
+   },
+   pathParameters: null,
+   queryStrings: null,
+   body: {}
+};
+const getManyRequest: BudgeterRequest = {
+   auth: {
+      isAuthenticated: false
+   },
+   pathParameters: null,
+   queryStrings: {},
+   body: {}
+};
 
 test("Empty paymentId", () => {
    expect(() => {
-      const pathParameters: APIGatewayProxyEventPathParameters = {
+      getByIdRequest.pathParameters = {
          paymentId: ""
       };
-      validate({ pathParameters, queryStrings: null });
+      validate(getByIdRequest);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
 
 test("Invalid paymentId", () => {
    expect(() => {
-      const pathParameters: APIGatewayProxyEventPathParameters = {
+      getByIdRequest.pathParameters = {
          paymentId: "!!!"
       };
-      validate({ pathParameters, queryStrings: null });
+      validate(getByIdRequest);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
 
 test("Valid", () => {
    const objectId = new ObjectId().toHexString();
-   const pathParameters: APIGatewayProxyEventPathParameters = {
+   getByIdRequest.pathParameters = {
       paymentId: objectId
    };
-   expect(
-      validate({
-         pathParameters,
-         queryStrings: null
-      }).pathParameters.paymentId.toHexString()
-   ).toBe(objectId);
+   expect(validate(getByIdRequest).paymentId.toHexString()).toBe(objectId);
 });
 
 test("Null query strings", () => {
-   const result = validate({ pathParameters: null, queryStrings: null });
+   const result = validate(nullRequest);
    expect(result.queryStrings.limit).toBe(5);
    expect(result.queryStrings.skip).toBe(0);
 });
 
 test("Invalid limit", () => {
    expect(() => {
-      const queryStrings: APIGatewayProxyEventQueryStringParameters = {
+      getManyRequest.queryStrings = {
          limit: "-1"
       };
-      validate({ pathParameters: null, queryStrings });
+      validate(getManyRequest);
    }).toThrowError();
 });
 
 test("Invalid limit", () => {
    expect(() => {
-      const queryStrings: APIGatewayProxyEventQueryStringParameters = {
+      getManyRequest.queryStrings = {
          limit: "a"
       };
-      validate({ pathParameters: null, queryStrings });
+      validate(getManyRequest);
    }).toThrowError();
 });
 
 test("Invalid limit", () => {
    expect(() => {
-      const queryStrings: APIGatewayProxyEventQueryStringParameters = {
+      getManyRequest.queryStrings = {
          limit: "null"
       };
-      validate({ pathParameters: null, queryStrings });
+      validate(getManyRequest);
    }).toThrowError();
 });
 
 test("Valid limit", () => {
-   const queryStrings: APIGatewayProxyEventQueryStringParameters = {
+   getManyRequest.queryStrings = {
       limit: "7"
    };
-   const result = validate({ pathParameters: null, queryStrings });
+   const result = validate(getManyRequest);
    expect(result.queryStrings.limit).toBe(7);
    expect(result.queryStrings.skip).toBe(0);
 });
 
 test("Invalid skip", () => {
    expect(() => {
-      const queryStrings: APIGatewayProxyEventQueryStringParameters = {
+      getManyRequest.queryStrings = {
          skip: "-1"
       };
-      validate({ pathParameters: null, queryStrings });
+      validate(getManyRequest);
    }).toThrowError();
 });
 
 test("Invalid skip", () => {
    expect(() => {
-      const queryStrings: APIGatewayProxyEventQueryStringParameters = {
+      getManyRequest.queryStrings = {
          skip: "a"
       };
-      validate({ pathParameters: null, queryStrings });
+      validate(getManyRequest);
    }).toThrowError();
 });
 
 test("Invalid skip", () => {
    expect(() => {
-      const queryStrings: APIGatewayProxyEventQueryStringParameters = {
+      getManyRequest.queryStrings = {
          skip: "null"
       };
-      validate({ pathParameters: null, queryStrings });
+      validate(getManyRequest);
    }).toThrowError();
 });
 
 test("Valid skip", () => {
-   const queryStrings: APIGatewayProxyEventQueryStringParameters = {
+   getManyRequest.queryStrings = {
       skip: "7"
    };
-   const result = validate({ pathParameters: null, queryStrings });
+   const result = validate(getManyRequest);
    expect(result.queryStrings.limit).toBe(5);
    expect(result.queryStrings.skip).toBe(7);
 });
 
 test("Valid query strings", () => {
-   const queryStrings: APIGatewayProxyEventQueryStringParameters = {
+   getManyRequest.queryStrings = {
       limit: "10",
       skip: "5"
    };
-   const result = validate({ pathParameters: null, queryStrings });
+   const result = validate(getManyRequest);
    expect(result.queryStrings.limit).toBe(10);
    expect(result.queryStrings.skip).toBe(5);
 });
 
 test("Valid query strings with", () => {
-   const queryStrings: APIGatewayProxyEventQueryStringParameters = {
+   getManyRequest.queryStrings = {
       limit: "10",
       skip: "5",
       search: "Test"
    };
-   const result = validate({ pathParameters: null, queryStrings });
+   const result = validate(getManyRequest);
    expect(result.queryStrings.limit).toBe(10);
    expect(result.queryStrings.skip).toBe(5);
    expect(result.queryStrings.search).toBe("Test");

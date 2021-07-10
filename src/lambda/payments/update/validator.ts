@@ -1,5 +1,5 @@
-import { APIGatewayProxyEventPathParameters } from "aws-lambda";
-import { getPathParameter } from "middleware/url";
+import { BudgeterRequest } from "middleware/handler";
+import { validatePathParameterId } from "middleware/url";
 import {
    validateNumber,
    validateIsOneOfStr,
@@ -12,32 +12,34 @@ import {
 import { Payment } from "models/data/payment";
 import { Recurrence, recurrenceTypes } from "models/data/recurrence";
 import { GeneralError } from "models/errors";
-import { Form } from "models/requests";
-import { ObjectId } from "mongodb";
 
-export const validatePathParameter = (
-   pathParameters: APIGatewayProxyEventPathParameters
-): ObjectId => {
-   return getPathParameter("paymentId", pathParameters);
-};
-
-export const validateForm = (form: Form): Partial<Payment> => {
-   let title = validateStr(form, "title");
+export const validate = (request: BudgeterRequest): Partial<Payment> => {
+   const {
+      auth: { userId },
+      body
+   } = request;
+   const paymentId = validatePathParameterId(
+      "paymentId",
+      request.pathParameters
+   );
+   let title = validateStr(body, "title");
    if (title === "" || title === null) title = undefined;
    if (title && title.length > 100)
       throw new GeneralError("title exceeds the character limit of 100");
-   const amount = validateNumber(form, "amount");
-   const initialDay = validateDayOfWeek(form, "initialDay");
-   const initialDate = validateDayOfMonth(form, "initialDate");
-   const initialMonth = validateMonth(form, "initialMonth");
-   const initialYear = validateYear(form, "initialYear");
+   const amount = validateNumber(body, "amount");
+   const initialDay = validateDayOfWeek(body, "initialDay");
+   const initialDate = validateDayOfMonth(body, "initialDate");
+   const initialMonth = validateMonth(body, "initialMonth");
+   const initialYear = validateYear(body, "initialYear");
    const recurrence = validateIsOneOfStr(
-      form,
+      body,
       "recurrence",
       recurrenceTypes
    ) as Recurrence;
 
    return {
+      _id: paymentId,
+      userId,
       title,
       amount,
       initialDay,

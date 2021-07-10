@@ -1,58 +1,44 @@
 import { PublicBudgetItem } from "models/data/budgetItem";
 import { Payment } from "models/data/payment";
 import { NotFoundError } from "models/errors";
+import { WithId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 
+const allowedFieldsToUpdate: (keyof WithId<Payment>)[] = [
+   "title",
+   "amount",
+   "initialDay",
+   "initialDate",
+   "initialMonth",
+   "initialYear",
+   "recurrence"
+];
+
 export const processUpdatePayment = async (
-   partiallyUpdatedPayment: Partial<Payment>
+   request: Partial<Payment>
 ): Promise<PublicBudgetItem> => {
    // Get Mongo Client
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
-   const existingPayment = await paymentsService.find({
-      userId: partiallyUpdatedPayment.userId,
-      _id: partiallyUpdatedPayment._id
+   // Issue with typescript. Otherwise I would not be able to update existingIncome[field] below
+   // because apparently existingIncome comes out as a type of 'never'
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   const existingPayment: any = await paymentsService.find({
+      userId: request.userId,
+      _id: request._id
    });
    if (!existingPayment)
       throw new NotFoundError("No Payment found with the given Id");
 
-   if (
-      partiallyUpdatedPayment.title !== undefined &&
-      existingPayment.title !== partiallyUpdatedPayment.title
-   )
-      existingPayment.title = partiallyUpdatedPayment.title;
-   if (
-      partiallyUpdatedPayment.amount !== undefined &&
-      existingPayment.amount !== partiallyUpdatedPayment.amount
-   )
-      existingPayment.amount = partiallyUpdatedPayment.amount;
-   if (
-      partiallyUpdatedPayment.initialDay !== undefined &&
-      existingPayment.initialDay !== partiallyUpdatedPayment.initialDay
-   )
-      existingPayment.initialDay = partiallyUpdatedPayment.initialDay;
-   if (
-      partiallyUpdatedPayment.initialDate !== undefined &&
-      existingPayment.initialDate !== partiallyUpdatedPayment.initialDate
-   )
-      existingPayment.initialDate = partiallyUpdatedPayment.initialDate;
-   if (
-      partiallyUpdatedPayment.initialMonth !== undefined &&
-      existingPayment.initialMonth !== partiallyUpdatedPayment.initialMonth
-   )
-      existingPayment.initialMonth = partiallyUpdatedPayment.initialMonth;
-   if (
-      partiallyUpdatedPayment.initialYear !== undefined &&
-      existingPayment.initialYear !== partiallyUpdatedPayment.initialYear
-   )
-      existingPayment.initialYear = partiallyUpdatedPayment.initialYear;
-   if (
-      partiallyUpdatedPayment.recurrence !== undefined &&
-      existingPayment.recurrence !== partiallyUpdatedPayment.recurrence
-   )
-      existingPayment.recurrence = partiallyUpdatedPayment.recurrence;
+   allowedFieldsToUpdate.forEach((field: keyof WithId<Payment>) => {
+      if (
+         request[field] !== undefined &&
+         existingPayment[field] !== request[field]
+      )
+         existingPayment[field] = request[field];
+   });
 
    const updatedPayment = await paymentsService.update(existingPayment);
 

@@ -11,7 +11,7 @@ const request: BudgeterRequest = {
    pathParameters: {},
    queryStrings: {},
    body: {}
-}
+};
 
 test("Empty incomeId", () => {
    expect(() => {

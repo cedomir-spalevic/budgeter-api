@@ -1,9 +1,11 @@
-import { APIGatewayProxyEventPathParameters } from "aws-lambda";
+import { BudgeterRequest } from "middleware/handler";
 import { getPathParameter } from "middleware/url";
-import { ObjectId } from "mongodb";
+import { DeleteUserRequest } from "./type";
 
-export const validate = (
-   pathParameters: APIGatewayProxyEventPathParameters
-): ObjectId => {
-   return getPathParameter("userId", pathParameters);
+export const validate = (request: BudgeterRequest): DeleteUserRequest => {
+   const userId = getPathParameter("userId", request.pathParameters);
+   return {
+      adminUserId: request.auth.userId,
+      userId
+   };
 };

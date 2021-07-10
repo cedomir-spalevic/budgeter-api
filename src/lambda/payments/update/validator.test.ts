@@ -1,39 +1,55 @@
+import { expect, test } from "@jest/globals";
+import { BudgeterRequest } from "middleware/handler";
 import { GeneralError } from "models/errors";
-import { validateForm, validatePathParameter } from "./validator";
-import { test, expect } from "@jest/globals";
-import { Form } from "models/requests";
 import { ObjectId } from "mongodb";
-import { APIGatewayProxyEventPathParameters } from "aws-lambda";
+import { validate } from "./validator";
+
+const request: BudgeterRequest = {
+   auth: {
+      isAuthenticated: false
+   },
+   pathParameters: {},
+   queryStrings: null,
+   body: {      
+      title: "123",
+      amount: 10,
+      initialDay: 5,
+      initialDate: 15,
+      initialMonth: 9,
+      initialYear: 2021,
+      recurrence: "oneTime"
+   }
+};
 
 test("Empty paymentId", () => {
    expect(() => {
-      const pathParameters: APIGatewayProxyEventPathParameters = {
+      request.pathParameters = {
          paymentId: ""
       };
-      validatePathParameter(pathParameters);
+      validate(request);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
 
 test("Invalid paymentId", () => {
    expect(() => {
-      const pathParameters: APIGatewayProxyEventPathParameters = {
+      request.pathParameters = {
          paymentId: "!!!"
       };
-      validatePathParameter(pathParameters);
+      validate(request);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
 
 test("Valid", () => {
    const objectId = new ObjectId().toHexString();
-   const pathParameters: APIGatewayProxyEventPathParameters = {
+   request.pathParameters = {
       paymentId: objectId
    };
-   expect(validatePathParameter(pathParameters).toHexString()).toBe(objectId);
+   expect(validate(request)._id.toHexString()).toBe(objectId);
 });
 
 test("Invalid title", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: 123,
          amount: 10,
          initialDay: 10,
@@ -42,13 +58,13 @@ test("Invalid title", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("title must be a string"));
 });
 
 test("Empty title", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "",
          amount: 10,
          initialDay: 10,
@@ -57,13 +73,13 @@ test("Empty title", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError();
 });
 
 test("Title too long", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: new Array(101).fill("a").join(""),
          amount: 10,
          initialDay: 10,
@@ -72,13 +88,13 @@ test("Title too long", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError();
 });
 
 test("Invalid initialDay", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: -1,
@@ -87,13 +103,13 @@ test("Invalid initialDay", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialDay must be between 0 and 6"));
 });
 
 test("Invalid initialDay", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 7,
@@ -102,13 +118,13 @@ test("Invalid initialDay", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialDay must be between 0 and 6"));
 });
 
 test("initialDay is not a number", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: "a",
@@ -117,13 +133,13 @@ test("initialDay is not a number", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialDay must be a number"));
 });
 
 test("Invalid initialDate", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -132,13 +148,13 @@ test("Invalid initialDate", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialDate must be between 1 and 31"));
 });
 
 test("Invalid initialDate", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -147,13 +163,13 @@ test("Invalid initialDate", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialDate must be between 1 and 31"));
 });
 
 test("initialDate is not a number", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -162,13 +178,13 @@ test("initialDate is not a number", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialDate must be a number"));
 });
 
 test("Invalid initialMonth", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -177,13 +193,13 @@ test("Invalid initialMonth", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialMonth must be between 0 and 11"));
 });
 
 test("Invalid initialMonth", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -192,13 +208,13 @@ test("Invalid initialMonth", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialMonth must be between 0 and 11"));
 });
 
 test("initialMonth not a number", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -207,13 +223,13 @@ test("initialMonth not a number", () => {
          initialYear: 2012,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialMonth must be a number"));
 });
 
 test("invalid initialYear", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -222,13 +238,13 @@ test("invalid initialYear", () => {
          initialYear: -1,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialYear is not valid"));
 });
 
 test("invalid initialYear", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -237,13 +253,13 @@ test("invalid initialYear", () => {
          initialYear: 123,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialYear is not valid"));
 });
 
 test("invalid initialYear", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -252,13 +268,13 @@ test("invalid initialYear", () => {
          initialYear: 12345,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialYear is not valid"));
 });
 
 test("invalid initialYear", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -267,13 +283,13 @@ test("invalid initialYear", () => {
          initialYear: -123,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialYear is not valid"));
 });
 
 test("initialYear not a number", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -282,13 +298,13 @@ test("initialYear not a number", () => {
          initialYear: "12345",
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(new GeneralError("initialYear must be a number"));
 });
 
 test("invalid recurrence", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -297,7 +313,7 @@ test("invalid recurrence", () => {
          initialYear: 2021,
          recurrence: ""
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(
       new GeneralError(
          "recurrence must have a value of 'oneTime' or 'daily' or 'weekly' or 'biweekly' or 'monthly' or 'yearly'"
@@ -307,7 +323,7 @@ test("invalid recurrence", () => {
 
 test("invalid recurrence", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -316,7 +332,7 @@ test("invalid recurrence", () => {
          initialYear: 2021,
          recurrence: "ONETIME"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(
       new GeneralError(
          "recurrence must have a value of 'oneTime' or 'daily' or 'weekly' or 'biweekly' or 'monthly' or 'yearly'"
@@ -326,7 +342,7 @@ test("invalid recurrence", () => {
 
 test("invalid recurrence", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -335,7 +351,7 @@ test("invalid recurrence", () => {
          initialYear: 2021,
          recurrence: "onetime"
       };
-      validateForm(form);
+      validate(request);
    }).toThrowError(
       new GeneralError(
          "recurrence must have a value of 'oneTime' or 'daily' or 'weekly' or 'biweekly' or 'monthly' or 'yearly'"
@@ -345,7 +361,7 @@ test("invalid recurrence", () => {
 
 test("valid form", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -354,13 +370,13 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "oneTime"
       };
-      validateForm(form);
+      validate(request);
    }).not.toThrowError();
 });
 
 test("valid form", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -369,13 +385,13 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "daily"
       };
-      validateForm(form);
+      validate(request);
    }).not.toThrowError();
 });
 
 test("valid form", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -384,13 +400,13 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "weekly"
       };
-      validateForm(form);
+      validate(request);
    }).not.toThrowError();
 });
 
 test("valid form", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -399,13 +415,13 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "biweekly"
       };
-      validateForm(form);
+      validate(request);
    }).not.toThrowError();
 });
 
 test("valid form", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -414,13 +430,13 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "monthly"
       };
-      validateForm(form);
+      validate(request);
    }).not.toThrowError();
 });
 
 test("valid form", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          title: "123",
          amount: 10,
          initialDay: 5,
@@ -429,6 +445,6 @@ test("valid form", () => {
          initialYear: 2021,
          recurrence: "yearly"
       };
-      validateForm(form);
+      validate(request);
    }).not.toThrowError();
 });

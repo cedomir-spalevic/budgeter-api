@@ -1,12 +1,10 @@
 import { NoUserEmailFoundError, UnauthorizedError } from "models/errors";
-import { AuthResponse, ConfirmationResponse } from "models/responses";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateAccessToken } from "services/internal/security/accessToken";
-import { generateRefreshToken } from "services/internal/security/refreshToken";
 import { generateHash } from "services/internal/security/hash";
+import { generateRefreshToken } from "services/internal/security/refreshToken";
 import { sendVerification } from "services/internal/verification";
 import { LoginRequest, LoginResponse } from "./type";
-
 
 export const processLogin = async (
    request: LoginRequest
@@ -23,10 +21,7 @@ export const processLogin = async (
             $and: [{ email: { $ne: null } }, { email: email }]
          },
          {
-            $and: [
-               { phoneNumber: { $ne: null } },
-               { phoneNumber: phoneNumber }
-            ]
+            $and: [{ phoneNumber: { $ne: null } }, { phoneNumber: phoneNumber }]
          }
       ]
    });

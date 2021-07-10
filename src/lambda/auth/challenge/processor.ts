@@ -19,18 +19,13 @@ export const processChallenge = async (
             $and: [{ email: { $ne: null } }, { email: email }]
          },
          {
-            $and: [
-               { phoneNumber: { $ne: null } },
-               { phoneNumber: phoneNumber }
-            ]
+            $and: [{ phoneNumber: { $ne: null } }, { phoneNumber: phoneNumber }]
          }
       ]
    });
    if (!user) {
       throw new NotFoundError(
-         `No user found with the provided ${
-            email ? "email" : "phone number"
-         }`
+         `No user found with the provided ${email ? "email" : "phone number"}`
       );
    }
 
@@ -42,10 +37,7 @@ export const processChallenge = async (
       email: email,
       phoneNumber: phoneNumber
    };
-   const confirmationResponse = await sendVerification(
-      userToChallenge,
-      type
-   );
+   const confirmationResponse = await sendVerification(userToChallenge, type);
 
    return {
       expires: confirmationResponse.expires,

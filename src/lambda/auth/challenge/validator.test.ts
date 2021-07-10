@@ -10,7 +10,7 @@ let request: BudgeterRequest = {
    pathParameters: {},
    queryStrings: {},
    body: {}
-}
+};
 
 test("Empty email", () => {
    expect(() => {
@@ -20,7 +20,7 @@ test("Empty email", () => {
             email: null,
             type: "userVerification"
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("email must be a string"));
 });
@@ -33,7 +33,7 @@ test("Empty phone number", () => {
             phoneNumber: null,
             type: "userVerification"
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("phoneNumber must be a string"));
 });
@@ -46,7 +46,7 @@ test("Invalid phone number", () => {
             phoneNumber: "123",
             type: "userVerification"
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("Phone number is not valid"));
 });
@@ -59,7 +59,7 @@ test("userVerification type", () => {
             email: "cedomir.spalevic@gmail.com",
             type: "userVerification"
          }
-      }
+      };
       return validate(request);
    }).not.toBeNull();
 });
@@ -72,7 +72,7 @@ test("passwordReset type", () => {
             email: "cedomir.spalevic@gmail.com",
             type: "passwordReset"
          }
-      }
+      };
       return validate(request);
    }).not.toBeNull();
 });
@@ -85,7 +85,7 @@ test("incorrect type", () => {
             phoneNumber: "123",
             type: "test"
          }
-      }
+      };
       validate(request);
    }).toThrowError(GeneralError);
 });
@@ -111,7 +111,7 @@ test("email and phone number", () => {
             phoneNumber: null,
             type: "userVerification"
          }
-      }
+      };
       return validate(request);
    }).not.toBeNull();
 });

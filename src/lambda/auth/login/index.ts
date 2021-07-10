@@ -1,7 +1,8 @@
 import { APIGatewayProxyResult } from "aws-lambda";
-import { LoginResponse, processLogin } from "./processor";
+import { processLogin } from "./processor";
 import { validate } from "./validator";
 import { middy } from "middleware/handler";
+import { LoginResponse } from "./type";
 
 const responseTransformer = (
    response: LoginResponse

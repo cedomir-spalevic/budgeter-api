@@ -4,12 +4,12 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 
 export const processCreatePayment = async (
-   payment: Partial<Payment>
+   request: Partial<Payment>
 ): Promise<PublicBudgetItem> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
-   payment = await paymentsService.create(payment);
+   const payment = await paymentsService.create(request);
 
    const cachingStrategy = new UserBudgetCachingStrategy("payment");
    cachingStrategy.delete(payment.userId);

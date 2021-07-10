@@ -3,12 +3,12 @@ import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
 import { ObjectId } from "mongodb";
 
-export interface GetIncomeRequest {
+export interface GetPaymentRequest {
    userId: ObjectId;
-   incomeId?: ObjectId;
+   paymentId?: ObjectId;
    queryStrings?: GetListQueryStringParameters;
 }
 
-export type GetIncomeResponse = Promise<
+export type GetPaymentResponse = Promise<
    GetResponse<PublicBudgetItem> | PublicBudgetItem
 >;

@@ -10,7 +10,7 @@ let request: BudgeterRequest = {
    pathParameters: {},
    queryStrings: {},
    body: {}
-}
+};
 
 test("Missing first name", () => {
    expect(() => {
@@ -21,7 +21,7 @@ test("Missing first name", () => {
             email: "",
             password: ""
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("firstName is required"));
 });
@@ -35,7 +35,7 @@ test("Missing last name", () => {
             email: "",
             password: ""
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("lastName is required"));
 });
@@ -49,7 +49,7 @@ test("Missing Password", () => {
             lastName: "Spalevic",
             email: "cedomir.spalevic@gmail.com"
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("password is required"));
 });
@@ -64,7 +64,7 @@ test("Empty Password", () => {
             email: "cedomir.spalevic@gmail.com",
             password: ""
          }
-      }
+      };
       validate(request);
    }).toThrowError(new GeneralError("password is required"));
 });
@@ -79,7 +79,7 @@ test("Valid request with email", () => {
             email: "cedomir.spalevic@gmail.com",
             password: "123"
          }
-      }
+      };
       validate(request);
    }).not.toThrowError();
 });
@@ -94,7 +94,7 @@ test("Valid request with phone number", () => {
             phoneNumber: "6309152350",
             password: "123"
          }
-      }
+      };
       validate(request);
    }).not.toThrowError();
 });
@@ -108,7 +108,7 @@ test("Missing email or phone number", () => {
             lastName: "Spalevic",
             password: "123"
          }
-      }
+      };
       validate(request);
    }).toThrowError();
 });

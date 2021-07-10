@@ -1,102 +1,111 @@
+import { expect, test } from "@jest/globals";
+import { BudgeterRequest } from "middleware/handler";
 import { GeneralError } from "models/errors";
 import { validate } from "./validator";
-import { test, expect } from "@jest/globals";
-import { Form } from "models/requests";
+
+const request: BudgeterRequest = {
+   auth: {
+      isAuthenticated: false
+   },
+   pathParameters: {},
+   queryStrings: null,
+   body: {}
+};
 
 test("Missing first name", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          lastName: "",
          email: "",
          password: "",
          isAdmin: false
       };
-      validate(form);
+      validate(request);
    }).toThrowError(new GeneralError("firstName is required"));
 });
 
 test("Missing last name", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          firstName: "",
          email: "",
          password: "",
          isAdmin: false
       };
-      validate(form);
+      validate(request);
    }).toThrowError(new GeneralError("lastName is required"));
 });
 
 test("Missing Password", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          firstName: "Charlie",
          lastName: "Spalevic",
          email: "cedomir.spalevic@gmail.com",
          isAdmin: false
       };
-      validate(form);
+      validate(request);
    }).toThrowError(new GeneralError("password is required"));
 });
 
 test("Empty Password", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          firstName: "Charlie",
          lastName: "Spalevic",
          email: "cedomir.spalevic@gmail.com",
          password: "",
          isAdmin: false
       };
-      validate(form);
+      validate(request);
    }).toThrowError(new GeneralError("password is required"));
 });
 
 test("Valid form with email", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          firstName: "Charlie",
          lastName: "Spalevic",
          email: "cedomir.spalevic@gmail.com",
          password: "123",
          isAdmin: false
       };
-      validate(form);
+      validate(request);
    }).not.toThrowError();
 });
 
 test("Valid form with phone number", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          firstName: "Charlie",
          lastName: "Spalevic",
          phoneNumber: "6309152350",
          password: "123",
          isAdmin: false
       };
-      validate(form);
+      validate(request);
    }).not.toThrowError();
 });
 
 test("Missing email or phone number", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          firstName: "Charlie",
          lastName: "Spalevic",
          password: "123",
          isAdmin: false
       };
-      validate(form);
+      validate(request);
    }).toThrowError();
 });
 
 test("Missing isAdmin", () => {
    expect(() => {
-      const form: Form = {
+      request.body = {
          firstName: "Charlie",
          lastName: "Spalevic",
          password: "123"
       };
-      validate(form);
+      validate(request);
    }).toThrowError();
 });
