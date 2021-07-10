@@ -272,6 +272,21 @@ test("invalid initialYear", () => {
    }).toThrowError(new GeneralError("initialYear is not valid"));
 });
 
+test("null initialYear", () => {
+   expect(() => {
+      request.body = {
+         title: "123",
+         amount: 10,
+         initialDay: 5,
+         initialDate: 15,
+         initialMonth: 10,
+         initialYear: null,
+         recurrence: "daily"
+      };
+      validate(request);
+   }).toThrowError(new GeneralError("initialYear must be a number"));
+})
+
 test("invalid initialYear", () => {
    expect(() => {
       request.body = {
@@ -443,6 +458,21 @@ test("valid request", () => {
          initialDate: 15,
          initialMonth: 9,
          initialYear: 2021,
+         recurrence: "yearly"
+      };
+      validate(request);
+   }).not.toThrowError();
+});
+
+
+test("valid request", () => {
+   expect(() => {
+      request.body = {
+         title: "123",
+         amount: 10,
+         initialDay: 5,
+         initialDate: 15,
+         initialMonth: 9,
          recurrence: "yearly"
       };
       validate(request);

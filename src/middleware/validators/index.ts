@@ -173,7 +173,7 @@ export const validateYear = (
    required = false
 ): number => {
    const num = validateNumber(form, name, required);
-   if (!/^\d{4}$/.test(num.toString()))
+   if (num && !/^\d{4}$/.test(num.toString()))
       throw new GeneralError(`${name} is not valid`);
    return num;
 };

@@ -13,7 +13,7 @@ import { GeneralError } from "models/errors";
 import { BudgeterRequest } from "middleware/handler";
 
 export const validate = (request: BudgeterRequest): Partial<Income> => {
-   const { body } = request;
+   const { auth: { userId }, body } = request;
    const title = validateStr(body, "title", true);
    if (!title) throw new GeneralError("title is required");
    if (title.length > 100)
@@ -31,6 +31,7 @@ export const validate = (request: BudgeterRequest): Partial<Income> => {
    ) as Recurrence;
 
    return {
+      userId,
       title,
       amount,
       initialDay,

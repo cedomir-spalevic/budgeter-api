@@ -235,7 +235,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"cedomir0527@gmail.com\",\r\n    \"password\": \"MTIzNDU2IUE=\"\r\n}",
+							"raw": "{\r\n    \"email\": \"cedomir0527@gmail.com\",\r\n    \"password\": \"MTIz\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
