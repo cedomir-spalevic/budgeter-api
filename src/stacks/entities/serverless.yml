@@ -1,0 +1,4 @@
+service: budgeter-api
+app: budgeter-entities
+org: cedomirspalevic
+frameworkVersion: "2.35"
