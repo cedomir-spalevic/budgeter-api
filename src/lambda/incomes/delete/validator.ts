@@ -1,9 +1,13 @@
-import { APIGatewayProxyEventQueryStringParameters } from "aws-lambda";
+import { BudgeterRequest } from "middleware/handler";
 import { getPathParameter } from "middleware/url";
-import { ObjectId } from "mongodb";
+import { DeleteIncomeRequest } from "./type";
 
 export const validate = (
-   queryStringParameters: APIGatewayProxyEventQueryStringParameters
-): ObjectId => {
-   return getPathParameter("incomeId", queryStringParameters);
+   request: BudgeterRequest
+): DeleteIncomeRequest => {
+   const incomeId = getPathParameter("incomeId", request.pathParameters);
+   return { 
+      userId: request.auth.userId,
+      incomeId
+   }
 };

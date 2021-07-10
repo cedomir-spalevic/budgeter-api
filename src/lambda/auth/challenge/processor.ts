@@ -3,11 +3,12 @@ import { ConfirmationResponse } from "models/responses";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { sendVerification } from "services/internal/verification";
 import { User } from "models/data/user";
-import { ChallengeBody } from "./validator";
+import { ChallengeRequest } from "./type";
 
 export const processChallenge = async (
-   challengeBody: ChallengeBody
+   request: ChallengeRequest
 ): Promise<ConfirmationResponse> => {
+   const { email, phoneNumber, type } = request;
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
@@ -15,12 +16,12 @@ export const processChallenge = async (
    const user = await usersService.find({
       $or: [
          {
-            $and: [{ email: { $ne: null } }, { email: challengeBody.email }]
+            $and: [{ email: { $ne: null } }, { email: email }]
          },
          {
             $and: [
                { phoneNumber: { $ne: null } },
-               { phoneNumber: challengeBody.phoneNumber }
+               { phoneNumber: phoneNumber }
             ]
          }
       ]
@@ -28,7 +29,7 @@ export const processChallenge = async (
    if (!user) {
       throw new NotFoundError(
          `No user found with the provided ${
-            challengeBody.email ? "email" : "phone number"
+            email ? "email" : "phone number"
          }`
       );
    }
@@ -38,12 +39,12 @@ export const processChallenge = async (
    // All the templates are stored in src/views folder
    const userToChallenge: Partial<User> = {
       _id: user._id,
-      email: challengeBody.email,
-      phoneNumber: challengeBody.phoneNumber
+      email: email,
+      phoneNumber: phoneNumber
    };
    const confirmationResponse = await sendVerification(
       userToChallenge,
-      challengeBody.type
+      type
    );
 
    return {

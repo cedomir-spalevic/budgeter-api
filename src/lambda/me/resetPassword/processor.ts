@@ -1,16 +1,16 @@
 import { GeneralError, UnauthorizedError } from "models/errors";
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { PasswordResetBody } from ".";
 import { UserAuth } from "models/data/userAuth";
 import { generateHash } from "services/internal/security/hash";
 import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
 import { AuthResponse } from "models/responses";
+import { PasswordResetRequest } from "./type";
 
 export const processPasswordReset = async (
-   passwordResetBody: PasswordResetBody
+   request: PasswordResetRequest
 ): Promise<AuthResponse> => {
-   if (!passwordResetBody.password)
+   if (!request.password)
       throw new GeneralError("Password cannot be blank");
 
    const budgeterClient = await BudgeterMongoClient.getInstance();
@@ -24,7 +24,7 @@ export const processPasswordReset = async (
    // endpoint, we set the completed property to True. We only let the user change their password if the completed property is True
    // for the provided key
    const oneTimeCode = await oneTimeCodeService.find({
-      key: passwordResetBody.key,
+      key: request.key,
       completed: true,
       type: "passwordReset"
    });
@@ -36,7 +36,7 @@ export const processPasswordReset = async (
 
    const userAuth: Partial<UserAuth> = {
       userId: oneTimeCode.userId,
-      hash: generateHash(passwordResetBody.password)
+      hash: generateHash(request.password)
    };
    await usersAuthService.replace({ userId: oneTimeCode.userId }, userAuth);
 

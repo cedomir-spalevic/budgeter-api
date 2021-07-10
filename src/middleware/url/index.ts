@@ -63,6 +63,17 @@ export const getListQueryStringParameters = (
    return { limit, skip, search };
 };
 
+export const validatePathParameterId = (
+   name: string,
+   params: { [name: string]: any } | null
+): ObjectId => {
+   if (params === null) throw new GeneralError("Invalid Id");
+   const id = params[name];
+   if (!ObjectId.isValid(id)) throw new GeneralError("Invalid Id");
+   return new ObjectId(id);
+};
+
+
 export const getPathParameterId = (
    name: string,
    params: { [name: string]: any } | null

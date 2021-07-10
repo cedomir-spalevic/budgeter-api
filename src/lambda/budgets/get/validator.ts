@@ -1,16 +1,15 @@
-import { APIGatewayProxyEventQueryStringParameters } from "aws-lambda";
+import { BudgeterRequest } from "middleware/handler";
 import { getBudgetQueryStringParameters } from "middleware/url";
-import { GetBudgetQueryStringParameters } from "models/requests";
+import { GetBudgetsRequest } from "./type";
 
-export interface GetBudgetsBody {
-   queryStrings: GetBudgetQueryStringParameters;
-}
+
 
 export const validate = (
-   queryStringParameters: APIGatewayProxyEventQueryStringParameters
-): GetBudgetsBody => {
-   const queryStrings = getBudgetQueryStringParameters(queryStringParameters);
+   request: BudgeterRequest
+): GetBudgetsRequest => {
+   const queryStrings = getBudgetQueryStringParameters(request.queryStrings);
    return {
+      userId: request.auth.userId,
       queryStrings
    };
 };

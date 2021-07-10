@@ -1,12 +1,10 @@
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { NotFoundError } from "models/errors";
-import { ObjectId } from "mongodb";
 import UserBudgetCachingStrategy from "services/internal/caching/budgets";
+import { DeleteIncomeRequest } from "./type";
 
-export const processDeleteIncome = async (
-   userId: ObjectId,
-   incomeId: ObjectId
-): Promise<void> => {
+export const processDeleteIncome = async (request: DeleteIncomeRequest): Promise<void> => {
+   const { userId, incomeId } = request;
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const incomesService = budgeterClient.getIncomesCollection();
 

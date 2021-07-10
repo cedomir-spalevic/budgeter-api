@@ -1,10 +1,11 @@
+import { DeleteApiKeyRequest } from "./type";
 import { BudgeterRequest } from "middleware/handler";
-import { getPathParameter } from "middleware/url";
-import { ObjectId } from "mongodb";
+import { validatePathParameterId } from "middleware/url";
 
 export const validate = (
    request: BudgeterRequest
-): ObjectId => {
+): DeleteApiKeyRequest => {
    const { pathParameters } = request;
-   return getPathParameter("apiKeyId", pathParameters);
+   const apiKeyId = validatePathParameterId("apiKeyId", pathParameters);
+   return { apiKeyId };
 };

@@ -4,10 +4,10 @@ import {
    subscribeToTopic
 } from "services/external/aws/sns";
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { RegisterDeviceBody } from ".";
+import { RegisterDeviceRequest } from "./type";
 
 export const processRegisterDevice = async (
-   request: RegisterDeviceBody
+   request: RegisterDeviceRequest
 ): Promise<void> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();

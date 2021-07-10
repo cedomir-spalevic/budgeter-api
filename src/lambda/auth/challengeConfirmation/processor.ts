@@ -3,19 +3,20 @@ import { AuthResponse } from "models/responses";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
-import { ChallengeConfirmationBody } from "./validator";
+import { ChallengeConfirmationRequest } from "./type";
 
 export const processChallengeConfirmation = async (
-   challengeConfirmationBody: ChallengeConfirmationBody
+   request: ChallengeConfirmationRequest
 ): Promise<AuthResponse> => {
+   const { key, code } = request;
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
    const refreshTokenService = budgeterClient.getRefreshTokenCollection();
 
    let oneTimeCode = await oneTimeCodeService.find({
-      key: challengeConfirmationBody.key,
-      code: challengeConfirmationBody.code
+      key: key,
+      code: code
    });
    if (!oneTimeCode || oneTimeCode.expiresOn < Date.now())
       throw new UnauthorizedError();

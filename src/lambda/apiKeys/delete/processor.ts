@@ -1,10 +1,12 @@
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { NotFoundError } from "models/errors";
-import { ObjectId } from "mongodb";
+import { DeleteApiKeyRequest } from "./type";
 
 export const processDeleteAPIKey = async (
-   apiKeyId: ObjectId
+   request: DeleteApiKeyRequest
 ): Promise<void> => {
+   const { apiKeyId } = request;
+
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const apiKeyService = budgeterClient.getAPIKeyCollection();
 

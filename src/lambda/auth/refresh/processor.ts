@@ -2,16 +2,16 @@ import { UnauthorizedError } from "models/errors";
 import { AuthResponse } from "models/responses";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateAccessToken } from "services/internal/security/accessToken";
-import { RefreshBody } from "./validator";
+import { RefreshRequest } from "./type";
 
 export const processRefresh = async (
-   refreshBody: RefreshBody
+   request: RefreshRequest
 ): Promise<AuthResponse> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const refreshTokenService = budgeterClient.getRefreshTokenCollection();
 
    const refreshToken = await refreshTokenService.find({
-      token: refreshBody.refreshToken
+      token: request.refreshToken
    });
 
    if (!refreshToken || refreshToken.expiresOn < Date.now())

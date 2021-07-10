@@ -45,5 +45,5 @@ test("Valid", () => {
          apiKeyId: objectId
       }
    }
-   expect(validate(request).toHexString()).toBe(objectId);
+   expect(validate(request).apiKeyId).toBe(objectId);
 });

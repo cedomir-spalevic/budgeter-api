@@ -5,16 +5,13 @@ import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
 import { generateHash } from "services/internal/security/hash";
 import { sendVerification } from "services/internal/verification";
-import { LoginBody } from "./validator";
+import { LoginRequest, LoginResponse } from "./type";
 
-export interface LoginResponse {
-   status: number;
-   response: AuthResponse | ConfirmationResponse;
-}
 
 export const processLogin = async (
-   loginBody: LoginBody
+   request: LoginRequest
 ): Promise<LoginResponse> => {
+   const { email, phoneNumber, password } = request;
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
@@ -23,12 +20,12 @@ export const processLogin = async (
    const user = await usersService.find({
       $or: [
          {
-            $and: [{ email: { $ne: null } }, { email: loginBody.email }]
+            $and: [{ email: { $ne: null } }, { email: email }]
          },
          {
             $and: [
                { phoneNumber: { $ne: null } },
-               { phoneNumber: loginBody.phoneNumber }
+               { phoneNumber: phoneNumber }
             ]
          }
       ]
@@ -40,7 +37,7 @@ export const processLogin = async (
    // Which is why we only do a count
    const userAuthRecordsAmount = await usersAuthService.count({
       userId: user._id,
-      hash: generateHash(loginBody.password)
+      hash: generateHash(password)
    });
    if (userAuthRecordsAmount < 1) throw new UnauthorizedError();
 

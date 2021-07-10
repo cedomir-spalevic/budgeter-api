@@ -1,24 +1,12 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { isAuthorized } from "middleware/auth";
-import { handleErrorResponse } from "middleware/errors";
-import { validateJSONBody } from "middleware/validators";
+ import { auth } from "middleware/auth";
 import { processCreateIncome } from "./processor";
 import { validate } from "./validator";
+import { middy } from "middleware/handler";
 
-export const handler = async (
-   event: APIGatewayProxyEvent
-): Promise<APIGatewayProxyResult> => {
-   try {
-      const userId = await isAuthorized(event);
-      const form = validateJSONBody(event.body);
-      const incomeBody = validate(form);
-      incomeBody.userId = userId;
-      const response = await processCreateIncome(incomeBody);
-      return {
-         statusCode: 201,
-         body: JSON.stringify(response)
-      };
-   } catch (error) {
-      return handleErrorResponse(error);
-   }
-};
+export const handler = middy()
+   .useAuth(auth)
+   .useJsonBodyParser()
+   .use(validate)
+   .use(processCreateIncome)
+   .useDefaultResponseStatusCode(201)
+   .go();

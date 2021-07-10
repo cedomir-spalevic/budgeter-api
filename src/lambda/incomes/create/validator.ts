@@ -1,4 +1,3 @@
-import { Form } from "models/requests";
 import {
    validateNumber,
    validateIsOneOfStr,
@@ -11,19 +10,21 @@ import {
 import { Income } from "models/data/income";
 import { Recurrence, recurrenceTypes } from "models/data/recurrence";
 import { GeneralError } from "models/errors";
+import { BudgeterRequest } from "middleware/handler";
 
-export const validate = (form: Form): Partial<Income> => {
-   const title = validateStr(form, "title", true);
+export const validate = (request: BudgeterRequest): Partial<Income> => {
+   const { body } = request;
+   const title = validateStr(body, "title", true);
    if (!title) throw new GeneralError("title is required");
    if (title.length > 100)
       throw new GeneralError("title exceeds the character limit of 100");
-   const amount = validateNumber(form, "amount", true);
-   const initialDay = validateDayOfWeek(form, "initialDay", true);
-   const initialDate = validateDayOfMonth(form, "initialDate", true);
-   const initialMonth = validateMonth(form, "initialMonth", true);
-   const initialYear = validateYear(form, "initialYear", true);
+   const amount = validateNumber(body, "amount", true);
+   const initialDay = validateDayOfWeek(body, "initialDay", true);
+   const initialDate = validateDayOfMonth(body, "initialDate", true);
+   const initialMonth = validateMonth(body, "initialMonth", true);
+   const initialYear = validateYear(body, "initialYear", true);
    const recurrence = validateIsOneOfStr(
-      form,
+      body,
       "recurrence",
       recurrenceTypes,
       true
