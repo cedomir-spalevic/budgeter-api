@@ -1,10 +1,9 @@
 import { ObjectId } from "mongodb";
-import { IEntity } from "./ientity";
 import { Recurrence } from "./recurrence";
 
 export type BudgetType = "income" | "payment";
 
-export interface IBudgetItem extends IEntity {
+export class IBudgetItem {
    userId: ObjectId;
    title: string;
    amount: number;
@@ -17,8 +16,7 @@ export interface IBudgetItem extends IEntity {
 
 export interface PublicBudgetItem {
    id: string;
-   title: string;
-   amount: number;
+   title: string; 
    initialDay: number; // Day of week
    initialDate: number; // Day of month
    initialMonth: number;
