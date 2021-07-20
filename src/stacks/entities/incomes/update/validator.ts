@@ -3,8 +3,8 @@ import { validatePathParameterId } from "middleware/url";
 import {
    validateDayOfMonth, validateDayOfWeek, validateIsOneOfStr, validateMonth, validateNumber, validateStr, validateYear
 } from "middleware/validators";
-import { Income } from "models/data/income";
-import { Recurrence, recurrenceTypes } from "models/data/recurrence";
+import { Income } from "models/schemas/income";
+import { Recurrence, recurrenceTypes } from "models/schemas/recurrence";
 import { GeneralError } from "models/errors";
 
 export const validate = (request: BudgeterRequest): Partial<Income> => {

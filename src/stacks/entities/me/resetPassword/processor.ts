@@ -1,6 +1,6 @@
 import { GeneralError, UnauthorizedError } from "models/errors";
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { UserAuth } from "models/data/userAuth";
+import { UserAuth } from "models/schemas/userAuth";
 import { generateHash } from "services/internal/security/hash";
 import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";

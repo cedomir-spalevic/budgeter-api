@@ -1,4 +1,4 @@
-import { IBudgetItem, PublicBudgetItemWithInfo } from "models/data/budgetItem";
+import { IBudgetItem, PublicBudgetItemWithInfo } from "models/schemas/budgetItem";
 import { GetBudgetQueryStringParameters } from "models/requests";
 import {
    getBiweeklyOccurrenceLength,

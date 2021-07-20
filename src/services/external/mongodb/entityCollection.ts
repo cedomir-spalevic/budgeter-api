@@ -6,7 +6,7 @@ import {
    OptionalId,
    WithId
 } from "mongodb";
-import { IEntity } from "models/data/ientity";
+import { IEntity } from "models/schemas/ientity";
 
 /**
  * Collection that performs basic CRUD functionality for a MongoDB collection

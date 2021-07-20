@@ -1,5 +1,5 @@
 import { validateIsOneOfStr, validateStr } from "middleware/validators";
-import { OneTimeCodeType } from "models/data/oneTimeCode";
+import { OneTimeCodeType } from "models/schemas/oneTimeCode";
 import { validateEmailOrPhoneNumber } from "middleware/validators/emailOrPhoneNumber";
 import { BudgeterRequest } from "middleware/handler";
 import { ChallengeRequest } from "./type";

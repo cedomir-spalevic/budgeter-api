@@ -1,4 +1,4 @@
-import { AdminPublicUser } from "models/data/user";
+import { AdminPublicUser } from "models/schemas/user";
 import { GeneralError, NotFoundError } from "models/errors";
 import { AdminUserRequest } from "models/requests";
 import BudgeterMongoClient from "services/external/mongodb/client";

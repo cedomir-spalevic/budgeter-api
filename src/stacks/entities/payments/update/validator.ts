@@ -9,8 +9,8 @@ import {
    validateMonth,
    validateYear
 } from "middleware/validators";
-import { Payment } from "models/data/payment";
-import { Recurrence, recurrenceTypes } from "models/data/recurrence";
+import { Payment } from "models/schemas/payment";
+import { Recurrence, recurrenceTypes } from "models/schemas/recurrence";
 import { GeneralError } from "models/errors";
 
 export const validate = (request: BudgeterRequest): Partial<Payment> => {

@@ -1,4 +1,4 @@
-import { PublicAPIKey } from "models/data/apiKey";
+import { PublicAPIKey } from "models/schemas/apiKey";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateHash } from "services/internal/security/hash";
 import { getRandomKey } from "services/internal/security/randomKey";

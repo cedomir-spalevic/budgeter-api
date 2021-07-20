@@ -7,8 +7,8 @@ import {
    validateMonth,
    validateYear
 } from "middleware/validators";
-import { Income } from "models/data/income";
-import { Recurrence, recurrenceTypes } from "models/data/recurrence";
+import { Income } from "models/schemas/income";
+import { Recurrence, recurrenceTypes } from "models/schemas/recurrence";
 import { GeneralError } from "models/errors";
 import { BudgeterRequest } from "middleware/handler";
 

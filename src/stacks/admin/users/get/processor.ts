@@ -1,5 +1,5 @@
 import { GetUserRequest, GetUserResponse } from "./type";
-import { AdminPublicUser, User } from "models/data/user";
+import { AdminPublicUser, User } from "models/schemas/user";
 import { NotFoundError } from "models/errors";
 import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";

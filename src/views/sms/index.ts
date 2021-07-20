@@ -1,4 +1,4 @@
-import { OneTimeCodeType } from "models/data/oneTimeCode";
+import { OneTimeCodeType } from "models/schemas/oneTimeCode";
 import { getNewUserVerificationSmsMessage } from "./newUserVerification";
 import { getPasswordResetVerificationSmsMessage } from "./passwordReset";
 import { getUserVerificationSmsMessage } from "./userVerification";

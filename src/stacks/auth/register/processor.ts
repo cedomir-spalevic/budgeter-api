@@ -1,8 +1,8 @@
 import { AlreadyExistsError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { User } from "models/data/user";
-import { UserAuth } from "models/data/userAuth";
+import { User } from "models/schemas/user";
+import { UserAuth } from "models/schemas/userAuth";
 import { generateHash } from "services/internal/security/hash";
 import { sendVerification } from "services/internal/verification";
 import { RegisterBody } from "./validator";

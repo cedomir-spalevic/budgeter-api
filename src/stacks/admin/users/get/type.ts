@@ -1,4 +1,4 @@
-import { AdminPublicUser } from "models/data/user";
+import { AdminPublicUser } from "models/schemas/user";
 import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
 import { ObjectId } from "mongodb";

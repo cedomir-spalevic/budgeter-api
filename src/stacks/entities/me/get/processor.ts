@@ -1,5 +1,5 @@
 import { BudgeterRequest } from "middleware/handler";
-import { PublicUser } from "models/data/user";
+import { PublicUser } from "models/schemas/user";
 import BudgeterMongoClient from "services/external/mongodb/client";
 
 export const processGetMe = async (

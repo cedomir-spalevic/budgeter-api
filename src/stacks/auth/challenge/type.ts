@@ -1,4 +1,4 @@
-import { OneTimeCodeType } from "models/data/oneTimeCode";
+import { OneTimeCodeType } from "models/schemas/oneTimeCode";
 
 export interface ChallengeRequest {
    email?: string;

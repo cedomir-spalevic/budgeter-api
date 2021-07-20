@@ -1,10 +1,10 @@
-import { APIKey } from "models/data/apiKey";
-import { Income } from "models/data/income";
-import { OneTimeCode } from "models/data/oneTimeCode";
-import { Payment } from "models/data/payment";
-import { RefreshToken } from "models/data/refreshToken";
-import { User } from "models/data/user";
-import { UserAuth } from "models/data/userAuth";
+import { APIKey } from "models/schemas/apiKey";
+import { Income } from "models/schemas/income";
+import { OneTimeCode } from "models/schemas/oneTimeCode";
+import { Payment } from "models/schemas/payment";
+import { RefreshToken } from "models/schemas/refreshToken";
+import { User } from "models/schemas/user";
+import { UserAuth } from "models/schemas/userAuth";
 import { Db, MongoClient } from "mongodb";
 import { BudgeterEntityCollection } from "./entityCollection";
 

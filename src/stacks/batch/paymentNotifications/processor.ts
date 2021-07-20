@@ -1,4 +1,4 @@
-import { User } from "models/data/user";
+import { User } from "models/schemas/user";
 import { GetBudgetQueryStringParameters } from "models/requests";
 import { publishToEndpoint } from "services/external/aws/sns";
 import BudgeterMongoClient from "services/external/mongodb/client";

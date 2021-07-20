@@ -1,4 +1,4 @@
-import { PublicUser, User } from "models/data/user";
+import { PublicUser, User } from "models/schemas/user";
 import { NotFoundError } from "models/errors";
 import BudgeterMongoClient from "services/external/mongodb/client";
 

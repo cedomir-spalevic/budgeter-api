@@ -1,5 +1,5 @@
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { PublicAPIKey } from "models/data/apiKey";
+import { PublicAPIKey } from "models/schemas/apiKey";
 import { GetResponse } from "models/responses";
 
 export const processGetAPIKeys = async (): Promise<

@@ -1,5 +1,5 @@
-import { PublicBudgetItem } from "models/data/budgetItem";
-import { Payment } from "models/data/payment";
+import { PublicBudgetItem } from "models/schemas/budgetItem";
+import { Payment } from "models/schemas/payment";
 import { NotFoundError } from "models/errors";
 import { WithId } from "mongodb";
 import BudgeterMongoClient from "services/external/mongodb/client";

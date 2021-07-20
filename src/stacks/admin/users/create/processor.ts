@@ -1,5 +1,5 @@
-import { AdminPublicUser, User } from "models/data/user";
-import { UserAuth } from "models/data/userAuth";
+import { AdminPublicUser, User } from "models/schemas/user";
+import { UserAuth } from "models/schemas/userAuth";
 import { AlreadyExistsError } from "models/errors";
 import { AdminUserRequest } from "models/requests";
 import BudgeterMongoClient from "services/external/mongodb/client";

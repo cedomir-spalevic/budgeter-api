@@ -1,6 +1,6 @@
 import { BudgeterRequest } from "middleware/handler";
 import { validateBool, validateStr } from "middleware/validators";
-import { User } from "models/data/user";
+import { User } from "models/schemas/user";
 
 export const validate = async (
    request: BudgeterRequest

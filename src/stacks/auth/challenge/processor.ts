@@ -2,7 +2,7 @@ import { NotFoundError } from "models/errors";
 import { ConfirmationResponse } from "models/responses";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { sendVerification } from "services/internal/verification";
-import { User } from "models/data/user";
+import { User } from "models/schemas/user";
 import { ChallengeRequest } from "./type";
 
 export const processChallenge = async (
