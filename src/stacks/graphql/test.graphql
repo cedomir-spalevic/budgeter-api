@@ -1,0 +1,7 @@
+type Socks {
+   amount: Int
+}
+
+type Query {
+   socks: Socks
+}

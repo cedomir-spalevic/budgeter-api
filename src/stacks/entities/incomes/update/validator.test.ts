@@ -10,7 +10,7 @@ const request: BudgeterRequest = {
    },
    pathParameters: {},
    queryStrings: null,
-   body: {      
+   body: {
       title: "123",
       amount: 10,
       initialDay: 5,
@@ -285,7 +285,7 @@ test("null initialYear", () => {
       };
       validate(request);
    }).toThrowError(new GeneralError("initialYear must be a number"));
-})
+});
 
 test("invalid initialYear", () => {
    expect(() => {
@@ -463,7 +463,6 @@ test("valid request", () => {
       validate(request);
    }).not.toThrowError();
 });
-
 
 test("valid request", () => {
    expect(() => {

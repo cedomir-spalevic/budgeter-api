@@ -10,7 +10,7 @@ const request: BudgeterRequest = {
    },
    pathParameters: {},
    queryStrings: null,
-   body: {      
+   body: {
       title: "123",
       amount: 10,
       initialDay: 5,

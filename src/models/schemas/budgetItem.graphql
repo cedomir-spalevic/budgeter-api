@@ -1,0 +1,22 @@
+type PublicBudgetItemWithInfo {
+   id: ID
+   title: String
+   amount: Float
+   initialDay: Int
+   initialDate: Int
+   initialMonth: Int
+   initialYear: Int
+   recurrence: String
+   dueToday: Boolean
+   numberOfOccurrences: Int
+   totalAmount: Float
+}
+
+type GetBudgetResponse {
+   incomes: [PublicBudgetItemWithInfo]
+   payments: [PublicBudgetItemWithInfo]
+}
+
+type Query {
+   budget(date: Int, month: Int, year: Int): GetBudgetResponse
+}

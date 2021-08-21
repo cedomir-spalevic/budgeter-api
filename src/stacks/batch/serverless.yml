@@ -1,4 +1,0 @@
-service: budgeter-api
-app: budgeter-batch
-org: cedomirspalevic
-frameworkVersion: "2.35"

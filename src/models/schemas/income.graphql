@@ -1,0 +1,9 @@
+type Income {
+   id: String
+   title: String
+   amount: Int
+   initialDay: Int
+   initialDate: Int
+   initialMonth: Int
+   initialYear: Int
+}

@@ -17,7 +17,7 @@ export interface IBudgetItem extends IEntity {
 
 export interface PublicBudgetItem {
    id: string;
-   title: string; 
+   title: string;
    amount: number;
    initialDay: number; // Day of week
    initialDate: number; // Day of month

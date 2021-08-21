@@ -1,5 +1,6 @@
 import { getBudget } from "./budgets";
 
 export const resolvers = {
-   budget: getBudget
-}
+   socks: () => ({ amount: 4 }),
+   rocks: () => ({ amount: 5 })
+};

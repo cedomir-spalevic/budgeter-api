@@ -28,7 +28,6 @@ package:
    individually: true
 
 functions:
-
    auth-login:
       handler: src/stacks/auth/login/index.handler
       events:

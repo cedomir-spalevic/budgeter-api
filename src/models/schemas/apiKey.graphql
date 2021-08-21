@@ -1,0 +1,4 @@
+type ApiKey {
+   id: String
+   key: String
+}

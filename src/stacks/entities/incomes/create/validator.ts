@@ -13,7 +13,10 @@ import { GeneralError } from "models/errors";
 import { BudgeterRequest } from "middleware/handler";
 
 export const validate = (request: BudgeterRequest): Partial<Income> => {
-   const { auth: { userId }, body } = request;
+   const {
+      auth: { userId },
+      body
+   } = request;
    const title = validateStr(body, "title", true);
    if (!title) throw new GeneralError("title is required");
    if (title.length > 100)
