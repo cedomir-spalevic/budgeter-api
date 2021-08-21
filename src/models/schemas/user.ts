@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { IEntity } from "./ientity";
 
 export interface User extends IEntity {
@@ -35,7 +36,7 @@ export interface PublicUser {
    };
 }
 
-export interface AdminPublicUser {
+export interface AdminPublicUserOld {
    id: string;
    isAdmin: boolean;
    firstName: string;
@@ -45,4 +46,9 @@ export interface AdminPublicUser {
    isMfaVerified: boolean;
    createdOn: Date;
    modifiedOn: Date;
+}
+
+export interface AdminPublicUser extends PublicUser {
+   id: string;
+   isAdmin: boolean;
 }

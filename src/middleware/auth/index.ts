@@ -7,6 +7,13 @@ import { generateHash } from "services/internal/security/hash";
 import { StepFunctionBatchJobRequest } from "models/requests";
 import { BudgeterRequestAuth } from "middleware/handler";
 
+export const graphqlAdminAuth = async (request: BudgeterRequestAuth): Promise<void> => {
+   const budgeterClient = await BudgeterMongoClient.getInstance();
+   const usersService = await budgeterClient.getUsersCollection();
+   const user = await usersService.getById(request.userId.toHexString());
+   if (!user || !user.isAdmin) throw new UnauthorizedError();
+}
+
 export const adminAuth = async (
    event: APIGatewayProxyEvent
 ): Promise<BudgeterRequestAuth> => {

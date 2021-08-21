@@ -1,0 +1,13 @@
+type ApiKey {
+   id: ID!
+   key: String!
+}
+
+type Query {
+   apiKeys: [ApiKey]
+}
+
+type Mutation {
+   createApiKey: ApiKey
+   deleteApiKey(apiKeyId: String): String!
+}

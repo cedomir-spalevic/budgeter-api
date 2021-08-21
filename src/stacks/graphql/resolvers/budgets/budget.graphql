@@ -1,4 +1,4 @@
-type PublicBudgetItemWithInfo {
+type BudgetItem {
    id: ID
    title: String
    amount: Float
@@ -12,11 +12,11 @@ type PublicBudgetItemWithInfo {
    totalAmount: Float
 }
 
-type GetBudgetResponse {
-   incomes: [PublicBudgetItemWithInfo]
-   payments: [PublicBudgetItemWithInfo]
+type Budget {
+   incomes: [BudgetItem]
+   payments: [BudgetItem]
 }
 
 type Query {
-   budget(date: Int, month: Int, year: Int): GetBudgetResponse
+   budget(date: Int, month: Int, year: Int): Budget
 }

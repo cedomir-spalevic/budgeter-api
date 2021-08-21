@@ -1,7 +1,0 @@
-type Rocks {
-   amount: Int
-}
-
-type Query {
-   rocks: Rocks
-}

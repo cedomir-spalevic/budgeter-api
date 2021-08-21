@@ -1,4 +1,4 @@
-import { AdminPublicUser } from "models/schemas/user";
+import { AdminPublicUser, AdminPublicUserOld } from "models/schemas/user";
 import { GeneralError, NotFoundError } from "models/errors";
 import { AdminUserRequest } from "models/requests";
 import BudgeterMongoClient from "services/external/mongodb/client";
@@ -6,7 +6,7 @@ import { generateHash } from "services/internal/security/hash";
 
 export const processUpdateUser = async (
    request: AdminUserRequest
-): Promise<AdminPublicUser> => {
+): Promise<AdminPublicUserOld> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const usersAuthService = budgeterClient.getUsersAuthCollection();

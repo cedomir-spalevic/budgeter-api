@@ -1,5 +1,5 @@
 import { GetUserRequest, GetUserResponse } from "./type";
-import { AdminPublicUser, User } from "models/schemas/user";
+import { AdminPublicUser, AdminPublicUserOld, User } from "models/schemas/user";
 import { NotFoundError } from "models/errors";
 import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
@@ -15,7 +15,7 @@ export const processGetUser = async (
 
 export const processGetMany = async (
    queryStringParameters: GetListQueryStringParameters
-): Promise<GetResponse<AdminPublicUser>> => {
+): Promise<GetResponse<AdminPublicUserOld>> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
@@ -51,7 +51,7 @@ export const processGetMany = async (
 
 export const processGetSingle = async (
    userId: ObjectId
-): Promise<AdminPublicUser> => {
+): Promise<AdminPublicUserOld> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 

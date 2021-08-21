@@ -8,14 +8,12 @@ import { BudgeterRequestAuth } from "middleware/handler";
 import { GetBudgetQueryStringParameters } from "models/requests";
 
 export const getBudget = async (
-   request: GetBudgetQueryStringParameters,
+   args: GetBudgetQueryStringParameters,
    context: BudgeterRequestAuth
 ): Promise<GetBudgetResponse> => {
-   console.log(request);
-   console.log(context);
    const response = await Promise.all([
-      await getIncomes(request, context),
-      await getPayments(request, context)
+      await getIncomes(args, context),
+      await getPayments(args, context)
    ]);
 
    return {
@@ -25,35 +23,35 @@ export const getBudget = async (
 };
 
 const getIncomes = async (
-   request: GetBudgetQueryStringParameters,
+   args: GetBudgetQueryStringParameters,
    context: BudgeterRequestAuth
 ): Promise<PublicBudgetItemWithInfo[]> => {
    const { userId } = context;
    const cachingStrategy = new UserBudgetCachingStrategy("income");
-   let incomes = await cachingStrategy.get(userId, request);
+   let incomes = await cachingStrategy.get(userId, args);
    if (!incomes) {
       const budgeterClient = await BudgeterMongoClient.getInstance();
       const incomesService = budgeterClient.getIncomesCollection();
-      const query = getQuery(userId, request);
+      const query = getQuery(userId, args);
       incomes = await incomesService.findMany(query);
-      await cachingStrategy.set(userId, request, incomes);
+      await cachingStrategy.set(userId, args, incomes);
    }
-   return getBudgetItems(incomes, request);
+   return getBudgetItems(incomes, args);
 };
 
 const getPayments = async (
-   request: GetBudgetQueryStringParameters,
+   args: GetBudgetQueryStringParameters,
    context: BudgeterRequestAuth
 ): Promise<PublicBudgetItemWithInfo[]> => {
    const { userId } = context;
    const cachingStrategy = new UserBudgetCachingStrategy("payment");
-   let payments = await cachingStrategy.get(userId, request);
+   let payments = await cachingStrategy.get(userId, args);
    if (!payments) {
       const budgeterClient = await BudgeterMongoClient.getInstance();
       const paymentsService = budgeterClient.getPaymentsCollection();
-      const query = getQuery(userId, request);
+      const query = getQuery(userId, args);
       payments = await paymentsService.findMany(query);
-      await cachingStrategy.set(userId, request, payments);
+      await cachingStrategy.set(userId, args, payments);
    }
-   return getBudgetItems(payments, request);
+   return getBudgetItems(payments, args);
 };
