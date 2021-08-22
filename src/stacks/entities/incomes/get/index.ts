@@ -1,6 +1,6 @@
 import { auth } from "middleware/auth";
 import { processGetIncome } from "./processor";
-import { validate } from "./validator";
+import { validate } from "../../../graphql/resolvers/incomes/validators/validateGet";
 import { middy } from "middleware/handler";
 
 export const handler = middy()

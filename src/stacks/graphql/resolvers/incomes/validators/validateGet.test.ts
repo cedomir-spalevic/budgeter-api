@@ -2,7 +2,7 @@ import { expect, test } from "@jest/globals";
 import { BudgeterRequest } from "middleware/handler";
 import { GeneralError } from "models/errors";
 import { ObjectId } from "mongodb";
-import { validate } from "./validator";
+import { validate } from "./validateGet";
 
 const getByIdRequest: BudgeterRequest = {
    auth: {
@@ -29,19 +29,19 @@ const getManyRequest: BudgeterRequest = {
    body: {}
 };
 
-test("Empty userId", () => {
+test("Empty incomeId", () => {
    expect(() => {
       getByIdRequest.pathParameters = {
-         userId: ""
+         incomeId: ""
       };
       validate(getByIdRequest);
    }).toThrowError(new GeneralError("Invalid Id"));
 });
 
-test("Invalid userId", () => {
+test("Invalid incomeId", () => {
    expect(() => {
       getByIdRequest.pathParameters = {
-         userId: "!!!"
+         incomeId: "!!!"
       };
       validate(getByIdRequest);
    }).toThrowError(new GeneralError("Invalid Id"));
@@ -50,9 +50,9 @@ test("Invalid userId", () => {
 test("Valid", () => {
    const objectId = new ObjectId().toHexString();
    getByIdRequest.pathParameters = {
-      userId: objectId
+      incomeId: objectId
    };
-   expect(validate(getByIdRequest).userId.toHexString()).toBe(objectId);
+   expect(validate(getByIdRequest).incomeId.toHexString()).toBe(objectId);
 });
 
 test("Null query strings", () => {

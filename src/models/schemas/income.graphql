@@ -1,0 +1,10 @@
+type Query {
+   incomes(limit: Int = 5, skip: Int = 0, search: String): [Item]
+   incomeById(incomeId: ObjectID!): Item
+}
+
+type Mutation {
+   createIncome(income: ItemInput): Item
+   deleteIncome(incomeId: ObjectID!): ObjectID
+   updateIncome(incomeId: ObjectID!, income: ItemInput): Item
+}

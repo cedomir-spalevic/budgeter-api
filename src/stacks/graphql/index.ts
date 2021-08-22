@@ -1,28 +1,9 @@
 import { BudgeterRequest, middy } from "middleware/handler";
 import { graphql } from "graphql";
-//import { resolvers } from "./resolvers";
 import { auth } from "middleware/auth";
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import { DateTimeTypeDefinition } from "graphql-scalars";
-import ApiKeyDefs from "./resolvers/apiKeys/apiKey.graphql";
-import ApiKeyResolvers from "./resolvers/apiKeys/resolver";
-import UserDefs from "./resolvers/users/user.graphql";
-import UserResolvers from "./resolvers/users/resolver";
-//import BudgetDefs from "./resolvers/budgets/budget.graphql";
 import { UnauthorizedError } from "models/errors";
-
-const schema = makeExecutableSchema({ 
-   typeDefs: [
-      DateTimeTypeDefinition,
-      ApiKeyDefs,
-      UserDefs
-   ] 
-})
-
-const resolvers = {
-   ...ApiKeyResolvers,
-   ...UserResolvers
-}
+import schema from "./utils/schema";
+import resolvers from "./utils/resolvers";
 
 const executeGraphqlQuery = async (request: BudgeterRequest) => {
    const body = request.body;

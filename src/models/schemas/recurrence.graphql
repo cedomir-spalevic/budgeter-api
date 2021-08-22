@@ -1,0 +1,8 @@
+enum Recurrence {
+   oneTime
+   daily
+   weekly
+   biweekly
+   monthly
+   yearly
+}

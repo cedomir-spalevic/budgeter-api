@@ -1,5 +1,5 @@
 type ApiKey {
-   id: ID!
+   id: ObjectID!
    key: String!
 }
 
@@ -9,5 +9,5 @@ type Query {
 
 type Mutation {
    createApiKey: ApiKey
-   deleteApiKey(apiKeyId: String): String!
+   deleteApiKey(apiKeyId: ObjectID): ObjectID
 }

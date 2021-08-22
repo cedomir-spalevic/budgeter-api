@@ -1,5 +1,5 @@
 type User {
-   id: ID!
+   id: ObjectID!
    firstName: String!
    lastName: String!
    email: String
@@ -21,7 +21,22 @@ type UserDevice {
    os: String
 }
 
+input UserInput {
+   firstName: String!
+   lastName: String!
+   email: String
+   phoneNumber: String
+   isAdmin: Boolean!
+   password: String!
+}
+
 type Query {
    users(limit: Int = 5, skip: Int = 0, search: String): [User]
-   userById(userId: ID): User
+   userById(userId: ObjectID!): User
+}
+
+type Mutation {
+   createUser(user: UserInput): User
+   deleteUser(userId: ObjectID!): ObjectID
+   updateUser(userId: ObjectID!, user: UserInput): User
 }

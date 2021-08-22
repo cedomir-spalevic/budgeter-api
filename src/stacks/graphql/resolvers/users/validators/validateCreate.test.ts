@@ -1,7 +1,7 @@
 import { expect, test } from "@jest/globals";
 import { BudgeterRequest } from "middleware/handler";
 import { GeneralError } from "models/errors";
-import { validate } from "./validator";
+import { validate } from "./validateCreate";
 
 const request: BudgeterRequest = {
    auth: {

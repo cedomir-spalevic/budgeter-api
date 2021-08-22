@@ -1,0 +1,8 @@
+type Budget {
+   incomes: [BudgetItem]
+   payments: [BudgetItem]
+}
+
+type Query {
+   budget(date: Int, month: Int, year: Int): Budget
+}

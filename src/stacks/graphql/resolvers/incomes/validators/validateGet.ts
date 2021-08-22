@@ -1,6 +1,6 @@
 import { getListQueryStringParameters, getPathParameter } from "middleware/url";
 import { BudgeterRequest } from "middleware/handler";
-import { GetIncomeRequest } from "./type";
+import { GetIncomeRequest } from "../../../../entities/incomes/get/type";
 
 export const validate = (request: BudgeterRequest): GetIncomeRequest => {
    const {

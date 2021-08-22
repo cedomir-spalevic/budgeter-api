@@ -1,0 +1,10 @@
+type Query {
+   payments(limit: Int = 5, skip: Int = 0, search: String): [Item]
+   paymentById(paymentId: ObjectID!): Item
+}
+
+type Mutation {
+   createPayment(payment: ItemInput): Item
+   deletePayment(paymentId: ObjectID!): ObjectID
+   updatePayment(paymentId: ObjectID!, payment: ItemInput): Item
+}
