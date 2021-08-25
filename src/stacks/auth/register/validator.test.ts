@@ -23,7 +23,7 @@ test("Missing first name", () => {
          }
       };
       validate(request);
-   }).toThrowError(new GeneralError("firstName is required"));
+   }).toThrowError();
 });
 
 test("Missing last name", () => {
@@ -37,7 +37,7 @@ test("Missing last name", () => {
          }
       };
       validate(request);
-   }).toThrowError(new GeneralError("lastName is required"));
+   }).toThrowError();
 });
 
 test("Missing Password", () => {
@@ -51,7 +51,7 @@ test("Missing Password", () => {
          }
       };
       validate(request);
-   }).toThrowError(new GeneralError("password is required"));
+   }).toThrowError();
 });
 
 test("Empty Password", () => {
@@ -66,7 +66,7 @@ test("Empty Password", () => {
          }
       };
       validate(request);
-   }).toThrowError(new GeneralError("password is required"));
+   }).toThrowError();
 });
 
 test("Valid request with email", () => {
@@ -91,7 +91,7 @@ test("Valid request with phone number", () => {
          body: {
             firstName: "Charlie",
             lastName: "Spalevic",
-            phoneNumber: "6309152350",
+            phoneNumber: "(630)915-2350",
             password: "123"
          }
       };

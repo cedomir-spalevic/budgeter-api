@@ -34,10 +34,12 @@
    "homepage": "https://github.com/cedomir-spalevic/budgeter-api#readme",
    "dependencies": {
       "@graphql-tools/schema": "^8.1.2",
+      "@types/validator": "^13.6.3",
       "async": "^3.2.0",
       "aws-sdk": "^2.799.0",
       "graphql": "^15.5.1",
       "graphql-scalars": "^1.10.0",
+      "jsonschema": "^1.4.0",
       "jsonwebtoken": "^8.5.1",
       "libphonenumber-js": "^1.9.16",
       "mongodb": "^3.6.3",

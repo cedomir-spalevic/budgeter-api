@@ -1,9 +1,14 @@
 import { BudgeterRequest } from "middleware/handler";
-import { validateStr } from "middleware/validators";
 import { RefreshRequest } from "./type";
+import { Validator } from "jsonschema";
+import schema from "./schema.json";
+
+const validator = new Validator();
 
 export const validate = (request: BudgeterRequest): RefreshRequest => {
    const { body } = request;
-   const refreshToken = validateStr(body, "refreshToken", true);
-   return { refreshToken };
+   validator.validate(body, schema, { throwError: true });
+   return { 
+      refreshToken: body["refreshToken"] as string
+   };
 };

@@ -1,0 +1,11 @@
+{
+   "$schema": "http://json-schema.org/draft/2020-12/schema",
+   "$id": "https://cedomir.tech",
+   "type": "object",
+   "properties": {
+      "refreshToken": {
+         "type": "string"
+      }
+   },
+   "required": ["refreshToken"]
+}

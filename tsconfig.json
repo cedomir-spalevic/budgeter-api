@@ -9,7 +9,7 @@
       "lib": ["es2020", "ESNext.AsyncIterable"],
       "moduleResolution": "node",
       "sourceMap": true,
-      "outDir": "build",
-      "baseUrl": "./src"
+      "baseUrl": "./src",
+      "resolveJsonModule": true
    }
 }

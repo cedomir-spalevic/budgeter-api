@@ -1,0 +1,67 @@
+{
+   "$schema": "http://json-schema.org/draft/2020-12/schema",
+   "$id": "https://cedomir.tech",
+   "type": "object",
+   "anyOf": [
+      {
+         "title": "Email required",
+         "type": "object",
+         "properties": {
+            "firstName": {
+               "type": "string",
+               "minLength": 1,
+               "maxLength": 100
+            },
+            "lastName": {
+               "type": "string",
+               "minLength": 1,
+               "maxLength": 100
+            },
+            "password": {
+               "type": "string",
+               "minLength": 1,
+               "pattern": "[A-Z][!#$%&()*+,-./:;<=>?@_]"
+            },
+            "phoneNumber": {
+               "type": ["string", "null"],
+               "pattern": "^(\\([0-9]{3}\\))?[0-9]{3}-[0-9]{4}$"
+            },
+            "email": {
+               "type": "string",
+               "format": "email"
+            }
+         },
+         "required": ["firstName", "lastName", "password", "email"]
+      },
+      {
+         "title": "Phone number required",
+         "type": "object",
+         "properties": {
+            "firstName": {
+               "type": "string",
+               "minLength": 1,
+               "maxLength": 100
+            },
+            "lastName": {
+               "type": "string",
+               "minLength": 1,
+               "maxLength": 100
+            },
+            "password": {
+               "type": "string",
+               "minLength": 1,
+               "pattern": "[A-Z][!#$%&()*+,-./:;<=>?@_]"
+            },
+            "phoneNumber": {
+               "type": "string",
+               "pattern": "^(\\([0-9]{3}\\))?[0-9]{3}-[0-9]{4}$"
+            },
+            "email": {
+               "type": ["string", "null"],
+               "format": "email"
+            }
+         },
+         "required": ["firstName", "lastName", "password", "phoneNumber"]
+      }
+   ]
+}

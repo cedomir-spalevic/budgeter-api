@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { PublicBudgetItem } from "models/schemas/budgetItem";
 import { Income } from "models/schemas/income";
 import UserBudgetCachingStrategy from "services/internal/caching/budgets";
-import { ObjectId, WithId } from "mongodb";
+import { FilterQuery, FindOneOptions, ObjectId, WithId } from "mongodb";
 import { NotFoundError } from "models/errors";
 import { BudgeterEntityCollection } from "services/external/mongodb/entityCollection";
+import { GetListQueryStringParameters } from "models/requests";
 
 class IncomeProcessor {
    static instance: IncomeProcessor;
@@ -74,14 +76,13 @@ class IncomeProcessor {
       await this._collection.delete(incomeId);
    }
 
-   public async update(incomeId: ObjectId, request: Partial<Income>): Promise<PublicBudgetItem> {
-      const existingIncome = await this._collection.find({
+   public async update(incomeId: ObjectId, request: Partial<WithId<Income>>): Promise<PublicBudgetItem> {
+      const existingIncome: any = await this._collection.find({
          userId: this._userId,
          _id: incomeId
       });
       if (!existingIncome) throw new NotFoundError("No Income found with the given Id");
       
-      // We only want to update the income with the differences. Not replace
       this._allowedFieldsToUpdate.forEach((field: keyof WithId<Income>) => {
          if (
             request[field] !== undefined &&
@@ -96,6 +97,39 @@ class IncomeProcessor {
       cachingStrategy.delete(existingIncome.userId);
 
       return this.transformResponse(updatedIncome);
+   }
+
+   public async get(queryStringParameters: GetListQueryStringParameters): Promise<PublicBudgetItem[]> {
+      const userIncomesQuery: FilterQuery<Income> = {
+         userId: this._userId
+      };
+      if (queryStringParameters.search) {
+         userIncomesQuery.title = {
+            $regex: queryStringParameters.search,
+            $options: "$I"
+         };
+      }
+      const queryOptions: FindOneOptions<Income> = {
+         limit: queryStringParameters.limit,
+         skip: queryStringParameters.skip
+      };
+      const incomes = await this._collection.findMany(
+         userIncomesQuery,
+         queryOptions
+      );
+
+      return incomes.map(this.transformResponse);
+   }
+
+   public async getById(incomeId: ObjectId): Promise<PublicBudgetItem> {
+      const income = await this._collection.find({
+         userId: this._userId,
+         _id: incomeId
+      });
+      if(!income)
+         throw new NotFoundError("No Income found with the given Id");
+      
+      return this.transformResponse(income);
    }
 }
 

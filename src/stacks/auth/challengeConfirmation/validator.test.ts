@@ -1,4 +1,3 @@
-import { GeneralError } from "models/errors";
 import { validate } from "./validator";
 import { test, expect } from "@jest/globals";
 import { BudgeterRequest } from "middleware/handler";
@@ -24,7 +23,7 @@ test("Invalid key", () => {
          }
       };
       validate(request);
-   }).toThrowError(new GeneralError("Invalid Id"));
+   }).toThrowError();
 });
 
 test("Missing code", () => {
@@ -37,7 +36,7 @@ test("Missing code", () => {
          body: {}
       };
       validate(request);
-   }).toThrowError(new GeneralError("code is required"));
+   }).toThrowError();
 });
 
 test("Invalid code", () => {
@@ -52,7 +51,7 @@ test("Invalid code", () => {
          }
       };
       validate(request);
-   }).toThrowError(new GeneralError("code must be a number"));
+   }).toThrowError();
 });
 
 test("Valid form", () => {

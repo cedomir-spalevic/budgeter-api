@@ -1,4 +1,3 @@
-import { GeneralError } from "models/errors";
 import { validate } from "./validator";
 import { test, expect } from "@jest/globals";
 import { BudgeterRequest } from "middleware/handler";
@@ -21,5 +20,5 @@ test("Invalid refresh token", () => {
          }
       };
       validate(request);
-   }).toThrowError(new GeneralError("refreshToken must be a string"));
+   }).toThrowError();
 });

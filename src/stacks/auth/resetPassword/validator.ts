@@ -1,19 +1,17 @@
 import { BudgeterRequest } from "middleware/handler";
-import { ChallengeConfirmationRequest } from "./type";
+import { PasswordResetRequest } from "./type";
 import { Validator } from "jsonschema";
 import schema from "./schema.json";
 
 const validator = new Validator();
 
-export const validate = (
-   request: BudgeterRequest
-): ChallengeConfirmationRequest => {
-   const { pathParameters, body } = request;   
+export const validate = (request: BudgeterRequest): PasswordResetRequest => {
+   const { pathParameters, body } = request;
    const input = { ...pathParameters, ...body };
    validator.validate(input, schema, { throwError: true });
 
    return { 
-      key: pathParameters["key"] as string, 
-      code: body["code"] as number
+      key: body["key"] as string, 
+      password: body["password"] as string 
    };
 };

@@ -1,27 +1,18 @@
-import { validateIsOneOfStr, validateStr } from "middleware/validators";
 import { OneTimeCodeType } from "models/schemas/oneTimeCode";
-import { validateEmailOrPhoneNumber } from "middleware/validators/emailOrPhoneNumber";
 import { BudgeterRequest } from "middleware/handler";
 import { ChallengeRequest } from "./type";
+import { Validator } from "jsonschema";
+import schema from "./schema.json";
+
+const validator = new Validator();
 
 export const validate = (request: BudgeterRequest): ChallengeRequest => {
    const { body } = request;
-   const type = validateIsOneOfStr(
-      body,
-      "type",
-      ["userVerification", "passwordReset"],
-      true
-   ) as OneTimeCodeType;
-   const emailInput = validateStr(body, "email");
-   const phoneNumberInput = validateStr(body, "phoneNumber");
-   const { email, phoneNumber } = validateEmailOrPhoneNumber({
-      email: emailInput,
-      phoneNumber: phoneNumberInput
-   });
+   validator.validate(body, schema, { throwError: true });
 
    return {
-      email,
-      phoneNumber,
-      type
+      email: body["email"] as string,
+      phoneNumber: body["phoneNumber"] as string,
+      type: body["type"] as OneTimeCodeType
    };
 };

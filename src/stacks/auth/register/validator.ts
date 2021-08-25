@@ -1,7 +1,8 @@
-import { validateStr } from "middleware/validators";
-import { validateEmailOrPhoneNumber } from "middleware/validators/emailOrPhoneNumber";
-import { GeneralError } from "models/errors";
 import { BudgeterRequest } from "middleware/handler";
+import { Validator } from "jsonschema";
+import schema from "./schema.json";
+
+const validator = new Validator();
 
 export interface RegisterBody {
    firstName: string;
@@ -13,22 +14,13 @@ export interface RegisterBody {
 
 export const validate = (request: BudgeterRequest): RegisterBody => {
    const { body } = request;
-   const firstName = validateStr(body, "firstName", true);
-   const lastName = validateStr(body, "lastName", true);
-   const emailInput = validateStr(body, "email");
-   const phoneNumberInput = validateStr(body, "phoneNumber");
-   const password = validateStr(body, "password", true);
-   if (!password) throw new GeneralError("password is required");
-   const { email, phoneNumber } = validateEmailOrPhoneNumber({
-      email: emailInput,
-      phoneNumber: phoneNumberInput
-   });
+   validator.validate(body, schema, { throwError: true });
 
    return {
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      password
+      firstName: body["firstName"] as string,
+      lastName: body["lastName"] as string,
+      email: body["email"] as string,
+      phoneNumber: body["phoneNumber"] as string,
+      password: body["password"] as string
    };
 };
