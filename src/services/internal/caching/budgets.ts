@@ -1,4 +1,4 @@
-import { BudgetType, IBudgetItem } from "models/schemas/budgetItem";
+import { BudgetType, IBudgetItem } from "models/schemas/budget";
 import { GetBudgetQueryStringParameters } from "models/requests";
 import { ObjectId } from "mongodb";
 import BudgeterRedisClient from "services/external/redis/client";

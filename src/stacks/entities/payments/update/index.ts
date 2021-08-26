@@ -1,5 +1,5 @@
 import { auth } from "middleware/auth";
-import { middy } from "middleware/handler";
+import { middy } from "middleware/handler/lambda";
 import { processUpdatePayment } from "./processor";
 import { validate } from "./validator";
 

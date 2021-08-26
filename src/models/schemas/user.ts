@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import { IEntity } from "./ientity";
 
 export interface User extends IEntity {
@@ -34,18 +33,6 @@ export interface PublicUser {
       incomeNotifications: boolean;
       paymentNotifications: boolean;
    };
-}
-
-export interface AdminPublicUserOld {
-   id: string;
-   isAdmin: boolean;
-   firstName: string;
-   lastName: string;
-   email: string;
-   phoneNumber: string;
-   isMfaVerified: boolean;
-   createdOn: Date;
-   modifiedOn: Date;
 }
 
 export interface AdminPublicUser extends PublicUser {

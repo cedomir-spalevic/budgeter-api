@@ -1,4 +1,4 @@
-import { middy } from "middleware/handler";
+import { middy } from "middleware/handler/lambda";
 import { processPasswordReset } from "./processor";
 import { validate } from "./validator";
 

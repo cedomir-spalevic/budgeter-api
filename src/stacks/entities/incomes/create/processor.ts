@@ -1,4 +1,4 @@
-import { PublicBudgetItem } from "models/schemas/budgetItem";
+import { PublicBudgetItem } from "models/schemas/budget";
 import { Income } from "models/schemas/income";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import UserBudgetCachingStrategy from "services/internal/caching/budgets";

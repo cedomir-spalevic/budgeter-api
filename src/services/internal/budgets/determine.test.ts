@@ -1,5 +1,5 @@
 import { test, expect, describe } from "@jest/globals";
-import { IBudgetItem } from "models/schemas/budgetItem";
+import { IBudgetItem } from "models/schemas/budget";
 import { ObjectId } from "mongodb";
 import { getBudgetItems } from "./determine";
 

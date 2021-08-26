@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { PublicBudgetItem } from "models/schemas/budgetItem";
+import { PublicBudgetItem } from "models/schemas/budget";
 import { Income } from "models/schemas/income";
 import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 import { FilterQuery, FindOneOptions, ObjectId, WithId } from "mongodb";

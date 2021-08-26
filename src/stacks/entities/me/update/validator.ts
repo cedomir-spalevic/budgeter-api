@@ -1,4 +1,4 @@
-import { BudgeterRequest } from "middleware/handler";
+import { BudgeterRequest } from "middleware/handler/lambda";
 import { validateBool, validateStr } from "middleware/validators";
 import { User } from "models/schemas/user";
 

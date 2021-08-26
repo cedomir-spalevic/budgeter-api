@@ -1,4 +1,4 @@
-import { BudgeterRequest } from "middleware/handler";
+import { BudgeterRequest } from "middleware/handler/lambda";
 import { validatePathParameterId } from "middleware/url";
 import {
    validateNumber,

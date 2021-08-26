@@ -1,4 +1,4 @@
-import { BudgeterRequest, middy } from "middleware/handler";
+import { BudgeterRequest, middy } from "middleware/handler/lambda";
 import { graphql } from "graphql";
 import { auth } from "middleware/auth";
 import { UnauthorizedError } from "models/errors";

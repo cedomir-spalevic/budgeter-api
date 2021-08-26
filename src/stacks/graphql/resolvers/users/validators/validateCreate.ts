@@ -1,4 +1,4 @@
-import { BudgeterRequest } from "middleware/handler";
+import { BudgeterRequest } from "middleware/handler/lambda";
 import { validateBool, validateStr } from "middleware/validators";
 import { validateEmailOrPhoneNumber } from "middleware/validators/emailOrPhoneNumber";
 import { GeneralError } from "models/errors";

@@ -1,3 +1,4 @@
+import { APIGatewayProxyEventPathParameters, APIGatewayProxyEventQueryStringParameters } from "aws-lambda";
 import { ObjectId } from "mongodb";
 
 export interface Form {
@@ -24,6 +25,18 @@ export interface AdminUserRequest {
    phoneNumber?: string;
    isAdmin: boolean;
    password: string;
+}
+
+export interface BudgeterRequest {
+   auth: BudgeterRequestAuth;
+   pathParameters: APIGatewayProxyEventPathParameters;
+   queryStrings: APIGatewayProxyEventQueryStringParameters;
+   body: Form;
+}
+
+export interface BudgeterRequestAuth {
+   isAuthenticated: boolean;
+   userId?: ObjectId;
 }
 
 export interface StepFunctionBatchJobRequest {

@@ -1,4 +1,4 @@
-import { IBudgetItem } from "models/schemas/budgetItem";
+import { IBudgetItem } from "models/schemas/budget";
 import { GetBudgetQueryStringParameters } from "models/requests";
 import { FilterQuery, ObjectId } from "mongodb";
 

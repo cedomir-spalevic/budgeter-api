@@ -1,6 +1,6 @@
 import { auth } from "middleware/auth";
 import { processRegisterDevice } from "./processor";
-import { middy } from "middleware/handler";
+import { middy } from "middleware/handler/lambda";
 import { validate } from "./validator";
 
 export const handler = middy()

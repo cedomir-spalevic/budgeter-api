@@ -1,4 +1,4 @@
-import { BudgeterRequest } from "middleware/handler";
+import { BudgeterRequest } from "middleware/handler/lambda";
 import { PublicUser } from "models/schemas/user";
 import BudgeterMongoClient from "services/external/mongodb/client";
 

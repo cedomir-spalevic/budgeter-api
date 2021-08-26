@@ -1,5 +1,5 @@
 import { OneTimeCodeType } from "models/schemas/oneTimeCode";
-import { BudgeterRequest } from "middleware/handler";
+import { BudgeterRequest } from "middleware/handler/lambda";
 import { ChallengeRequest } from "./type";
 import { Validator } from "jsonschema";
 import schema from "./schema.json";

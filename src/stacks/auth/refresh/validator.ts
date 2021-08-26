@@ -1,4 +1,4 @@
-import { BudgeterRequest } from "middleware/handler";
+import { BudgeterRequest } from "middleware/handler/lambda";
 import { RefreshRequest } from "./type";
 import { Validator } from "jsonschema";
 import schema from "./schema.json";

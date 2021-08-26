@@ -1,5 +1,5 @@
 import { graphqlAdminAuth } from "middleware/auth";
-import { BudgeterRequestAuth } from "middleware/handler";
+import { BudgeterRequestAuth } from "middleware/handler/lambda";
 import { AdminUserRequest, GetListQueryStringParameters } from "models/requests";
 import { AdminPublicUser } from "models/schemas/user";
 import { ObjectId } from "mongodb";

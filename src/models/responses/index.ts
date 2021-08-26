@@ -1,4 +1,4 @@
-import { PublicBudgetItemWithInfo } from "models/schemas/budgetItem";
+import { PublicBudgetItemWithInfo } from "models/schemas/budget";
 
 export interface ConfirmationResponse {
    expires: number;

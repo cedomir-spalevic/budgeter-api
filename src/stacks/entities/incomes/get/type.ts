@@ -1,4 +1,4 @@
-import { PublicBudgetItem } from "models/schemas/budgetItem";
+import { PublicBudgetItem } from "models/schemas/budget";
 import { GetListQueryStringParameters } from "models/requests";
 import { GetResponse } from "models/responses";
 import { ObjectId } from "mongodb";

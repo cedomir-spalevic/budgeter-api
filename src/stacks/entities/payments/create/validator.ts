@@ -10,7 +10,7 @@ import {
 import { Payment } from "models/schemas/payment";
 import { Recurrence, recurrenceTypes } from "models/schemas/recurrence";
 import { GeneralError } from "models/errors";
-import { BudgeterRequest } from "middleware/handler";
+import { BudgeterRequest } from "middleware/handler/lambda";
 
 export const validate = (request: BudgeterRequest): Partial<Payment> => {
    const {

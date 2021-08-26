@@ -3,8 +3,8 @@ import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 import { GetBudgetResponse } from "models/responses";
 import { getQuery } from "services/internal/budgets/query";
 import { getBudgetItems } from "services/internal/budgets/determine";
-import { PublicBudgetItemWithInfo } from "models/schemas/budgetItem";
-import { BudgeterRequestAuth } from "middleware/handler";
+import { PublicBudgetItemWithInfo } from "models/schemas/budget";
+import { BudgeterRequestAuth } from "middleware/handler/lambda";
 import { GetBudgetQueryStringParameters } from "models/requests";
 
 export const getBudget = async (

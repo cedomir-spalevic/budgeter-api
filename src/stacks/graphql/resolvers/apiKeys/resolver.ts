@@ -1,5 +1,5 @@
 import { graphqlAdminAuth } from "middleware/auth";
-import { BudgeterRequestAuth } from "middleware/handler";
+import { BudgeterRequestAuth } from "middleware/handler/lambda";
 import { PublicAPIKey } from "models/schemas/apiKey";
 import { ObjectId } from "mongodb";
 import { createApiKey, deleteApiKey, getApiKeys } from "./processor";

@@ -1,52 +1,28 @@
 import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyEventPathParameters,
-   APIGatewayProxyEventQueryStringParameters,
    APIGatewayProxyResult
 } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
 import { apply, asyncify, waterfall } from "async";
-import { validateJSONBody } from "middleware/validators";
-import { Form } from "models/requests";
-import { ObjectId } from "mongodb";
+import { StepFunctionBatchJobRequest } from "models/requests";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type AsyncRoute<Req = any, Res = any> = (...args: Req[]) => Promise<Res>;
 type SyncRoute<Req = any, Res = any> = (...args: Req[]) => Res;
 
-export interface BudgeterRequest {
-   auth: BudgeterRequestAuth;
-   pathParameters: APIGatewayProxyEventPathParameters;
-   queryStrings: APIGatewayProxyEventQueryStringParameters;
-   body: Form;
-}
-
-export interface BudgeterRequestAuth {
-   isAuthenticated: boolean;
-   userId?: ObjectId;
-}
-
-type LambdaRoute = (event: APIGatewayProxyEvent) => Promise<any>;
+type StepFunctionRoute = (event: StepFunctionBatchJobRequest) => Promise<any>;
 
 class Handler {
    private defaultResponseStatusCode: number;
-   private parseJsonBody: boolean;
    private routes: AsyncRoute[];
    private errorRoute: AsyncRoute<Error, APIGatewayProxyResult>;
-   private authRoute: AsyncRoute<APIGatewayProxyEvent, BudgeterRequestAuth>;
-   private requestTransformerRoute: AsyncRoute<
-      APIGatewayProxyEvent,
-      BudgeterRequest
-   >;
+   private authRoute: AsyncRoute<StepFunctionBatchJobRequest, void>;
    private responseTransformerRoute: AsyncRoute<any, APIGatewayProxyResult>;
 
    constructor() {
       this.defaultResponseStatusCode = 200;
-      this.parseJsonBody = false;
       this.routes = [];
       this.errorRoute = handleErrorResponse;
       this.authRoute = undefined;
-      this.requestTransformerRoute = asyncify(this.defaultRequestTransformer);
       this.responseTransformerRoute = asyncify(this.defaultResponseTransformer);
    }
 
@@ -54,29 +30,6 @@ class Handler {
       if (route.constructor.name === "Function") return asyncify(route);
       return route;
    }
-
-   private defaultRequestTransformer = async (
-      event: APIGatewayProxyEvent
-   ): Promise<BudgeterRequest> => {
-      let auth: BudgeterRequestAuth = {
-         isAuthenticated: false
-      };
-      let body: Form = {};
-
-      if (this.authRoute) {
-         auth = await this.authRoute(event);
-      }
-      if (this.parseJsonBody) {
-         body = validateJSONBody(event.body);
-      }
-
-      return {
-         auth,
-         pathParameters: event.pathParameters,
-         queryStrings: event.queryStringParameters,
-         body
-      };
-   };
 
    private defaultResponseTransformer = (
       response: any
@@ -86,11 +39,6 @@ class Handler {
          body: JSON.stringify(response)
       };
    };
-
-   useJsonBodyParser(): Handler {
-      this.parseJsonBody = true;
-      return this;
-   }
 
    use(route: AsyncRoute | SyncRoute): Handler {
       this.routes.push(this.getAsyncRoute(route));
@@ -108,19 +56,10 @@ class Handler {
 
    useAuth(
       authRoute:
-         | AsyncRoute<APIGatewayProxyEvent, BudgeterRequestAuth>
-         | SyncRoute<APIGatewayProxyEvent, BudgeterRequestAuth>
+         | AsyncRoute<StepFunctionBatchJobRequest, void>
+         | SyncRoute<StepFunctionBatchJobRequest, void>
    ): Handler {
       this.authRoute = this.getAsyncRoute(authRoute);
-      return this;
-   }
-
-   useRequestTransformer(
-      route:
-         | AsyncRoute<APIGatewayProxyEvent, BudgeterRequest>
-         | SyncRoute<APIGatewayProxyEvent, BudgeterRequest>
-   ): Handler {
-      this.requestTransformerRoute = this.getAsyncRoute(route);
       return this;
    }
 
@@ -138,12 +77,12 @@ class Handler {
       return this;
    }
 
-   go(): LambdaRoute {
-      return async (event: APIGatewayProxyEvent) => {
+   go(): StepFunctionRoute {
+      return async (event: StepFunctionBatchJobRequest) => {
          return new Promise((resolve) => {
             waterfall(
                [
-                  apply(this.requestTransformerRoute, event),
+                  apply(this.authRoute, event),
                   ...this.routes,
                   this.responseTransformerRoute
                ],

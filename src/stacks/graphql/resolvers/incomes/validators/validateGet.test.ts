@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals";
-import { BudgeterRequest } from "middleware/handler";
+import { BudgeterRequest } from "middleware/handler/lambda";
 import { GeneralError } from "models/errors";
 import { ObjectId } from "mongodb";
 import { validate } from "./validateGet";

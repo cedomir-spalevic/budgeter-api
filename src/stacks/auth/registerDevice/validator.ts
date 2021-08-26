@@ -1,5 +1,5 @@
 import { RegisterDeviceRequest } from "./type";
-import { BudgeterRequest } from "middleware/handler";
+import { BudgeterRequest } from "middleware/handler/lambda";
 import { Validator } from "jsonschema";
 import schema from "./schema.json";
 

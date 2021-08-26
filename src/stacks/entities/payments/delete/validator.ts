@@ -1,4 +1,4 @@
-import { BudgeterRequest } from "middleware/handler";
+import { BudgeterRequest } from "middleware/handler/lambda";
 import { getPathParameter } from "middleware/url";
 import { DeletePaymentRequest } from "./type";
 

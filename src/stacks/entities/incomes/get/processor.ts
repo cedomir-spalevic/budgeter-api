@@ -1,4 +1,4 @@
-import { PublicBudgetItem } from "models/schemas/budgetItem";
+import { PublicBudgetItem } from "models/schemas/budget";
 import { Income } from "models/schemas/income";
 import { NotFoundError } from "models/errors";
 import { GetListQueryStringParameters } from "models/requests";

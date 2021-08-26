@@ -2,7 +2,7 @@ import { validate } from "./validator";
 import { test, expect } from "@jest/globals";
 import { GeneralError } from "models/errors";
 import { ObjectId } from "mongodb";
-import { BudgeterRequest } from "middleware/handler";
+import { BudgeterRequest } from "middleware/handler/lambda";
 
 const request: BudgeterRequest = {
    auth: {
