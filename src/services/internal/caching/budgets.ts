@@ -1,13 +1,13 @@
-import { BudgetType, IBudgetItem } from "models/schemas/budget";
+import { BudgetTypeValue } from "models/schemas/budget";
 import { GetBudgetQueryStringParameters } from "models/requests";
 import { ObjectId } from "mongodb";
 import BudgeterRedisClient from "services/external/redis/client";
 
-class UserBudgetCachingStrategy {
-   private _type: string;
+class UserBudgetCachingStrategy<T> {
+   private _type: BudgetTypeValue;
 
-   constructor(type: BudgetType) {
-      this._type = type === "income" ? "income" : "payment";
+   constructor(type: BudgetTypeValue) {
+      this._type = type;
    }
 
    private buildKey = (
@@ -21,20 +21,18 @@ class UserBudgetCachingStrategy {
    public get = async (
       userId: ObjectId,
       queryParams: GetBudgetQueryStringParameters
-   ): Promise<IBudgetItem[] | null> => {
+   ): Promise<T[] | null> => {
       const redisClient = await BudgeterRedisClient.getInstance();
       const key = this.buildKey(userId, queryParams);
-      console.log(key);
       const response = await redisClient.get(key);
-      console.log(JSON.parse(response));
       if (!response) return null;
-      return JSON.parse(response) as IBudgetItem[];
+      return JSON.parse(response) as T[];
    };
 
    public set = async (
       userId: ObjectId,
       queryParams: GetBudgetQueryStringParameters,
-      value: IBudgetItem[]
+      value: T[]
    ): Promise<"OK"> => {
       const redisClient = await BudgeterRedisClient.getInstance();
       const key = this.buildKey(userId, queryParams);
@@ -45,7 +43,6 @@ class UserBudgetCachingStrategy {
       const redisClient = await BudgeterRedisClient.getInstance();
       const matchingKey = `${userId.toHexString()}-${this._type}-budget-*`;
       const keys = await redisClient.find(matchingKey);
-      console.log(keys);
       keys.forEach((k) => redisClient.delete(k));
    };
 }

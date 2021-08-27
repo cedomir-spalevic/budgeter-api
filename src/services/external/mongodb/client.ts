@@ -1,4 +1,4 @@
-import { APIKey } from "models/schemas/apiKey";
+import { ApiKey } from "models/schemas/apiKey";
 import { Income } from "models/schemas/income";
 import { OneTimeCode } from "models/schemas/oneTimeCode";
 import { Payment } from "models/schemas/payment";
@@ -36,9 +36,9 @@ class BudgeterMongoClient {
       await this._client.close();
    };
 
-   public getAPIKeyCollection = () =>
-      new BudgeterEntityCollection<APIKey>(
-         this._db.collection<APIKey>("apiKeys")
+   public getApiKeyCollection = () =>
+      new BudgeterEntityCollection<ApiKey>(
+         this._db.collection<ApiKey>("apiKeys")
       );
 
    public getOneTimeCodeCollection = () =>

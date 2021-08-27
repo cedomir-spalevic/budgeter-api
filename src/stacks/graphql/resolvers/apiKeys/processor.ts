@@ -1,42 +1,59 @@
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { PublicAPIKey } from "models/schemas/apiKey";
+import { ApiKey, PublicApiKey } from "models/schemas/apiKey";
 import { getRandomKey } from "services/internal/security/randomKey";
 import { generateHash } from "services/internal/security/hash";
 import { ObjectId } from "mongodb";
 import { NotFoundError } from "models/errors";
+import { BudgeterEntityCollection } from "services/external/mongodb/entityCollection";
 
-export const getApiKeys = async (): Promise<PublicAPIKey[]> => {
-   const budgeterClient = await BudgeterMongoClient.getInstance();
-   const apiKeyService = budgeterClient.getAPIKeyCollection();
+class ApiKeyProcessor {
+   static instance: ApiKeyProcessor;
+   private _collection: BudgeterEntityCollection<ApiKey>;
 
-   const allApiKeys = await apiKeyService.findMany({});
-   return allApiKeys.map((apiKey) => ({
-      id: apiKey._id.toHexString(),
-      key: apiKey.key
-   }))
-};
+   private async connect(): Promise<void> {
+      const budgeterClient = await BudgeterMongoClient.getInstance();
+      this._collection = budgeterClient.getApiKeyCollection();
+   }
 
-export const createApiKey = async (): Promise<PublicAPIKey> => {
-   const budgeterClient = await BudgeterMongoClient.getInstance();
-   const apiKeyService = budgeterClient.getAPIKeyCollection();
+   static async getInstance(): Promise<ApiKeyProcessor> {
+      if(!ApiKeyProcessor.instance) {
+         ApiKeyProcessor.instance = new ApiKeyProcessor();
+         await ApiKeyProcessor.instance.connect();
+      }
+      return ApiKeyProcessor.instance;
+   }
 
-   // For all API Keys, I want to follow the format of budgeter/{key}
-   const key = `budgeter/${getRandomKey()}`;
-   const apiKey = await apiKeyService.create({ key: generateHash(key) });
+   private buildKey = (): string => `budgeter/${getRandomKey()}`;
 
-   return {
-      id: apiKey._id.toHexString(),
-      key
-   };
-};
+   public async create(): Promise<PublicApiKey> {
+      const key = this.buildKey();
+      const hash = generateHash(key);
+      const apiKey = await this._collection.create({ key: hash });
 
-export const deleteApiKey = async (apiKeyId: ObjectId): Promise<ObjectId> => {
-   const budgeterClient = await BudgeterMongoClient.getInstance();
-   const apiKeyService = budgeterClient.getAPIKeyCollection();
+      return {
+         id: apiKey._id.toHexString(),
+         key: key
+      }
+   }
 
-   const apiKey = await apiKeyService.find({ _id: apiKeyId });
-   if (!apiKey) throw new NotFoundError("No API Key found with the given Id");
+   public async get(): Promise<PublicApiKey[]> {
+      const apiKeys = await this._collection.findMany({});
 
-   await apiKeyService.delete(apiKeyId);
-   return apiKeyId;
+      return apiKeys.map((apiKey) => ({
+         id: apiKey._id.toHexString(),
+         key: apiKey.key
+      }))
+   }
+
+   public async delete(apiKeyId: ObjectId): Promise<ObjectId> {
+      const apiKey = await this._collection.find({ _id: apiKeyId });
+      if (!apiKey) throw new NotFoundError("No API Key found with the given Id");
+   
+      await this._collection.delete(apiKeyId);
+      return apiKeyId;
+   }
+}
+
+export default {
+   getInstance: ApiKeyProcessor.getInstance
 }

@@ -1,9 +1,10 @@
-import { BudgeterRequest, middy } from "middleware/handler/lambda";
+import { middy } from "middleware/handler/lambda";
 import { graphql } from "graphql";
 import { auth } from "middleware/auth";
 import { UnauthorizedError } from "models/errors";
 import schema from "./utils/schema";
 import resolvers from "./utils/resolvers";
+import { BudgeterRequest } from "models/requests";
 
 const executeGraphqlQuery = async (request: BudgeterRequest) => {
    const body = request.body;

@@ -1,9 +1,11 @@
 import ApiKeyResolvers from "../resolvers/apiKeys/resolver";
-import UserResolvers from "../resolvers/users/resolver";
+import BudgetResolvers from "../resolvers/budgets/resolver";
+//import UserResolvers from "../resolvers/users/resolver";
+
 
 const resolvers = {
    ...ApiKeyResolvers,
-   ...UserResolvers
+   ...BudgetResolvers
 }
 
 export default resolvers;
