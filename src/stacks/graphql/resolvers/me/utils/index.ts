@@ -1,5 +1,5 @@
-import { User, PublicUser } from "models/schemas/user"
-import { WithId } from "mongodb"
+import { User, PublicUser } from "models/schemas/user";
+import { WithId } from "mongodb";
 
 export const transformResponse = (user: WithId<User>): PublicUser => ({
    firstName: user.firstName,
@@ -16,4 +16,4 @@ export const transformResponse = (user: WithId<User>): PublicUser => ({
       incomeNotifications: user.notificationPreferences.incomeNotifications,
       paymentNotifications: user.notificationPreferences.paymentNotifications
    }
-})
+});

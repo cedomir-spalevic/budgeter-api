@@ -5,7 +5,9 @@ interface DeleteApiKeyRequest {
    apiKeyId: ObjectId;
 }
 
-export const validateDelete = (args: Record<string, unknown>): DeleteApiKeyRequest => {
+export const validateDelete = (
+   args: Record<string, unknown>
+): DeleteApiKeyRequest => {
    const apiKeyId = validatePathParameterId("apiKeyId", args);
    return { apiKeyId };
 };

@@ -1,6 +1,4 @@
-import {
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyResult } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
 import { apply, asyncify, waterfall } from "async";
 import { StepFunctionBatchJobRequest } from "models/requests";

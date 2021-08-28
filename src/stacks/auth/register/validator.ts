@@ -1,5 +1,5 @@
-import { BudgeterRequest } from "middleware/handler/lambda";
 import { Validator } from "jsonschema";
+import { BudgeterRequest } from "models/requests";
 import schema from "./schema.json";
 
 const validator = new Validator();

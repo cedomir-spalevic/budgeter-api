@@ -1,8 +1,7 @@
-import { BudgeterRequest } from "middleware/handler/lambda";
 import { getPathParameter } from "middleware/url";
-import { DeleteUserRequest } from "../../../../admin/users/delete/type";
+import { BudgeterRequest } from "models/requests";
 
-export const validate = (request: BudgeterRequest): DeleteUserRequest => {
+export const validate = (request: BudgeterRequest): any => {
    const userId = getPathParameter("userId", request.pathParameters);
    return {
       adminUserId: request.auth.userId,

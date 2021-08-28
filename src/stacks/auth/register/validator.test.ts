@@ -1,7 +1,6 @@
-import { GeneralError } from "models/errors";
 import { validate } from "./validator";
 import { test, expect } from "@jest/globals";
-import { BudgeterRequest } from "middleware/handler/lambda";
+import { BudgeterRequest } from "models/requests";
 
 let request: BudgeterRequest = {
    auth: {
@@ -77,7 +76,7 @@ test("Valid request with email", () => {
             firstName: "Charlie",
             lastName: "Spalevic",
             email: "cedomir.spalevic@gmail.com",
-            password: "123"
+            password: "1234567A!"
          }
       };
       validate(request);
@@ -92,7 +91,7 @@ test("Valid request with phone number", () => {
             firstName: "Charlie",
             lastName: "Spalevic",
             phoneNumber: "(630)915-2350",
-            password: "123"
+            password: "1234567A!"
          }
       };
       validate(request);

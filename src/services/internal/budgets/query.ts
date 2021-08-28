@@ -3,7 +3,10 @@ import { FilterQuery, ObjectId } from "mongodb";
 import { Payment } from "models/schemas/payment";
 import { Income } from "models/schemas/income";
 
-export const getBudgetIncomeQuery = (userId: ObjectId, queryParams: GetBudgetQueryStringParameters): FilterQuery<Income> => {
+export const getBudgetIncomeQuery = (
+   userId: ObjectId,
+   queryParams: GetBudgetQueryStringParameters
+): FilterQuery<Income> => {
    const { month, year } = queryParams;
    return {
       $and: [
@@ -26,10 +29,13 @@ export const getBudgetIncomeQuery = (userId: ObjectId, queryParams: GetBudgetQue
             initialYear: { $lte: year }
          }
       ]
-   }
-}
+   };
+};
 
-export const getBudgetPaymentQuery = (userId: ObjectId, queryParams: GetBudgetQueryStringParameters): FilterQuery<Payment> => {
+export const getBudgetPaymentQuery = (
+   userId: ObjectId,
+   queryParams: GetBudgetQueryStringParameters
+): FilterQuery<Payment> => {
    const { month, year } = queryParams;
    return {
       $and: [
@@ -52,5 +58,5 @@ export const getBudgetPaymentQuery = (userId: ObjectId, queryParams: GetBudgetQu
             initialYear: { $lte: year }
          }
       ]
-   }
-}
+   };
+};

@@ -1,5 +1,5 @@
-import { AdminPublicUser, User } from "models/schemas/user"
-import { WithId } from "mongodb"
+import { AdminPublicUser, User } from "models/schemas/user";
+import { WithId } from "mongodb";
 
 export const transformResponse = (user: WithId<User>): AdminPublicUser => ({
    id: user._id.toHexString(),
@@ -18,4 +18,4 @@ export const transformResponse = (user: WithId<User>): AdminPublicUser => ({
       incomeNotifications: user.notificationPreferences.incomeNotifications,
       paymentNotifications: user.notificationPreferences.paymentNotifications
    }
-})
+});

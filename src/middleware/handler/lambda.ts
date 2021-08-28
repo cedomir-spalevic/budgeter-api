@@ -1,7 +1,4 @@
-import {
-   APIGatewayProxyEvent,
-   APIGatewayProxyResult
-} from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
 import { apply, asyncify, waterfall } from "async";
 import { validateJSONBody } from "middleware/validators";

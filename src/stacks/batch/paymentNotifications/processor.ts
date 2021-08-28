@@ -2,8 +2,9 @@ import { User } from "models/schemas/user";
 import { GetBudgetQueryStringParameters } from "models/requests";
 import { publishToEndpoint } from "services/external/aws/sns";
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { getBudgetItems } from "services/internal/budgets/determine";
-import { getQuery } from "services/internal/budgets/query";
+import { getBudgetPayments } from "services/internal/budgets/determine";
+import { getBudgetPaymentQuery } from "services/internal/budgets/query";
+import { transformResponse } from "stacks/graphql/resolvers/payments/utils";
 
 const today = new Date();
 const date = today.getDate();
@@ -38,9 +39,10 @@ const notifyUser = async (user: User): Promise<void> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 
-   const query = getQuery(user._id, queryParams);
-   const payments = await paymentsService.findMany(query);
-   const dueTodayItems = getBudgetItems(payments, queryParams).filter(
+   const query = getBudgetPaymentQuery(user._id, queryParams);
+   const nPayments = await paymentsService.findMany(query);
+   const payments = nPayments.map(transformResponse);
+   const dueTodayItems = getBudgetPayments(payments, queryParams).filter(
       (x) => x.dueToday
    );
 

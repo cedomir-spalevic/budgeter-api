@@ -20,7 +20,7 @@ class MeProcessor {
    }
 
    static async getInstance(userId: ObjectId): Promise<MeProcessor> {
-      if(!MeProcessor.instance) {
+      if (!MeProcessor.instance) {
          MeProcessor.instance = new MeProcessor(userId);
          await MeProcessor.instance.connect();
       }
@@ -32,7 +32,7 @@ class MeProcessor {
          _id: this._userId
       });
       if (!existingUser) throw new NotFoundError("No User found");
-   
+
       if (
          input.firstName !== undefined &&
          existingUser.firstName !== input.firstName
@@ -44,22 +44,20 @@ class MeProcessor {
       )
          existingUser.lastName = input.lastName;
       if (
-         input.notificationPreferences.incomeNotifications !==
-            undefined &&
+         input.notificationPreferences.incomeNotifications !== undefined &&
          existingUser.notificationPreferences.incomeNotifications !==
-         input.notificationPreferences.incomeNotifications
+            input.notificationPreferences.incomeNotifications
       )
          existingUser.notificationPreferences.incomeNotifications =
-         input.notificationPreferences.incomeNotifications;
+            input.notificationPreferences.incomeNotifications;
       if (
-         input.notificationPreferences.paymentNotifications !==
-            undefined &&
+         input.notificationPreferences.paymentNotifications !== undefined &&
          existingUser.notificationPreferences.paymentNotifications !==
-         input.notificationPreferences.paymentNotifications
+            input.notificationPreferences.paymentNotifications
       )
          existingUser.notificationPreferences.paymentNotifications =
-         input.notificationPreferences.paymentNotifications;
-   
+            input.notificationPreferences.paymentNotifications;
+
       const updatedUser = await this._collection.update(existingUser);
       return transformResponse(updatedUser);
    }
@@ -73,4 +71,4 @@ class MeProcessor {
 
 export default {
    getInstance: MeProcessor.getInstance
-}
+};

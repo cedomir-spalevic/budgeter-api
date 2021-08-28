@@ -8,7 +8,10 @@ import { PublicIncome } from "models/schemas/income";
 import { PublicPayment } from "models/schemas/payment";
 import { PublicBudgetIncome, PublicBudgetPayment } from "models/schemas/budget";
 
-export const getBudgetIncomes = (items: PublicIncome[], query: GetBudgetQueryStringParameters): PublicBudgetIncome[] => {
+export const getBudgetIncomes = (
+   items: PublicIncome[],
+   query: GetBudgetQueryStringParameters
+): PublicBudgetIncome[] => {
    const { date, month, year } = query;
    const budgetIncomes: PublicBudgetIncome[] = [];
    items.forEach((item) => {
@@ -122,7 +125,7 @@ export const getBudgetIncomes = (items: PublicIncome[], query: GetBudgetQueryStr
       });
    });
    return budgetIncomes;
-}
+};
 
 export const getBudgetPayments = (
    items: PublicPayment[],

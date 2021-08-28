@@ -1,5 +1,5 @@
-import { Payment, PublicPayment } from "models/schemas/payment"
-import { WithId } from "mongodb"
+import { Payment, PublicPayment } from "models/schemas/payment";
+import { WithId } from "mongodb";
 
 export const transformResponse = (income: WithId<Payment>): PublicPayment => ({
    id: income._id.toHexString(),
@@ -12,4 +12,4 @@ export const transformResponse = (income: WithId<Payment>): PublicPayment => ({
    recurrence: income.recurrence,
    createdOn: income.createdOn,
    modifiedOn: income.modifiedOn
-})
+});

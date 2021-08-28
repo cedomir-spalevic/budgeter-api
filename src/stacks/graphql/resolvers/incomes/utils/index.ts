@@ -1,5 +1,5 @@
-import { Income, PublicIncome } from "models/schemas/income"
-import { WithId } from "mongodb"
+import { Income, PublicIncome } from "models/schemas/income";
+import { WithId } from "mongodb";
 
 export const transformResponse = (income: WithId<Income>): PublicIncome => ({
    id: income._id.toHexString(),
@@ -12,4 +12,4 @@ export const transformResponse = (income: WithId<Income>): PublicIncome => ({
    recurrence: income.recurrence,
    createdOn: income.createdOn,
    modifiedOn: income.modifiedOn
-})
+});

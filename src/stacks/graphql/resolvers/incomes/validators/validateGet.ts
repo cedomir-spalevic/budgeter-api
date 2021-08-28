@@ -1,8 +1,7 @@
 import { getListQueryStringParameters, getPathParameter } from "middleware/url";
-import { BudgeterRequest } from "middleware/handler/lambda";
-import { GetIncomeRequest } from "../../../../entities/incomes/get/type";
+import { BudgeterRequest } from "models/requests";
 
-export const validate = (request: BudgeterRequest): GetIncomeRequest => {
+export const validate = (request: BudgeterRequest): any => {
    const {
       auth: { userId }
    } = request;

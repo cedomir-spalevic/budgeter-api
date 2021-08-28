@@ -16,7 +16,7 @@ class ApiKeyProcessor {
    }
 
    static async getInstance(): Promise<ApiKeyProcessor> {
-      if(!ApiKeyProcessor.instance) {
+      if (!ApiKeyProcessor.instance) {
          ApiKeyProcessor.instance = new ApiKeyProcessor();
          await ApiKeyProcessor.instance.connect();
       }
@@ -33,7 +33,7 @@ class ApiKeyProcessor {
       return {
          id: apiKey._id.toHexString(),
          key: key
-      }
+      };
    }
 
    public async get(): Promise<PublicApiKey[]> {
@@ -42,13 +42,14 @@ class ApiKeyProcessor {
       return apiKeys.map((apiKey) => ({
          id: apiKey._id.toHexString(),
          key: apiKey.key
-      }))
+      }));
    }
 
    public async delete(apiKeyId: ObjectId): Promise<ObjectId> {
       const apiKey = await this._collection.find({ _id: apiKeyId });
-      if (!apiKey) throw new NotFoundError("No API Key found with the given Id");
-   
+      if (!apiKey)
+         throw new NotFoundError("No API Key found with the given Id");
+
       await this._collection.delete(apiKeyId);
       return apiKeyId;
    }
@@ -56,4 +57,4 @@ class ApiKeyProcessor {
 
 export default {
    getInstance: ApiKeyProcessor.getInstance
-}
+};

@@ -33,7 +33,7 @@ class PaymentsProcessor {
    }
 
    static async getInstance(userId: ObjectId): Promise<PaymentsProcessor> {
-      if(!PaymentsProcessor.instance) {
+      if (!PaymentsProcessor.instance) {
          PaymentsProcessor.instance = new PaymentsProcessor(userId);
          await PaymentsProcessor.instance.connect();
       }
@@ -42,10 +42,12 @@ class PaymentsProcessor {
 
    public async create(request: Partial<Payment>): Promise<PublicPayment> {
       const payment = await this._collection.create(request);
-   
-      const cachingStrategy = new UserBudgetCachingStrategy(BudgetTypeValue.Payment);
+
+      const cachingStrategy = new UserBudgetCachingStrategy(
+         BudgetTypeValue.Payment
+      );
       cachingStrategy.delete(payment.userId);
-   
+
       return transformResponse(payment);
    }
 
@@ -54,21 +56,28 @@ class PaymentsProcessor {
          userId: this._userId,
          _id: paymentId
       });
-      if (!payment) throw new NotFoundError("No Payment found with the given Id");
+      if (!payment)
+         throw new NotFoundError("No Payment found with the given Id");
 
-      const cachingStrategy = new UserBudgetCachingStrategy(BudgetTypeValue.Payment);
+      const cachingStrategy = new UserBudgetCachingStrategy(
+         BudgetTypeValue.Payment
+      );
       cachingStrategy.delete(this._userId);
 
       await this._collection.delete(paymentId);
    }
 
-   public async update(paymentId: ObjectId, request: Partial<WithId<Payment>>): Promise<PublicPayment> {
+   public async update(
+      paymentId: ObjectId,
+      request: Partial<WithId<Payment>>
+   ): Promise<PublicPayment> {
       const existingPayment: any = await this._collection.find({
          userId: this._userId,
          _id: paymentId
       });
-      if (!existingPayment) throw new NotFoundError("No Payment found with the given Id");
-      
+      if (!existingPayment)
+         throw new NotFoundError("No Payment found with the given Id");
+
       this._allowedFieldsToUpdate.forEach((field: keyof WithId<Payment>) => {
          if (
             request[field] !== undefined &&
@@ -79,13 +88,17 @@ class PaymentsProcessor {
 
       const updatedPayment = await this._collection.update(existingPayment);
 
-      const cachingStrategy = new UserBudgetCachingStrategy(BudgetTypeValue.Payment);
+      const cachingStrategy = new UserBudgetCachingStrategy(
+         BudgetTypeValue.Payment
+      );
       cachingStrategy.delete(existingPayment.userId);
 
       return transformResponse(updatedPayment);
    }
 
-   public async get(queryStringParameters: GetListQueryStringParameters): Promise<PublicPayment[]> {
+   public async get(
+      queryStringParameters: GetListQueryStringParameters
+   ): Promise<PublicPayment[]> {
       const userPaymentsQuery: FilterQuery<Payment> = {
          userId: this._userId
       };
@@ -112,13 +125,13 @@ class PaymentsProcessor {
          userId: this._userId,
          _id: paymentId
       });
-      if(!payment)
+      if (!payment)
          throw new NotFoundError("No Payment found with the given Id");
-      
+
       return transformResponse(payment);
    }
 }
 
 export default {
    getInstance: PaymentsProcessor.getInstance
-}
+};

@@ -1,7 +1,7 @@
 import { RegisterDeviceRequest } from "./type";
-import { BudgeterRequest } from "middleware/handler/lambda";
 import { Validator } from "jsonschema";
 import schema from "./schema.json";
+import { BudgeterRequest } from "models/requests";
 
 const validator = new Validator();
 
@@ -14,8 +14,8 @@ export const validate = async (
    } = request;
    validator.validate(body, schema, { throwError: true });
 
-   return { 
-      userId, 
+   return {
+      userId,
       device: body["device"] as "ios" | "android",
       token: body["token"] as string
    };

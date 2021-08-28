@@ -33,7 +33,7 @@ class IncomesProcessor {
    }
 
    static async getInstance(userId: ObjectId): Promise<IncomesProcessor> {
-      if(!IncomesProcessor.instance) {
+      if (!IncomesProcessor.instance) {
          IncomesProcessor.instance = new IncomesProcessor(userId);
          await IncomesProcessor.instance.connect();
       }
@@ -42,10 +42,12 @@ class IncomesProcessor {
 
    public async create(request: Partial<Income>): Promise<PublicIncome> {
       const income = await this._collection.create(request);
-   
-      const cachingStrategy = new UserBudgetCachingStrategy(BudgetTypeValue.Income);
+
+      const cachingStrategy = new UserBudgetCachingStrategy(
+         BudgetTypeValue.Income
+      );
       cachingStrategy.delete(income.userId);
-   
+
       return transformResponse(income);
    }
 
@@ -56,19 +58,25 @@ class IncomesProcessor {
       });
       if (!income) throw new NotFoundError("No Income found with the given Id");
 
-      const cachingStrategy = new UserBudgetCachingStrategy(BudgetTypeValue.Income);
+      const cachingStrategy = new UserBudgetCachingStrategy(
+         BudgetTypeValue.Income
+      );
       cachingStrategy.delete(this._userId);
 
       await this._collection.delete(incomeId);
    }
 
-   public async update(incomeId: ObjectId, request: Partial<WithId<Income>>): Promise<PublicIncome> {
+   public async update(
+      incomeId: ObjectId,
+      request: Partial<WithId<Income>>
+   ): Promise<PublicIncome> {
       const existingIncome: any = await this._collection.find({
          userId: this._userId,
          _id: incomeId
       });
-      if (!existingIncome) throw new NotFoundError("No Income found with the given Id");
-      
+      if (!existingIncome)
+         throw new NotFoundError("No Income found with the given Id");
+
       this._allowedFieldsToUpdate.forEach((field: keyof WithId<Income>) => {
          if (
             request[field] !== undefined &&
@@ -79,13 +87,17 @@ class IncomesProcessor {
 
       const updatedIncome = await this._collection.update(existingIncome);
 
-      const cachingStrategy = new UserBudgetCachingStrategy(BudgetTypeValue.Income);
+      const cachingStrategy = new UserBudgetCachingStrategy(
+         BudgetTypeValue.Income
+      );
       cachingStrategy.delete(existingIncome.userId);
 
       return transformResponse(updatedIncome);
    }
 
-   public async get(queryStringParameters: GetListQueryStringParameters): Promise<PublicIncome[]> {
+   public async get(
+      queryStringParameters: GetListQueryStringParameters
+   ): Promise<PublicIncome[]> {
       const userIncomesQuery: FilterQuery<Income> = {
          userId: this._userId
       };
@@ -112,13 +124,12 @@ class IncomesProcessor {
          userId: this._userId,
          _id: incomeId
       });
-      if(!income)
-         throw new NotFoundError("No Income found with the given Id");
-      
+      if (!income) throw new NotFoundError("No Income found with the given Id");
+
       return transformResponse(income);
    }
 }
 
 export default {
    getInstance: IncomesProcessor.getInstance
-}
+};

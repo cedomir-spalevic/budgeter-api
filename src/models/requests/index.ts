@@ -1,8 +1,17 @@
-import { APIGatewayProxyEventPathParameters, APIGatewayProxyEventQueryStringParameters } from "aws-lambda";
+import {
+   APIGatewayProxyEventPathParameters,
+   APIGatewayProxyEventQueryStringParameters
+} from "aws-lambda";
 import { ObjectId } from "mongodb";
 
 export interface Form {
-   [name: string]: Record<string, unknown> | string | number | boolean | null | undefined;
+   [name: string]:
+      | Record<string, unknown>
+      | string
+      | number
+      | boolean
+      | null
+      | undefined;
 }
 
 export interface GetListQueryStringParameters {

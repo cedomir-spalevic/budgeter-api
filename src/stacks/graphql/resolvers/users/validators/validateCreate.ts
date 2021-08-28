@@ -1,8 +1,7 @@
-import { BudgeterRequest } from "middleware/handler/lambda";
 import { validateBool, validateStr } from "middleware/validators";
 import { validateEmailOrPhoneNumber } from "middleware/validators/emailOrPhoneNumber";
 import { GeneralError } from "models/errors";
-import { AdminUserRequest } from "models/requests";
+import { AdminUserRequest, BudgeterRequest } from "models/requests";
 
 export const validate = (request: BudgeterRequest): AdminUserRequest => {
    const { body } = request;

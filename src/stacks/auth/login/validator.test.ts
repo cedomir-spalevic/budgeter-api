@@ -1,6 +1,6 @@
 import { validate } from "./validator";
 import { test, expect } from "@jest/globals";
-import { BudgeterRequest } from "middleware/handler/lambda";
+import { BudgeterRequest } from "models/requests";
 
 let request: BudgeterRequest = {
    auth: {

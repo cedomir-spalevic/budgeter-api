@@ -1,5 +1,8 @@
 import { AlreadyExistsError, GeneralError, NotFoundError } from "models/errors";
-import { AdminUserRequest, GetListQueryStringParameters } from "models/requests";
+import {
+   AdminUserRequest,
+   GetListQueryStringParameters
+} from "models/requests";
 import { AdminPublicUser, User } from "models/schemas/user";
 import { UserAuth } from "models/schemas/userAuth";
 import { FilterQuery, FindOneOptions, ObjectId } from "mongodb";
@@ -7,7 +10,9 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 import { generateHash } from "services/internal/security/hash";
 import { transformResponse } from "./utils";
 
-export const getUsers = async(queryStringParameters: GetListQueryStringParameters): Promise<AdminPublicUser[]> => {
+export const getUsers = async (
+   queryStringParameters: GetListQueryStringParameters
+): Promise<AdminPublicUser[]> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
@@ -18,10 +23,12 @@ export const getUsers = async(queryStringParameters: GetListQueryStringParameter
    };
    const users = await usersService.findMany(query, queryOptions);
 
-   return users.map((user) => transformResponse(user))
-}
+   return users.map((user) => transformResponse(user));
+};
 
-export const getUserById = async (userId: ObjectId): Promise<AdminPublicUser> => {
+export const getUserById = async (
+   userId: ObjectId
+): Promise<AdminPublicUser> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
@@ -29,9 +36,11 @@ export const getUserById = async (userId: ObjectId): Promise<AdminPublicUser> =>
    if (!user) throw new NotFoundError("No User found with the given Id");
 
    return transformResponse(user);
-}
+};
 
-export const createUser = async (userInput: AdminUserRequest): Promise<AdminPublicUser> => {
+export const createUser = async (
+   userInput: AdminUserRequest
+): Promise<AdminPublicUser> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
    const usersService = budgeterClient.getUsersCollection();
@@ -78,7 +87,7 @@ export const createUser = async (userInput: AdminUserRequest): Promise<AdminPubl
    }
 
    return transformResponse(user);
-}
+};
 
 export const deleteUser = async (userId: ObjectId): Promise<ObjectId> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
@@ -99,9 +108,12 @@ export const deleteUser = async (userId: ObjectId): Promise<ObjectId> => {
    await paymentsService.deleteAll({ userId: user._id });
 
    return userId;
-}
+};
 
-export const updateUser = async (userId: ObjectId, userInput: AdminUserRequest): Promise<AdminPublicUser> => {
+export const updateUser = async (
+   userId: ObjectId,
+   userInput: AdminUserRequest
+): Promise<AdminPublicUser> => {
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
@@ -110,13 +122,17 @@ export const updateUser = async (userId: ObjectId, userInput: AdminUserRequest):
    if (!user) throw new NotFoundError("No User found with the given Id");
 
    if (userInput.password !== undefined) {
-      if (!userInput.password) throw new GeneralError("Password cannot be blank");
+      if (!userInput.password)
+         throw new GeneralError("Password cannot be blank");
       const userAuth = await usersAuthService.find({ userId });
       userAuth.hash = generateHash(userInput.password);
       await usersAuthService.update(userAuth);
    }
 
-   if (userInput.firstName !== undefined && user.firstName !== userInput.firstName)
+   if (
+      userInput.firstName !== undefined &&
+      user.firstName !== userInput.firstName
+   )
       user.firstName = userInput.firstName;
    if (userInput.lastName !== undefined && user.lastName !== userInput.lastName)
       user.lastName = userInput.lastName;
@@ -126,4 +142,4 @@ export const updateUser = async (userId: ObjectId, userInput: AdminUserRequest):
    user = await usersService.update(user);
 
    return transformResponse(user);
-}
+};
