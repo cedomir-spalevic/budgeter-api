@@ -1,13 +1,12 @@
-import { BudgeterRequestAuth } from "middleware/handler/lambda";
-import { AdminUserRequest, GetListQueryStringParameters } from "models/requests";
-import { PublicBudgetItem } from "models/schemas/budget";
-import { Income } from "models/schemas/income";
-import { AdminPublicUser } from "models/schemas/user";
+
+import { BudgeterRequestAuth, GetListQueryStringParameters } from "models/requests";
+import { Income, PublicIncome } from "models/schemas/income";
+import { Recurrence } from "models/schemas/recurrence";
 import { ObjectId } from "mongodb";
 import IncomesProcessor from "./processor";
 
 const resolvers = {
-   incomes: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<PublicBudgetItem[]> => {
+   incomes: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<PublicIncome[]> => {
       const queryStringParameters: GetListQueryStringParameters = {
          skip: args["skip"] as number,
          limit: args["limit"] as number
@@ -15,32 +14,46 @@ const resolvers = {
       const incomesProcessor = await IncomesProcessor.getInstance(context.userId);
       return incomesProcessor.get(queryStringParameters);
    },
-   incomeById: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<PublicBudgetItem> => {
-      const userId = args["userId"] as string;
+   incomeById: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<PublicIncome> => {
+      const incomeId = args["incomeId"] as string;
       const incomesProcessor = await IncomesProcessor.getInstance(context.userId);
-      return incomesProcessor.getById(new ObjectId(userId));
+      return incomesProcessor.getById(new ObjectId(incomeId));
    },
-   // -
-   // deleteUser: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<ObjectId> => {
-   //    await graphqlAdminAuth(context);
-   //    const userId = args["userId"] as string;
-   //    return deleteUser(new ObjectId(userId));
-   // },
-   // updateUser: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<AdminPublicUser> => {
-   //    await graphqlAdminAuth(context);
-   //    const userId = args["userId"] as string;
-   //    const userInput = args["user"] as Record<string, unknown>;
-   //    const request: AdminUserRequest = {
-   //       userId: new ObjectId(userInput["id"] as string),
-   //       firstName: userInput["firstName"] as string,
-   //       lastName: userInput["lastName"] as string,
-   //       email: userInput["email"] as string | null,
-   //       phoneNumber: userInput["phoneNumber"] as string | null,
-   //       isAdmin: userInput["isAdmin"] as boolean,
-   //       password: userInput["password"] as string
-   //    }
-   //    return updateUser(new ObjectId(userId), request);
-   // }
+   createIncome: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<PublicIncome> => {
+      const input = args["income"] as Record<string, unknown>;
+      const request: Partial<Income> = {
+         title: input["title"] as string,
+         amount: input["amount"] as number,
+         initialDay: input["initialDay"] as number,
+         initialDate: input["initialDate"] as number,
+         initialMonth: input["initialMonth"] as number,
+         initialYear: input["initialYear"] as number,
+         recurrence: input["recurrence"] as Recurrence
+      }
+      const incomesProcessor = await IncomesProcessor.getInstance(context.userId);
+      return await incomesProcessor.create(request);
+   },
+   updateIncome: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<PublicIncome> => {
+      const incomeId = args["incomeId"] as string;
+      const input = args["income"] as Record<string, unknown>;
+      const request: Partial<Income> = {
+         title: input["title"] as string,
+         amount: input["amount"] as number,
+         initialDay: input["initialDay"] as number,
+         initialDate: input["initialDate"] as number,
+         initialMonth: input["initialMonth"] as number,
+         initialYear: input["initialYear"] as number,
+         recurrence: input["recurrence"] as Recurrence
+      }
+      const incomesProcessor = await IncomesProcessor.getInstance(context.userId);
+      return await incomesProcessor.update(new ObjectId(incomeId), request);
+   },
+   deleteIncome: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<ObjectId> => {
+      const incomeId = args["incomeId"] as string;
+      const incomesProcessor = await IncomesProcessor.getInstance(context.userId);
+      await incomesProcessor.delete(new ObjectId(incomeId));
+      return new ObjectId(incomeId);
+   }
 }
 
 export default resolvers;

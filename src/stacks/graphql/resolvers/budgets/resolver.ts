@@ -9,14 +9,14 @@ const resolvers = {
          month: args["month"] as number,
          year: args["year"] as number
       }
-      const response = await Promise.all([
+      const { 0: incomes, 1: payments } = await Promise.all([
          await getIncomes(queryParams, context),
          await getPayments(queryParams, context)
       ]);
 
       return {
-         incomes: response[0],
-         payments: response[1]
+         incomes,
+         payments
       };
    }
 }

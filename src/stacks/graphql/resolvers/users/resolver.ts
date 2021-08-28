@@ -1,6 +1,5 @@
 import { graphqlAdminAuth } from "middleware/auth";
-import { BudgeterRequestAuth } from "middleware/handler/lambda";
-import { AdminUserRequest, GetListQueryStringParameters } from "models/requests";
+import { AdminUserRequest, BudgeterRequestAuth, GetListQueryStringParameters } from "models/requests";
 import { AdminPublicUser } from "models/schemas/user";
 import { ObjectId } from "mongodb";
 import { createUser, deleteUser, getUserById, getUsers, updateUser } from "./processor";
@@ -22,37 +21,37 @@ const resolvers = {
    },
    createUser: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<AdminPublicUser> => {
       await graphqlAdminAuth(context);
-      const userInput = args["user"] as Record<string, unknown>;
+      const input = args["user"] as Record<string, unknown>;
       const request: AdminUserRequest = {
-         userId: new ObjectId(userInput["id"] as string),
-         firstName: userInput["firstName"] as string,
-         lastName: userInput["lastName"] as string,
-         email: userInput["email"] as string | null,
-         phoneNumber: userInput["phoneNumber"] as string | null,
-         isAdmin: userInput["isAdmin"] as boolean,
-         password: userInput["password"] as string
+         userId: new ObjectId(input["id"] as string),
+         firstName: input["firstName"] as string,
+         lastName: input["lastName"] as string,
+         email: input["email"] as string | null,
+         phoneNumber: input["phoneNumber"] as string | null,
+         isAdmin: input["isAdmin"] as boolean,
+         password: input["password"] as string
       }
       return createUser(request);
+   },
+   updateUser: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<AdminPublicUser> => {
+      await graphqlAdminAuth(context);
+      const userId = args["userId"] as string;
+      const input = args["user"] as Record<string, unknown>;
+      const request: AdminUserRequest = {
+         userId: new ObjectId(input["id"] as string),
+         firstName: input["firstName"] as string,
+         lastName: input["lastName"] as string,
+         email: input["email"] as string | null,
+         phoneNumber: input["phoneNumber"] as string | null,
+         isAdmin: input["isAdmin"] as boolean,
+         password: input["password"] as string
+      }
+      return updateUser(new ObjectId(userId), request);
    },
    deleteUser: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<ObjectId> => {
       await graphqlAdminAuth(context);
       const userId = args["userId"] as string;
       return deleteUser(new ObjectId(userId));
-   },
-   updateUser: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<AdminPublicUser> => {
-      await graphqlAdminAuth(context);
-      const userId = args["userId"] as string;
-      const userInput = args["user"] as Record<string, unknown>;
-      const request: AdminUserRequest = {
-         userId: new ObjectId(userInput["id"] as string),
-         firstName: userInput["firstName"] as string,
-         lastName: userInput["lastName"] as string,
-         email: userInput["email"] as string | null,
-         phoneNumber: userInput["phoneNumber"] as string | null,
-         isAdmin: userInput["isAdmin"] as boolean,
-         password: userInput["password"] as string
-      }
-      return updateUser(new ObjectId(userId), request);
    }
 }
 

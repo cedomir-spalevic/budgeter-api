@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BudgeterMongoClient from "services/external/mongodb/client";
-import { PublicBudgetItem } from "models/schemas/budget";
-import { Income } from "models/schemas/income";
+import { Income, PublicIncome } from "models/schemas/income";
 import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 import { FilterQuery, FindOneOptions, ObjectId, WithId } from "mongodb";
 import { NotFoundError } from "models/errors";
 import { BudgeterEntityCollection } from "services/external/mongodb/entityCollection";
 import { GetListQueryStringParameters } from "models/requests";
+import { transformResponse } from "./utils";
+import { BudgetTypeValue } from "models/schemas/budget";
 
-class IncomeProcessor {
-   static instance: IncomeProcessor;
+class IncomesProcessor {
+   static instance: IncomesProcessor;
    private _userId: ObjectId;
    private _collection: BudgeterEntityCollection<Income>;
    private _allowedFieldsToUpdate: (keyof WithId<Income>)[] = [
@@ -31,36 +32,21 @@ class IncomeProcessor {
       this._collection = budgeterClient.getIncomesCollection();
    }
 
-   static async getInstance(userId: ObjectId): Promise<IncomeProcessor> {
-      if(!IncomeProcessor.instance) {
-         IncomeProcessor.instance = new IncomeProcessor(userId);
-         await IncomeProcessor.instance.connect();
+   static async getInstance(userId: ObjectId): Promise<IncomesProcessor> {
+      if(!IncomesProcessor.instance) {
+         IncomesProcessor.instance = new IncomesProcessor(userId);
+         await IncomesProcessor.instance.connect();
       }
-      return IncomeProcessor.instance;
+      return IncomesProcessor.instance;
    }
 
-   private transformResponse(income: Income): PublicBudgetItem {
-      return {
-         id: income._id.toHexString(),
-         title: income.title,
-         amount: income.amount,
-         initialDay: income.initialDay,
-         initialDate: income.initialDate,
-         initialMonth: income.initialMonth,
-         initialYear: income.initialYear,
-         recurrence: income.recurrence,
-         createdOn: income.createdOn,
-         modifiedOn: income.modifiedOn
-      }
-   }
-
-   public async create(request: Partial<Income>): Promise<PublicBudgetItem> {
+   public async create(request: Partial<Income>): Promise<PublicIncome> {
       const income = await this._collection.create(request);
    
-      const cachingStrategy = new UserBudgetCachingStrategy("income");
+      const cachingStrategy = new UserBudgetCachingStrategy(BudgetTypeValue.Income);
       cachingStrategy.delete(income.userId);
    
-      return this.transformResponse(income);
+      return transformResponse(income);
    }
 
    public async delete(incomeId: ObjectId): Promise<void> {
@@ -70,13 +56,13 @@ class IncomeProcessor {
       });
       if (!income) throw new NotFoundError("No Income found with the given Id");
 
-      const cachingStrategy = new UserBudgetCachingStrategy("income");
+      const cachingStrategy = new UserBudgetCachingStrategy(BudgetTypeValue.Income);
       cachingStrategy.delete(this._userId);
 
       await this._collection.delete(incomeId);
    }
 
-   public async update(incomeId: ObjectId, request: Partial<WithId<Income>>): Promise<PublicBudgetItem> {
+   public async update(incomeId: ObjectId, request: Partial<WithId<Income>>): Promise<PublicIncome> {
       const existingIncome: any = await this._collection.find({
          userId: this._userId,
          _id: incomeId
@@ -93,13 +79,13 @@ class IncomeProcessor {
 
       const updatedIncome = await this._collection.update(existingIncome);
 
-      const cachingStrategy = new UserBudgetCachingStrategy("income");
+      const cachingStrategy = new UserBudgetCachingStrategy(BudgetTypeValue.Income);
       cachingStrategy.delete(existingIncome.userId);
 
-      return this.transformResponse(updatedIncome);
+      return transformResponse(updatedIncome);
    }
 
-   public async get(queryStringParameters: GetListQueryStringParameters): Promise<PublicBudgetItem[]> {
+   public async get(queryStringParameters: GetListQueryStringParameters): Promise<PublicIncome[]> {
       const userIncomesQuery: FilterQuery<Income> = {
          userId: this._userId
       };
@@ -118,10 +104,10 @@ class IncomeProcessor {
          queryOptions
       );
 
-      return incomes.map(this.transformResponse);
+      return incomes.map(transformResponse);
    }
 
-   public async getById(incomeId: ObjectId): Promise<PublicBudgetItem> {
+   public async getById(incomeId: ObjectId): Promise<PublicIncome> {
       const income = await this._collection.find({
          userId: this._userId,
          _id: incomeId
@@ -129,10 +115,10 @@ class IncomeProcessor {
       if(!income)
          throw new NotFoundError("No Income found with the given Id");
       
-      return this.transformResponse(income);
+      return transformResponse(income);
    }
 }
 
 export default {
-   getInstance: IncomeProcessor.getInstance
+   getInstance: IncomesProcessor.getInstance
 }
