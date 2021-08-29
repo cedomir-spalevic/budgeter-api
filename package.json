@@ -3,7 +3,7 @@
    "version": "1.0.0",
    "description": "Budgeter API",
    "scripts": {
-      "dev": "serverless offline start --stage dev",
+      "dev": "sls offline start --stage dev",
       "clean": "npm-run-all clean:*",
       "clean:serverless": "rimraf ./.serverless",
       "clean:webpack": "rimraf ./.webpack",
@@ -13,13 +13,14 @@
       "build:validate": "tsc --noEmit",
       "build:lint": "eslint . --ext .ts",
       "build:format": "prettier --write ./src",
-      "build:test": "npm-run-all test:*",
+      "fix-build:test": "npm-run-all test:*",
       "test:unit": "jest",
       "test:e2e": "ts-node tests/index.ts",
       "watch:test-unit": "jest --watch --maxWorkers=4",
       "e2e-tests": "newman run tests/\"Budgeter - Tests.postman_collection.json\" -r cli,json -e tests/env/local.json",
-      "login": "serverless login",
-      "deploy": "serverless deploy"
+      "login": "sls login",
+      "deploy:dev": "sls deploy --stage dev",
+      "deploy:prod": "sls deploy --stage prod"
    },
    "repository": {
       "type": "git",

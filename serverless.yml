@@ -2,6 +2,10 @@ org: cedomirspalevic
 app: budgeter
 service: budgeter
 
+# adapting to new behviors for next major version
+useDotenv: true
+variablesResolutionMode: 20210326
+
 frameworkVersion: '2.35'
 
 provider:
@@ -143,12 +147,10 @@ plugins:
    - '@serverless/safeguards-plugin'
    - 'serverless-bundle'
    - 'serverless-offline'
-   - 'serverless-dotenv-plugin'
    - 'serverless-step-functions'
    - 'serverless-pseudo-parameters'
 
 custom:
-   myStage: ${opt:stage, self:provider.stage}
    myEnvironment:
       sourcemaps:
          dev: true
@@ -157,7 +159,7 @@ custom:
       httpPort: 4000
       useChildProcesses: true
    bundle:
-      sourcemaps: ${self:custom.myEnvironment.${self:custom.myStage}}
+      sourcemaps: ${self:custom.myEnvironment.sourcemaps.${opt:stage}}
       forceExclude:
          - aws-sdk
       linting: false
