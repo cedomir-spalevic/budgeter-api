@@ -1,84 +1,152 @@
-service: budgeter-api
-app: budgeter-api
 org: cedomirspalevic
-frameworkVersion: "2.35"
+app: budgeter
+service: budgeter
+
+frameworkVersion: '2.35'
 
 provider:
-   name: aws
-   runtime: nodejs14.x
-   region: us-east-1
-   stackName: budgeter-api
-   apiName: budgeter
-   memorySize: 128
-   timeout: 10
-   deploymentPrefix:
-   environment:
-      JWT_KEY: ${env:JWT_KEY}
-      JWT_ADMIN_KEY: ${env:JWT_ADMIN_KEY}
-      AWS_PLATFORM_APPLICATION_IOS: ${env:AWS_PLATFORM_APPLICATION_IOS}
-      AWS_SNS_TOPIC: ${env:AWS_SNS_TOPIC}
-      MONGO_CONNECTION_STRING: ${env:MONGO_CONNECTION_STRING}
-      BUDGETER_API_KEY: ${env:BUDGETER_API_KEY}
-      REDIS_SERVER_HOST: ${env:REDIS_SERVER_HOST}
-      REDIS_SERVER_PORT: ${env:REDIS_SERVER_PORT}
-      REDIS_SERVER_PWD: ${env:REDIS_SERVER_PWD}
-
-# For serverless-bundle to remove dead code
-package:
-   individually: true
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  region: us-east-1
+  stackName: budgeter
+  apiName: budgeter
+  memorySize: 128
+  timeout: 10
+  deploymentPrefix: ''
+  environment: 
+    JWT_KEY: ${env:JWT_KEY}
+    JWT_ADMIN_KEY: ${env:JWT_ADMIN_KEY}
+    AWS_PLATFORM_APPLICATION_IOS: ${env:AWS_PLATFORM_APPLICATION_IOS}
+    AWS_SNS_TOPIC: ${env:AWS_SNS_TOPIC}
+    MONGO_CONNECTION_STRING: ${env:MONGO_CONNECTION_STRING}
+    BUDGETER_API_KEY: ${env:BUDGETER_API_KEY}
 
 functions:
-   auth-login:
-      handler: src/stacks/auth/login/index.handler
-      events:
-         - http:
-              path: auth/login
-              method: post
-   auth-refresh:
-      handler: src/stacks/auth/refresh/index.handler
-      memorySize: 2048
-      events:
-         - http:
-              path: auth/refresh
-              method: post
-   auth-register:
-      handler: src/stacks/auth/register/index.handler
-      events:
-         - http:
-              path: auth/register
-              method: post
-   auth-challenge:
-      handler: src/stacks/auth/challenge/index.handler
-      events:
-         - http:
-              path: auth/challenge
-              method: post
-   auth-challenge-confirmation:
-      handler: src/stacks/auth/challengeConfirmation/index.handler
-      events:
-         - http:
-              path: auth/challenge/{key}
-              method: post
-              request:
-                 parameters:
-                    paths:
-                       key: true
-   graphql:
-      handler: src/stacks/graphql/index.handler
-      events:
-         - http:
-              path: graphql
-              method: post
+  auth-challenge:
+    handler: stacks/auth/challenge/handler
+    events:
+      - http:
+            path: auth/challenge
+            method: post
+  auth-challenge-confirmation:
+    handler: stacks/auth/challengeConfirmation/handler
+    events:
+      - http:
+            path: auth/challenge/{key}
+            method: post
+            request:
+               parameters:
+                  paths:
+                     key: true
+  auth-login:
+    handler: stacks/auth/login/handler
+    events:
+      - http:
+            path: auth/login
+            method: post
+  auth-refresh:
+    handler: stacks/auth/refresh/handler
+    memorySize: 2028
+    events:
+      - http:
+            path: auth/refresh
+            method: post
+  auth-register:
+    handler: stacks/auth/register/handler
+    events:
+      - http:
+            path: auth/register
+            method: post
+  auth-register-device:
+    handler: stacks/auth/registerDevice/handler
+    events:
+      - http:
+            path: auth/registerDevice
+            method: post
+  auth-reset-password:
+    handler: stacks/auth/resetPassword/handler
+    events:
+      - http:
+            path: auth/resetPassword/{key}
+            method: post
+            request:
+               parameters:
+                  paths:
+                     key: true
+  graphql:
+    handler: stacks/graphql/handler
+    events:
+      - http:
+            path: graphql
+            method: post
+
+stepFunctions:
+   validate: true
+   stateMachines:
+      clear-tokens-job:
+         events:
+            - schedule:
+                 rate: cron(0 15 * * ? *)
+                 enabled: true
+         definition:
+            Comment: Step function to clear any expired tokens
+            StartAt: InvokeFunction
+            States:
+               InvokeFunction:
+                  Type: Task
+                  Resource:
+                     Fn::GetAtt: [batch-clear-tokens, Arn]
+                  Parameters:
+                     Payload:
+                        Input:
+                           apiKey: ${env:BUDGETER_API_KEY}
+                  End: true
+      payment-notifications-job:
+         events:
+            - schedule:
+                 rate: cron(0 15 * * ? *)
+                 enabled: true
+         definition:
+            Comment: Step function to send any payment notifications
+            StartAt: InvokeFunction
+            States:
+               InvokeFunction:
+                  Type: Task
+                  Resource:
+                     Fn::GetAtt: [batch-payment-notifications, Arn]
+                  Parameters:
+                     Payload:
+                        Input:
+                           apiKey: ${env:BUDGETER_API_KEY}
+                  End: true
+      income-notifications-job:
+         events:
+            - schedule:
+                 rate: cron(0 15 * * ? *)
+                 enabled: true
+         definition:
+            Comment: Step function to send any income notifications
+            StartAt: InvokeFunction
+            States:
+               InvokeFunction:
+                  Type: Task
+                  Resource:
+                     Fn::GetAtt: [batch-income-notifications, Arn]
+                  Parameters:
+                     Payload:
+                        Input:
+                           apiKey: ${env:BUDGETER_API_KEY}
+                  End: true
 
 plugins:
-   - "@serverless/safeguards-plugin"
-   - "serverless-bundle"
-   - "serverless-offline"
-   - "serverless-dotenv-plugin"
-   - "serverless-step-functions"
-   - "serverless-pseudo-parameters"
+   - '@serverless/safeguards-plugin'
+   - 'serverless-bundle'
+   - 'serverless-offline'
+   - 'serverless-dotenv-plugin'
+   - 'serverless-step-functions'
+   - 'serverless-pseudo-parameters'
 
-# Custom variables
 custom:
    myStage: ${opt:stage, self:provider.stage}
    myEnvironment:
@@ -89,7 +157,7 @@ custom:
       httpPort: 4000
       useChildProcesses: true
    bundle:
-      sourcemaps: ${self:custom.myEnvironment.sourcemaps.${self:custom.myStage}}
+      sourcemaps: ${self:custom.myEnvironment.${self:custom.myStage}}
       forceExclude:
          - aws-sdk
       linting: false

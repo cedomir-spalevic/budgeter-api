@@ -25,8 +25,10 @@ const executeGraphqlQuery = async (request: BudgeterRequest) => {
    return executionResult;
 };
 
-export const handler = middy()
+const handler = middy()
    .useAuth(auth)
    .useJsonBodyParser()
    .use(executeGraphqlQuery)
    .go();
+
+export default handler;

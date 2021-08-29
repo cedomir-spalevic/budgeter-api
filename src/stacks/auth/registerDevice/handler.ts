@@ -3,9 +3,11 @@ import { processRegisterDevice } from "./processor";
 import { middy } from "middleware/handler/lambda";
 import { validate } from "./validator";
 
-export const handler = middy()
+const handler = middy()
    .useAuth(auth)
    .useJsonBodyParser()
    .use(validate)
    .use(processRegisterDevice)
    .go();
+
+export default handler;
