@@ -1,0 +1,15 @@
+{
+   "AWS_ACCESS_KEY_ID": "",
+   "AWS_SECRET_ACCESS_KEY": "",
+   "AWS_REGION": "us-east-1",
+   "AWS_PLATFORM_APPLICATION_IOS": "arn:aws:sns:us-east-1:075433893437:app/APNS/budgeter-ios",
+   "AWS_SNS_TOPIC": "arn:aws:sns:us-east-1:075433893437:Budgeter",
+   "MONGO_CONNECTION_STRING": "mongodb+srv://admin:seWi3TfBAbLxriEa@cluster0.vvc2o.mongodb.net/budgeter?retryWrites=true&w=majority",
+   "REDIS_SERVER_HOST": "redis-15951.c239.us-east-1-2.ec2.cloud.redislabs.com",
+   "REDIS_SERVER_PORT": "15951",
+   "REDIS_SERVER_PWD": "ajZUQmY3eFFAQ1EhaDgkRg==",
+   "SERVERLESS_ACCESS_KEYS": "AKiKuvw5cJit9SLDrvcDQxAMMMTuISdkiPKcjoUtOcQlv",
+   "JWT_KEY": "mYq3t6w9z&F)J@NcRfUjWnZr4u7x!A%D*G-KaPdSgVkYp2s5v8y/B?E(H+MbQe",
+   "JWT_ADMIN_KEY": "QV!dOcTDKJ$!Ckz3IQx7FPXQI?gCMB?JTd8n7j1P",
+   "BUDGETER_API_KEY": "budgeter/bc6e4807d09296d324dd353c9591d91de548d61c"
+}

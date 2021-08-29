@@ -18,9 +18,11 @@
       "fix-test:e2e": "ts-node tests/index.ts",
       "watch:test-unit": "jest --watch --maxWorkers=4",
       "e2e-tests": "newman run tests/\"Budgeter - Tests.postman_collection.json\" -r cli,json -e tests/env/local.json",
-      "login": "sls login",
+      "env:dev": "ts-node scripts/env dev",
+      "env:prod": "ts-node scripts/env prod",
       "deploy:dev": "sls deploy --stage dev",
-      "deploy:prod": "sls deploy --stage prod"
+      "deploy:prod": "sls deploy --stage prod",
+      "login": "sls login"
    },
    "repository": {
       "type": "git",

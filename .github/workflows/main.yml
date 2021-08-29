@@ -1,4 +1,4 @@
-name: Build, Test, Deploy
+name: Build, Test, Prod Deploy
 
 on:
    push:
@@ -19,23 +19,14 @@ jobs:
               aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
               aws-region: ${{ secrets.AWS_REGION }}
-         - name: Create env file
-           run: |
-              cat > .env << EOF
-              JWT_KEY=${{ secrets.JWT_KEY }}
-              JWT_ADMIN_KEY=${{ secrets.JWT_ADMIN_KEY }}
-              MONGO_CONNECTION_STRING=${{ secrets.MONGO_CONNECTION_STRING }}
-              AWS_PLATFORM_APPLICATION_IOS=${{ secrets.AWS_PLATFORM_APPLICATION_IOS }}
-              AWS_PLATFORM_APPLICATION_ANDROID=${{ secrets.AWS_PLATFORM_APPLICATION_ANDROID }}
-              AWS_SNS_TOPIC=${{ secrets.AWS_SNS_TOPIC }}
-              BUDGETER_API_KEY=${{ secrets.BUDGETER_API_KEY }}
-              EOF
+         - name: Setup ENV
+           run: npm run env:dev
          - name: Build code
            run: npm run build
          - name: Deploy
            uses: serverless/github-action@master
            with:
-              args: deploy
+              args: deploy --stage prod
            env:
               SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
               # or if using AWS credentials directly
