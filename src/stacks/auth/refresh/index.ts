@@ -1,11 +1,10 @@
-import { processChallenge } from "./processor";
+import { processRefresh } from "./processor";
 import { validate } from "./validator";
 import { middy } from "middleware/handler/lambda";
 
-const handler = middy()
+export const handler = middy()
    .useJsonBodyParser()
    .use(validate)
-   .use(processChallenge)
+   .use(processRefresh)
    .go();
 
-export default handler;

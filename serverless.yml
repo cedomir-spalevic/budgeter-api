@@ -28,13 +28,13 @@ provider:
 
 functions:
   auth-challenge:
-    handler: stacks/auth/challenge/handler
+    handler: src/stacks/auth/challenge/index.handler
     events:
       - http:
             path: auth/challenge
             method: post
   auth-challenge-confirmation:
-    handler: stacks/auth/challengeConfirmation/handler
+    handler: src/stacks/auth/challengeConfirmation/index.handler
     events:
       - http:
             path: auth/challenge/{key}
@@ -44,32 +44,32 @@ functions:
                   paths:
                      key: true
   auth-login:
-    handler: stacks/auth/login/handler
+    handler: src/stacks/auth/login/index.handler
     events:
       - http:
             path: auth/login
             method: post
   auth-refresh:
-    handler: stacks/auth/refresh/handler
+    handler: src/stacks/auth/refresh/index.handler
     memorySize: 2028
     events:
       - http:
             path: auth/refresh
             method: post
   auth-register:
-    handler: stacks/auth/register/handler
+    handler: src/stacks/auth/register/index.handler
     events:
       - http:
             path: auth/register
             method: post
   auth-register-device:
-    handler: stacks/auth/registerDevice/handler
+    handler: src/stacks/auth/registerDevice/index.handler
     events:
       - http:
             path: auth/registerDevice
             method: post
   auth-reset-password:
-    handler: stacks/auth/resetPassword/handler
+    handler: src/stacks/auth/resetPassword/index.handler
     events:
       - http:
             path: auth/resetPassword/{key}
@@ -79,7 +79,7 @@ functions:
                   paths:
                      key: true
   graphql:
-    handler: stacks/graphql/handler
+    handler: src/stacks/graphql/index.handler
     events:
       - http:
             path: graphql

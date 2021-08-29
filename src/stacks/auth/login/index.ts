@@ -13,11 +13,10 @@ const responseTransformer = (
    };
 };
 
-const handler = middy()
+export const handler = middy()
    .useJsonBodyParser()
    .use(validate)
    .use(processLogin)
    .useResponseTransformer(responseTransformer)
    .go();
 
-export default handler;
