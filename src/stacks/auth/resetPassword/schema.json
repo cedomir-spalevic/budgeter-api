@@ -10,7 +10,7 @@
       "password": {
          "type": "string",
          "minLength": 8,
-         "pattern": "[A-Z][!#$%&()*+,-./:;<=>?@_]"
+         "pattern": "[1-9A-Z!#$%&()*+,-./:;<=>?@_]"
       }
    },
    "required": ["password", "key"]

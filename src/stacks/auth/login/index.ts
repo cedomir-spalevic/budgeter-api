@@ -19,4 +19,3 @@ export const handler = middy()
    .use(processLogin)
    .useResponseTransformer(responseTransformer)
    .go();
-

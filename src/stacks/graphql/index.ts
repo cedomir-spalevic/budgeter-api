@@ -30,4 +30,3 @@ export const handler = middy()
    .useJsonBodyParser()
    .use(executeGraphqlQuery)
    .go();
-

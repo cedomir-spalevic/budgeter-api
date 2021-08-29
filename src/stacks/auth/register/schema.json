@@ -19,8 +19,8 @@
             },
             "password": {
                "type": "string",
-               "minLength": 1,
-               "pattern": "[A-Z][!#$%&()*+,-./:;<=>?@_]"
+               "minLength": 8,
+               "pattern": "[1-9A-Z!#$%&()*+,-./:;<=>?@_]"
             },
             "phoneNumber": {
                "type": ["string", "null"],
@@ -49,8 +49,8 @@
             },
             "password": {
                "type": "string",
-               "minLength": 1,
-               "pattern": "[A-Z][!#$%&()*+,-./:;<=>?@_]"
+               "minLength": 8,
+               "pattern": "[1-9A-Z!#$%&()*+,-./:;<=>?@_]"
             },
             "phoneNumber": {
                "type": "string",

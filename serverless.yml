@@ -18,6 +18,9 @@ provider:
   memorySize: 128
   timeout: 10
   deploymentPrefix: ''
+  deploymentBucket:
+    tags:
+      budgeter-env: ${opt:stage}
   environment: 
     AWS_PLATFORM_APPLICATION_IOS: ${env:AWS_PLATFORM_APPLICATION_IOS}
     AWS_SNS_TOPIC: ${env:AWS_SNS_TOPIC}
@@ -82,6 +85,12 @@ functions:
                parameters:
                   paths:
                      key: true
+  batch-clear-tokens:
+    handler: src/stacks/batch/clearTokens/index.handler
+  batch-income-notifications:
+    handler: src/stacks/batch/incomeNotifications/index.handler
+  batch-payment-notifications:
+    handler: src/stacks/batch/paymentNotifications/index.handler
   graphql:
     handler: src/stacks/graphql/index.handler
     events:

@@ -7,4 +7,3 @@ export const handler = middy()
    .use(validate)
    .use(processRefresh)
    .go();
-

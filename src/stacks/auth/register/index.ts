@@ -8,4 +8,3 @@ export const handler = middy()
    .use(processRegister)
    .useDefaultResponseStatusCode(201)
    .go();
-
