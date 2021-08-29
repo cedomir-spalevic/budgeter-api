@@ -21,7 +21,7 @@ class BudgeterMongoClient {
 
    private async connect(): Promise<void> {
       await this._client.connect();
-      this._db = this._client.db("budgeter");
+      this._db = this._client.db(process.env.MONGO_DB_NAME);
    }
 
    static async getInstance(): Promise<BudgeterMongoClient> {
