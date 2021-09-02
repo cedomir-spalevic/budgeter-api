@@ -12,19 +12,18 @@ jobs:
          - uses: actions/checkout@v2
          - name: Install NPM dependencies
            run: npm ci
-         - name: Setup ENV
+         - name: Setup .env file
            run: npm run env:dev
-         - name: Test ENV VAR
-           run: echo $AWS_REGION
-         - name: Test ENV
-           run: echo ${{ env.AWS_REGION }}
+         - name: Run dotenv
+           id: dotenv
+           uses: falti/dotenv-action@v0.2.7
          - name: Configure AWS credentials
            id: creds
            uses: aws-actions/configure-aws-credentials@v1
            with:
-              aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
-              aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-              aws-region: ${{ env.AWS_REGION }}
+              aws-access-key-id: ${{ steps.dotenv.outputs.AWS_ACCESS_KEY_ID }}
+              aws-secret-access-key: ${{ steps.dotenv.outputs.AWS_SECRET_ACCESS_KEY }}
+              aws-region: ${{ steps.dotenv.outputs.AWS_REGION }}
          - name: Build code
            run: npm run build
          - name: Deploy
@@ -32,7 +31,7 @@ jobs:
            with:
               args: deploy --stage dev
            env:
-              SERVERLESS_ACCESS_KEY: ${{ env.SERVERLESS_ACCESS_KEY }}
+              SERVERLESS_ACCESS_KEY: ${{ steps.dotenv.outputs.SERVERLESS_ACCESS_KEY }}
               # or if using AWS credentials directly
               # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
               # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
