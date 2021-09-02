@@ -1,10 +1,10 @@
-import { APIKey } from "models/data/apiKey";
-import { Income } from "models/data/income";
-import { OneTimeCode } from "models/data/oneTimeCode";
-import { Payment } from "models/data/payment";
-import { RefreshToken } from "models/data/refreshToken";
-import { User } from "models/data/user";
-import { UserAuth } from "models/data/userAuth";
+import { ApiKey } from "models/schemas/apiKey";
+import { Income } from "models/schemas/income";
+import { OneTimeCode } from "models/schemas/oneTimeCode";
+import { Payment } from "models/schemas/payment";
+import { RefreshToken } from "models/schemas/refreshToken";
+import { User } from "models/schemas/user";
+import { UserAuth } from "models/schemas/userAuth";
 import { Db, MongoClient } from "mongodb";
 import { BudgeterEntityCollection } from "./entityCollection";
 
@@ -14,12 +14,14 @@ class BudgeterMongoClient {
    static instance: BudgeterMongoClient;
 
    constructor() {
-      this._client = new MongoClient(process.env.MONGO_CONNECTION_STRING);
+      this._client = new MongoClient(process.env.MONGO_CONNECTION_STRING, {
+         useUnifiedTopology: true
+      });
    }
 
    private async connect(): Promise<void> {
       await this._client.connect();
-      this._db = this._client.db("budgeter");
+      this._db = this._client.db(process.env.MONGO_DB_NAME);
    }
 
    static async getInstance(): Promise<BudgeterMongoClient> {
@@ -34,9 +36,9 @@ class BudgeterMongoClient {
       await this._client.close();
    };
 
-   public getAPIKeyCollection = () =>
-      new BudgeterEntityCollection<APIKey>(
-         this._db.collection<APIKey>("apiKeys")
+   public getApiKeyCollection = () =>
+      new BudgeterEntityCollection<ApiKey>(
+         this._db.collection<ApiKey>("apiKeys")
       );
 
    public getOneTimeCodeCollection = () =>

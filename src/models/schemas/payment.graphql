@@ -1,0 +1,33 @@
+type Payment {
+   id: ObjectID
+   title: String
+   amount: Float
+   initialDay: Int # day of week
+   initialDate: Int # Day of month
+   initialMonth: Int
+   initialYear: Int
+   recurrence: Recurrence
+   createdOn: DateTime
+   modifiedOn: DateTime
+}
+
+input PaymentInput {
+   title: String!
+   amount: Float!
+   initialDay: Int # day of week
+   initialDate: Int # Day of month
+   initialMonth: Int
+   initialYear: Int
+   recurrence: Recurrence
+}
+
+type Query {
+   payments(limit: Int = 5, skip: Int = 0, search: String): [Payment]
+   paymentById(paymentId: ObjectID!): Payment
+}
+
+type Mutation {
+   createPayment(payment: PaymentInput): Payment
+   deletePayment(paymentId: ObjectID!): ObjectID
+   updatePayment(paymentId: ObjectID!, payment: PaymentInput): Payment
+}

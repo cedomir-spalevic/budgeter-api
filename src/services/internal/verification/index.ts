@@ -1,5 +1,5 @@
-import { OneTimeCodeType } from "models/data/oneTimeCode";
-import { User } from "models/data/user";
+import { OneTimeCodeType } from "models/schemas/oneTimeCode";
+import { User } from "models/schemas/user";
 import { ConfirmationResponse } from "models/responses";
 import EmailVerification from "./email";
 import { IVerification } from "./iVerification";
@@ -15,8 +15,7 @@ export const sendVerification = (
    if (user.email) {
       verification = new EmailVerification();
       emailOrPhone = user.email;
-   }
-   if (user.phoneNumber) {
+   } else if (user.phoneNumber) {
       verification = new PhoneNumberVerification();
       emailOrPhone = user.phoneNumber;
    }

@@ -4,7 +4,9 @@ import { BudgeterError } from "models/errors";
 const transformErrorToResponse = (error: Error) =>
    JSON.stringify({ message: error.message, stack: error.stack });
 
-export const handleErrorResponse = (error: Error): APIGatewayProxyResult => {
+export const handleErrorResponse = async (
+   error: Error
+): Promise<APIGatewayProxyResult> => {
    let statusCode: number;
    let body: string;
    if (error instanceof BudgeterError) {

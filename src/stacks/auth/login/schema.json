@@ -1,0 +1,44 @@
+{
+   "$schema": "http://json-schema.org/draft/2020-12/schema",
+   "$id": "https://cedomir.tech",
+   "type": "object",
+   "anyOf": [
+      {
+         "title": "Email required",
+         "type": "object",
+         "properties": {
+            "password": {
+               "type": "string",
+               "minLength": 1
+            },
+            "phoneNumber": {
+               "type": ["string", "null"],
+               "pattern": "^(\\([0-9]{3}\\))?[0-9]{3}-[0-9]{4}$"
+            },
+            "email": {
+               "type": "string",
+               "format": "email"
+            }
+         },
+         "required": ["password", "email"]
+      },
+      {
+         "title": "Phone number required",
+         "type": "object",
+         "properties": {
+            "password": {
+               "type": "string"
+            },
+            "phoneNumber": {
+               "type": "string",
+               "pattern": "^(\\([0-9]{3}\\))?[0-9]{3}-[0-9]{4}$"
+            },
+            "email": {
+               "type": ["string", "null"],
+               "format": "email"
+            }
+         },
+         "required": ["password", "phoneNumber"]
+      }
+   ]
+}

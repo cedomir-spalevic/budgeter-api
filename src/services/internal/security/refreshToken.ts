@@ -1,4 +1,4 @@
-import { RefreshToken } from "models/data/refreshToken";
+import { RefreshToken } from "models/schemas/refreshToken";
 import { ObjectId } from "mongodb";
 import { getRandomKey } from "./randomKey";
 

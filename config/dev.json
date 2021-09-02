@@ -1,0 +1,13 @@
+{
+   "AWS_ACCESS_KEY_ID": "AKIARDEBV3Y6T2RYF26E",
+   "AWS_SECRET_ACCESS_KEY": "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",
+   "AWS_REGION": "us-east-1",
+   "AWS_PLATFORM_APPLICATION_IOS": "123",
+   "AWS_SNS_TOPIC": "arn:aws:sns:us-east-1:075433893437:budgeter-dev",
+   "MONGO_CONNECTION_STRING": "mongodb+srv://admin:seWi3TfBAbLxriEa@cluster0.vvc2o.mongodb.net/budgeter?retryWrites=true&w=majority",
+   "MONGO_DB_NAME": "budgeter-dev",
+   "SERVERLESS_ACCESS_KEYS": "AKiKuvw5cJit9SLDrvcDQxAMMMTuISdkiPKcjoUtOcQlv",
+   "JWT_KEY": "DNBE2t$cWRWEmsQc7bI0",
+   "JWT_ADMIN_KEY": "7DGZ7?AJ!D3jh$25hjEn",
+   "BUDGETER_API_KEY": "budgeter/478878a316615c8ab6002c2386302797f4d6942b"
+}

@@ -1,4 +1,4 @@
-import { OneTimeCode, OneTimeCodeType } from "models/data/oneTimeCode";
+import { OneTimeCode, OneTimeCodeType } from "models/schemas/oneTimeCode";
 import { ObjectId } from "mongodb";
 import { v4 as uuid } from "uuid";
 

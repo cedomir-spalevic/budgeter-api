@@ -1,0 +1,42 @@
+type User {
+   id: ObjectID!
+   firstName: String!
+   lastName: String!
+   email: String
+   phoneNumber: String
+   isAdmin: Boolean!
+   isMfaVerified: Boolean!
+   createdOn: DateTime!
+   modifiedOn: DateTime!
+   device: UserDevice
+   notificationPreferences: UserNotificationPreferences
+}
+
+type UserNotificationPreferences {
+   incomeNotifications: Boolean
+   paymentNotifications: Boolean
+}
+
+type UserDevice {
+   os: String
+}
+
+input UserInput {
+   firstName: String!
+   lastName: String!
+   email: String
+   phoneNumber: String
+   isAdmin: Boolean!
+   password: String!
+}
+
+type Query {
+   users(limit: Int = 5, skip: Int = 0, search: String): [User]
+   userById(userId: ObjectID!): User
+}
+
+type Mutation {
+   createUser(user: UserInput): User
+   deleteUser(userId: ObjectID!): ObjectID
+   updateUser(userId: ObjectID!, user: UserInput): User
+}

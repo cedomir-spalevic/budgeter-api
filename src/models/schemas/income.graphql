@@ -1,0 +1,33 @@
+type Income {
+   id: ObjectID
+   title: String
+   amount: Float
+   initialDay: Int # day of week
+   initialDate: Int # Day of month
+   initialMonth: Int
+   initialYear: Int
+   recurrence: Recurrence
+   createdOn: DateTime
+   modifiedOn: DateTime
+}
+
+input IncomeInput {
+   title: String!
+   amount: Float!
+   initialDay: Int # day of week
+   initialDate: Int # Day of month
+   initialMonth: Int
+   initialYear: Int
+   recurrence: Recurrence
+}
+
+type Query {
+   incomes(limit: Int = 5, skip: Int = 0, search: String): [Income]
+   incomeById(incomeId: ObjectID!): Income
+}
+
+type Mutation {
+   createIncome(income: IncomeInput): Income
+   deleteIncome(incomeId: ObjectID!): ObjectID
+   updateIncome(incomeId: ObjectID!, income: IncomeInput): Income
+}

@@ -1,0 +1,25 @@
+name: Build, Test
+
+on: pull_request
+
+jobs:
+   build-test:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v2
+         - name: Install NPM dependencies
+           run: npm ci
+         - name: Setup .env file
+           run: npm run env:dev
+         - name: Run dotenv
+           id: dotenv
+           uses: falti/dotenv-action@v0.2.7
+         - name: Configure AWS credentials
+           id: creds
+           uses: aws-actions/configure-aws-credentials@v1
+           with:
+              aws-access-key-id: ${{ steps.dotenv.outputs.AWS_ACCESS_KEY_ID }}
+              aws-secret-access-key: ${{ steps.dotenv.outputs.AWS_SECRET_ACCESS_KEY }}
+              aws-region: ${{ steps.dotenv.outputs.AWS_REGION }}
+         - name: Build code
+           run: npm run build

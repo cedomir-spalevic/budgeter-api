@@ -4,7 +4,7 @@ import { generateOneTimeCode } from "services/internal/security/oneTimeCode";
 import { IVerification } from "./iVerification";
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { sendTextMessage } from "services/external/aws/sns";
-import { OneTimeCodeType } from "models/data/oneTimeCode";
+import { OneTimeCodeType } from "models/schemas/oneTimeCode";
 import { getSmsMessage } from "views/sms";
 
 class PhoneNumberVerification implements IVerification {

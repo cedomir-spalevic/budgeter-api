@@ -1,0 +1,41 @@
+# Redefining this because there is no way to extend a graphql type
+type BudgetIncome {
+   id: ObjectID
+   title: String
+   amount: Float
+   initialDay: Int # day of week
+   initialDate: Int # Day of month
+   initialMonth: Int
+   initialYear: Int
+   recurrence: Recurrence
+   createdOn: DateTime
+   modifiedOn: DateTime
+   dueToday: Boolean
+   numberOfOccurrences: Int
+   totalAmount: Float
+}
+
+type BudgetPayment {
+   id: ObjectID
+   title: String
+   amount: Float
+   initialDay: Int # day of week
+   initialDate: Int # Day of month
+   initialMonth: Int
+   initialYear: Int
+   recurrence: Recurrence
+   createdOn: DateTime
+   modifiedOn: DateTime
+   dueToday: Boolean
+   numberOfOccurrences: Int
+   totalAmount: Float
+}
+
+type Budget {
+   incomes: [BudgetIncome]
+   payments: [BudgetPayment]
+}
+
+type Query {
+   budget(date: Int, month: Int, year: Int): Budget
+}
