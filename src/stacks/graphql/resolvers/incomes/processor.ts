@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { Income, PublicIncome } from "models/schemas/income";
-import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 import { FilterQuery, FindOneOptions, ObjectId, WithId } from "mongodb";
 import { NotFoundError } from "models/errors";
 import { BudgeterEntityCollection } from "services/external/mongodb/entityCollection";
@@ -43,11 +42,6 @@ class IncomesProcessor {
    public async create(request: Partial<Income>): Promise<PublicIncome> {
       const income = await this._collection.create(request);
 
-      const cachingStrategy = new UserBudgetCachingStrategy(
-         BudgetTypeValue.Income
-      );
-      cachingStrategy.delete(income.userId);
-
       return transformResponse(income);
    }
 
@@ -57,11 +51,6 @@ class IncomesProcessor {
          _id: incomeId
       });
       if (!income) throw new NotFoundError("No Income found with the given Id");
-
-      const cachingStrategy = new UserBudgetCachingStrategy(
-         BudgetTypeValue.Income
-      );
-      cachingStrategy.delete(this._userId);
 
       await this._collection.delete(incomeId);
    }
@@ -86,11 +75,6 @@ class IncomesProcessor {
       });
 
       const updatedIncome = await this._collection.update(existingIncome);
-
-      const cachingStrategy = new UserBudgetCachingStrategy(
-         BudgetTypeValue.Income
-      );
-      cachingStrategy.delete(existingIncome.userId);
 
       return transformResponse(updatedIncome);
    }

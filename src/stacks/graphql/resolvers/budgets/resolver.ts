@@ -6,7 +6,7 @@ import { Budget } from "models/schemas/budget";
 import { getIncomes, getPayments } from "./processor";
 
 const resolvers = {
-   getBudget: async (
+   budget: async (
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<Budget> => {

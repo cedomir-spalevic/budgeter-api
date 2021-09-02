@@ -15,8 +15,7 @@ export const sendVerification = (
    if (user.email) {
       verification = new EmailVerification();
       emailOrPhone = user.email;
-   }
-   else if (user.phoneNumber) {
+   } else if (user.phoneNumber) {
       verification = new PhoneNumberVerification();
       emailOrPhone = user.phoneNumber;
    }

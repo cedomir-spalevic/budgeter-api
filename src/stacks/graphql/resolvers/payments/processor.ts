@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { Payment, PublicPayment } from "models/schemas/payment";
-import UserBudgetCachingStrategy from "services/internal/caching/budgets";
 import { FilterQuery, FindOneOptions, ObjectId, WithId } from "mongodb";
 import { NotFoundError } from "models/errors";
 import { BudgeterEntityCollection } from "services/external/mongodb/entityCollection";
 import { GetListQueryStringParameters } from "models/requests";
 import { transformResponse } from "./utils";
-import { BudgetTypeValue } from "models/schemas/budget";
 
 class PaymentsProcessor {
    static instance: PaymentsProcessor;
@@ -43,11 +41,6 @@ class PaymentsProcessor {
    public async create(request: Partial<Payment>): Promise<PublicPayment> {
       const payment = await this._collection.create(request);
 
-      const cachingStrategy = new UserBudgetCachingStrategy(
-         BudgetTypeValue.Payment
-      );
-      cachingStrategy.delete(payment.userId);
-
       return transformResponse(payment);
    }
 
@@ -58,11 +51,6 @@ class PaymentsProcessor {
       });
       if (!payment)
          throw new NotFoundError("No Payment found with the given Id");
-
-      const cachingStrategy = new UserBudgetCachingStrategy(
-         BudgetTypeValue.Payment
-      );
-      cachingStrategy.delete(this._userId);
 
       await this._collection.delete(paymentId);
    }
@@ -87,11 +75,6 @@ class PaymentsProcessor {
       });
 
       const updatedPayment = await this._collection.update(existingPayment);
-
-      const cachingStrategy = new UserBudgetCachingStrategy(
-         BudgetTypeValue.Payment
-      );
-      cachingStrategy.delete(existingPayment.userId);
 
       return transformResponse(updatedPayment);
    }

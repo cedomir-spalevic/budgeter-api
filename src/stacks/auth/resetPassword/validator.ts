@@ -11,7 +11,7 @@ export const validate = (request: BudgeterRequest): PasswordResetRequest => {
    validator.validate(input, schema, { throwError: true });
 
    return {
-      key: body["key"] as string,
-      password: body["password"] as string
+      key: input["key"] as string,
+      password: input["password"] as string
    };
 };
