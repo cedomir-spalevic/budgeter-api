@@ -15,7 +15,7 @@ jobs:
            id: dotenv
            uses: falti/dotenv-action@v0.2.7
          - name: Test ENV VAR
-           run: echo "$AWS_REGION"
+           run: echo "${{ steps.dotenv.outputs.AWS_REGION }}"
            env:
              AWS_REGION: ${{ env.AWS_REGION }}
          - name: Test ENV VAR 2
