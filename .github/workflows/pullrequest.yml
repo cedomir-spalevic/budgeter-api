@@ -12,9 +12,9 @@ jobs:
          - name: Setup ENV
            run: npm run env:dev
          - name: Test ENV VAR
-           run: echo $AWS_REGION
+           run: echo "$AWS_REGION"
          - name: Test ENV
-           run: echo ${{ env.AWS_REGION }}
+           run: echo "${{ env.AWS_REGION }}"
          - name: Configure AWS credentials
            id: creds
            uses: aws-actions/configure-aws-credentials@v1
