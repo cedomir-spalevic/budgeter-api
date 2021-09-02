@@ -9,8 +9,11 @@ jobs:
          - uses: actions/checkout@v2
          - name: Install NPM dependencies
            run: npm ci
-         - name: Setup ENV
+         - name: Setup .env file
            run: npm run env:dev
+         - name: Run dotenv
+           id: dotenv
+           uses: falti/dotenv-action@v0.2.7
          - name: Test ENV VAR
            run: echo "$AWS_REGION"
          - name: Test ENV
