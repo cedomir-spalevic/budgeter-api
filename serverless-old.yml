@@ -153,6 +153,17 @@ stepFunctions:
                            apiKey: ${env:BUDGETER_API_KEY}
                   End: true
 
+resources:
+   Resources:
+      auth-challenge-role:
+         Type: AWS::IAM::Role
+         Properties: 
+            Path: /
+            RoleName: auth-challenge-role
+            Policies:
+               - PolicyName: sendEmail
+
+
 plugins:
    - '@serverless/safeguards-plugin'
    - 'serverless-bundle'
