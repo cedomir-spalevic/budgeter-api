@@ -16,14 +16,21 @@ jobs:
            uses: falti/dotenv-action@v0.2.7
          - name: Test ENV VAR
            run: echo "$AWS_REGION"
+           env:
+             AWS_REGION: ${{ env.AWS_REGION }}
+         - name: Test ENV VAR 2
+           run: echo "$AWS_REGION"
+           env:
+             AWS_REGION: ${{ env.AWS_REGION }}
          - name: Test ENV
            run: echo "${{ env.AWS_REGION }}"
+           env:
+             AWS_REGION: ${{ env.AWS_REGION }}
          - name: Configure AWS credentials
            id: creds
            uses: aws-actions/configure-aws-credentials@v1
            with:
               aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
               aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
-              aws-region: ${{ env.AWS_REGION }}
          - name: Build code
            run: npm run build
