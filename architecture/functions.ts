@@ -10,6 +10,13 @@ const functions: Functions = {
                method: "post"
             }
          }
+      ],
+      iamRoleStatements: [
+         {
+            Effect: "Allow",
+            Action: ["ses:SendEmail", "sns:Publish"],
+            Resource: ["*"]
+         }
       ]
    },
    "auth-challenge-confirmation": {
@@ -28,7 +35,8 @@ const functions: Functions = {
                }
             }
          }
-      ]
+      ],
+      iamRoleStatements: []
    },
    "auth-login": {
       handler: "src/stacks/auth/login/index.handler",
@@ -38,6 +46,13 @@ const functions: Functions = {
                path: "auth/login",
                method: "post"
             }
+         }
+      ],
+      iamRoleStatements: [
+         {
+            Effect: "Allow",
+            Action: ["ses:SendEmail", "sns:Publish"],
+            Resource: ["*"]
          }
       ]
    },
@@ -51,7 +66,8 @@ const functions: Functions = {
                method: "post"
             }
          }
-      ]
+      ],
+      iamRoleStatements: []
    },
    "auth-register": {
       handler: "src/stacks/auth/register/index.handler",
@@ -61,6 +77,13 @@ const functions: Functions = {
                path: "auth/register",
                method: "post"
             }
+         }
+      ],
+      iamRoleStatements: [
+         {
+            Effect: "Allow",
+            Action: ["ses:SendEmail", "sns:Publish"],
+            Resource: ["*"]
          }
       ]
    },
@@ -72,6 +95,13 @@ const functions: Functions = {
                path: "auth/registerDevice",
                method: "post"
             }
+         }
+      ],
+      iamRoleStatements: [
+         {
+            Effect: "Allow",
+            Action: ["sns:CreatePlatformEndpoint", "sns:Subscribe"],
+            Resource: ["*"]
          }
       ]
    },
@@ -91,16 +121,32 @@ const functions: Functions = {
                }
             }
          }
-      ]
+      ],
+      iamRoleStatements: []
    },
    "batch-clear-tokens": {
-      handler: "src/stacks/batch/clearTokens/index.handler"
+      handler: "src/stacks/batch/clearTokens/index.handler",
+      iamRoleStatements: []
    },
    "batch-income-notifications": {
-      handler: "src/stacks/batch/incomeNotifications/index.handler"
+      handler: "src/stacks/batch/incomeNotifications/index.handler",
+      iamRoleStatements: [
+         {
+            Effect: "Allow",
+            Action: ["sns:Publish"],
+            Resource: ["*"]
+         }
+      ]
    },
    "batch-payment-notifications": {
-      handler: "src/stacks/batch/paymentNotifications/index.handler"
+      handler: "src/stacks/batch/paymentNotifications/index.handler",
+      iamRoleStatements: [
+         {
+            Effect: "Allow",
+            Action: ["sns:Publish"],
+            Resource: ["*"]
+         }
+      ]
    },
    "graphql": {
       handler: "src/stacks/graphql/index.handler",
@@ -111,7 +157,8 @@ const functions: Functions = {
                method: "post"
             }
          }
-      ]
+      ],
+      iamRoleStatements: []
    }
 }
 

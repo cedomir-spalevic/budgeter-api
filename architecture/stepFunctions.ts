@@ -1,15 +1,17 @@
-import { StepFunctionsDef } from "../types/serverless";
+import type { StepFunctionsDef } from "serverless/aws";
 
 const stepFunctions: StepFunctionsDef = {
    validate: true,
    stateMachines: {
       "clear-tokens-job": {
-         events: {
-            schedule: {
-               rate: "cron(0 15 * * ? *)",
-               enabled: true
+         events: [
+            {
+               schedule: {
+                  rate: "cron(0 15 * * ? *)",
+                  enabled: true
+               }
             }
-         },
+         ],
          definition: {
             Comment: "Step function to clear any expired tokens",
             StartAt: "InvokeFunction",
@@ -32,12 +34,14 @@ const stepFunctions: StepFunctionsDef = {
          }
       },
       "payment-notifications-job": {
-         events: {
-            schedule: {
-               rate: "cron(0 15 * * ? *)",
-               enabled: true
+         events: [
+            {
+               schedule: {
+                  rate: "cron(0 15 * * ? *)",
+                  enabled: true
+               }
             }
-         },
+         ],
          definition: {
             Comment: "Step function to send any payment notifications",
             StartAt: "InvokeFunction",
@@ -60,12 +64,14 @@ const stepFunctions: StepFunctionsDef = {
          }
       },
       "income-notifications-job": {
-         events: {
-            schedule: {
-               rate: "cron(0 15 * * ? *)",
-               enabled: true
+         events: [
+            {
+               schedule: {
+                  rate: "cron(0 15 * * ? *)",
+                  enabled: true
+               }
             }
-         },
+         ],
          definition: {
             Comment: "Step function to send any income notifications",
             StartAt: "InvokeFunction",

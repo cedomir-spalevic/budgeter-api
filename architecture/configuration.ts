@@ -2,7 +2,8 @@ import providerConfig from "./provider";
 import functionsConfig from "./functions";
 import customConfig from "./custom";
 import stepFunctionsConfig from "./stepFunctions";
-import { Serverless } from "../types/serverless";
+//import poliiciesConfig from "./policies";
+import { Serverless } from "serverless/aws";
 
 const configuration: Serverless = {
    org: "cedomirspalevic",
@@ -18,7 +19,8 @@ const configuration: Serverless = {
       "serverless-bundle",
       "serverless-offline",
       "serverless-step-functions",
-      "serverless-pseudo-parameters"
+      "serverless-pseudo-parameters",
+      "serverless-iam-roles-per-function"
    ],
    stepFunctions: stepFunctionsConfig,
    custom: customConfig
