@@ -2,7 +2,8 @@ import jwt from "jsonwebtoken";
 import { Token } from "models/auth";
 import { TokenVerificationError } from "models/errors";
 
-const deriveKey = (isAdmin?: boolean) => (isAdmin === true ? process.env.JWT_ADMIN_KEY : process.env.JWT_KEY);
+const deriveKey = (isAdmin?: boolean) =>
+   isAdmin === true ? process.env.JWT_ADMIN_KEY : process.env.JWT_KEY;
 
 /**
  * Generate an Access Token and time of expiration

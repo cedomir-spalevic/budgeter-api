@@ -10,20 +10,25 @@ import {
 } from "models/requests";
 import { Token } from "models/auth";
 
-const getAccessTokenFromHeader = (headers: APIGatewayProxyEventHeaders): string => {
+const getAccessTokenFromHeader = (
+   headers: APIGatewayProxyEventHeaders
+): string => {
    let token = headers["Authorization"];
    if (!token) throw new UnauthorizedError();
 
    token = token.replace("Bearer ", "");
    return token;
-}
+};
 
-const attemptAccessTokenDecode = (token: string, tryAsAdmin?: boolean): Token => {
+const attemptAccessTokenDecode = (
+   token: string,
+   tryAsAdmin?: boolean
+): Token => {
    const decodedToken = decodeAccessToken(token, tryAsAdmin);
    if (!decodedToken.userId || !ObjectId.isValid(decodedToken.userId))
       throw new UnauthorizedError();
    return decodedToken;
-}  
+};
 
 export const apiKeyAuth = async (
    event: StepFunctionBatchJobRequest
@@ -56,8 +61,7 @@ export const auth = async (
    let isAdmin = false;
    try {
       decodedToken = attemptAccessTokenDecode(token, false);
-   }
-   catch(error) {
+   } catch (error) {
       // If it fails a second time, return 401
       decodedToken = attemptAccessTokenDecode(token, true);
       isAdmin = true;
@@ -68,4 +72,3 @@ export const auth = async (
       userId: new ObjectId(decodedToken.userId)
    };
 };
-

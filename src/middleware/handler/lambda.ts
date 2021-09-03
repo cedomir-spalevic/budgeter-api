@@ -42,7 +42,7 @@ class Handler {
    ): Promise<BudgeterRequest> => {
       let auth: BudgeterRequestAuth = {
          isAuthenticated: false,
-         isAdmin: false,
+         isAdmin: false
       };
       let body: Form = {};
 
