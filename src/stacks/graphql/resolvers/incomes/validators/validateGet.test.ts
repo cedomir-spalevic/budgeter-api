@@ -6,7 +6,8 @@ import { validate } from "./validateGet";
 
 const getByIdRequest: BudgeterRequest = {
    auth: {
-      isAuthenticated: false
+      isAuthenticated: false,
+      isAdmin: false
    },
    pathParameters: {},
    queryStrings: null,
@@ -14,7 +15,8 @@ const getByIdRequest: BudgeterRequest = {
 };
 const nullRequest: BudgeterRequest = {
    auth: {
-      isAuthenticated: true
+      isAuthenticated: true,
+      isAdmin: false
    },
    pathParameters: null,
    queryStrings: null,
@@ -22,7 +24,8 @@ const nullRequest: BudgeterRequest = {
 };
 const getManyRequest: BudgeterRequest = {
    auth: {
-      isAuthenticated: false
+      isAuthenticated: false,
+      isAdmin: false
    },
    pathParameters: null,
    queryStrings: {},

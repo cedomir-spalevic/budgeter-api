@@ -1,4 +1,3 @@
-import { graphqlAdminAuth } from "middleware/auth";
 import {
    AdminUserRequest,
    BudgeterRequestAuth,
@@ -6,6 +5,7 @@ import {
 } from "models/requests";
 import { AdminPublicUser } from "models/schemas/user";
 import { ObjectId } from "mongodb";
+import { graphqlAdminAuth } from "stacks/graphql/utils/auth";
 import {
    createUser,
    deleteUser,
@@ -20,7 +20,7 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<AdminPublicUser[]> => {
-      await graphqlAdminAuth(context);
+      graphqlAdminAuth(context);
       const queryStringParameters: GetListQueryStringParameters = {
          skip: args["skip"] as number,
          limit: args["limit"] as number
@@ -31,7 +31,7 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<AdminPublicUser> => {
-      await graphqlAdminAuth(context);
+      graphqlAdminAuth(context);
       const userId = args["userId"] as string;
       return getUserById(new ObjectId(userId));
    },
@@ -39,7 +39,7 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<AdminPublicUser> => {
-      await graphqlAdminAuth(context);
+      graphqlAdminAuth(context);
       const input = args["user"] as Record<string, unknown>;
       const request: AdminUserRequest = {
          userId: new ObjectId(input["id"] as string),
@@ -56,7 +56,7 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<AdminPublicUser> => {
-      await graphqlAdminAuth(context);
+      graphqlAdminAuth(context);
       const userId = args["userId"] as string;
       const input = args["user"] as Record<string, unknown>;
       const request: AdminUserRequest = {
@@ -74,7 +74,7 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<ObjectId> => {
-      await graphqlAdminAuth(context);
+      graphqlAdminAuth(context);
       const userId = args["userId"] as string;
       return deleteUser(new ObjectId(userId));
    }

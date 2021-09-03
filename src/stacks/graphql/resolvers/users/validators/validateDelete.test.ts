@@ -6,7 +6,8 @@ import { validate } from "./validateDelete";
 
 const request: BudgeterRequest = {
    auth: {
-      isAuthenticated: false
+      isAuthenticated: false,
+      isAdmin: false
    },
    pathParameters: {},
    queryStrings: null,
