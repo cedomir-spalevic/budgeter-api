@@ -1,9 +1,9 @@
-import { graphqlAdminAuth } from "middleware/auth";
 import { ObjectId } from "mongodb";
 import { validateDelete } from "./validators/validateDelete";
 import ApiKeyProcessor from "./processor";
 import { BudgeterRequestAuth } from "models/requests";
 import { PublicApiKey } from "models/schemas/apiKey";
+import { graphqlAdminAuth } from "stacks/graphql/utils/auth";
 
 // Admin access only
 const resolvers = {
@@ -11,7 +11,7 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<PublicApiKey[]> => {
-      await graphqlAdminAuth(context);
+      graphqlAdminAuth(context);
       const apiKeyProcessor = await ApiKeyProcessor.getInstance();
       return apiKeyProcessor.get();
    },
@@ -19,7 +19,7 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<PublicApiKey> => {
-      await graphqlAdminAuth(context);
+      graphqlAdminAuth(context);
       const apiKeyProcessor = await ApiKeyProcessor.getInstance();
       return apiKeyProcessor.create();
    },
@@ -27,7 +27,7 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<ObjectId> => {
-      await graphqlAdminAuth(context);
+      graphqlAdminAuth(context);
       const { apiKeyId } = validateDelete(args);
       const apiKeyProcessor = await ApiKeyProcessor.getInstance();
       return apiKeyProcessor.delete(apiKeyId);

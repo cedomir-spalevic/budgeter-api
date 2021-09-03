@@ -46,10 +46,11 @@ export const processPasswordReset = async (
    // to expire after 5 minutes or so.
    await refreshTokenService.deleteAll({ userId: oneTimeCode.userId });
 
-   const refreshToken = generateRefreshToken(oneTimeCode.userId);
+   const refreshToken = generateRefreshToken(oneTimeCode.userId, user.isAdmin);
    const accessToken = generateAccessToken(
       oneTimeCode.userId.toHexString(),
-      refreshToken.token
+      refreshToken.token,
+      user.isAdmin
    );
 
    await refreshTokenService.create(refreshToken);

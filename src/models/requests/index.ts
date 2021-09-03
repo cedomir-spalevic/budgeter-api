@@ -45,6 +45,7 @@ export interface BudgeterRequest {
 
 export interface BudgeterRequestAuth {
    isAuthenticated: boolean;
+   isAdmin: boolean;
    userId?: ObjectId;
 }
 

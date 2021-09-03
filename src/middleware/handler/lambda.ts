@@ -41,7 +41,8 @@ class Handler {
       event: APIGatewayProxyEvent
    ): Promise<BudgeterRequest> => {
       let auth: BudgeterRequestAuth = {
-         isAuthenticated: false
+         isAuthenticated: false,
+         isAdmin: false
       };
       let body: Form = {};
 
