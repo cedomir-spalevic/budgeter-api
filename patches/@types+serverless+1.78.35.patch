@@ -1,0 +1,77 @@
+diff --git a/node_modules/@types/serverless/plugins/aws/provider/awsProvider.d.ts b/node_modules/@types/serverless/plugins/aws/provider/awsProvider.d.ts
+index b8c360f..9f1e4a8 100644
+--- a/node_modules/@types/serverless/plugins/aws/provider/awsProvider.d.ts
++++ b/node_modules/@types/serverless/plugins/aws/provider/awsProvider.d.ts
+@@ -23,8 +23,51 @@ declare namespace Aws {
+         app?: string | undefined;
+         tenant?: string | undefined;
+         custom?: Custom | undefined;
++        stepFunctions?: StepFunctionsDef | undefined;
+     }
+ 
++    interface StepFunctionsDef {
++      validate: boolean;
++      stateMachines: StateMachines;
++   }
++   
++   interface StateMachines {
++      [name: string]: StateMachine;
++   }
++   
++   interface StateMachine {
++      events: StateMachineEvents[];
++      definition: StateMachineDefinition;
++   }
++   
++   interface StateMachineEvents {
++      schedule?: StateMachineSchedule;
++   }
++   
++   interface StateMachineSchedule {
++      rate: string;
++      enabled: boolean;
++   }
++   
++   interface StateMachineDefinition {
++      Comment: string;
++      StartAt: string;
++      States: StateMachineStates;
++   }
++   
++   interface StateMachineStates {
++      InvokeFunction?: StateMachineFunctionInvocation;
++   }
++   
++   interface StateMachineFunctionInvocation {
++      Type: string;
++      Resource: StateMachineResource,
++      Parameters: any;
++      End: boolean;
++   }
++   
++   type StateMachineResource = string | { "Fn::GetAtt": [string, "Arn"] } | { "Fn::Join": [string, StateMachineResource[]] };
++
+     interface Service {
+         name: string;
+         /** @deprecated in favor of `kmsKeyArn` at the provider level  */
+@@ -560,6 +603,12 @@ declare namespace Aws {
+         localMountPath: string;
+     }
+ 
++    interface AwsFunctionRoleStatement {
++       Effect: string;
++       Action: string[];
++       Resource: string[];
++    }
++
+     interface AwsFunction {
+         name?: string | undefined;
+         description?: string | undefined;
+@@ -585,6 +634,7 @@ declare namespace Aws {
+         destinations?: Destinations | undefined;
+         events?: Event[] | undefined;
+         disableLogs?: boolean | undefined;
++        iamRoleStatements?: AwsFunctionRoleStatement[] | undefined;
+     }
+ 
+     interface AwsFunctionHandler extends AwsFunction {
