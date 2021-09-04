@@ -3,6 +3,7 @@ import BudgetResolvers from "../resolvers/budgets/resolver";
 import IncomeResolvers from "../resolvers/incomes/resolver";
 import MeResolvers from "../resolvers/me/resolver";
 import PaymentResolvers from "../resolvers/payments/resolver";
+import PaymentTagResolvers from "../resolvers/paymentTags/resolver";
 import UserResolvers from "../resolvers/users/resolver";
 
 const resolvers = {
@@ -11,6 +12,7 @@ const resolvers = {
    ...IncomeResolvers,
    ...MeResolvers,
    ...PaymentResolvers,
+   ...PaymentTagResolvers,
    ...UserResolvers
 };
 
