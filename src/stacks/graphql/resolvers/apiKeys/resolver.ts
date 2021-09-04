@@ -1,5 +1,4 @@
 import { ObjectId } from "mongodb";
-import { validateDelete } from "./validators/validateDelete";
 import ApiKeyProcessor from "./processor";
 import { BudgeterRequestAuth } from "models/requests";
 import { PublicApiKey } from "models/schemas/apiKey";
@@ -28,9 +27,8 @@ const resolvers = {
       context: BudgeterRequestAuth
    ): Promise<ObjectId> => {
       graphqlAdminAuth(context);
-      const { apiKeyId } = validateDelete(args);
       const apiKeyProcessor = await ApiKeyProcessor.getInstance();
-      return apiKeyProcessor.delete(apiKeyId);
+      return apiKeyProcessor.delete(new ObjectId(args["id"] as string));
    }
 };
 

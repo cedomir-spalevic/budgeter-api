@@ -1,0 +1,23 @@
+{
+   "$schema": "http://json-schema.org/draft/2020-12/schema",
+   "$id": "https://cedomir.tech",
+   "type": "object",
+   "properties": {
+      "date": {
+         "type": "number",
+         "minimum": 1,
+         "maximum": 31
+      },
+      "month": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 11
+      },
+      "year": {
+         "type": "number",
+         "minimum": -999999,
+         "maximum": 999999
+      }
+   },
+   "required": ["date", "month", "year"]
+}

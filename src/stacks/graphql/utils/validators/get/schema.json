@@ -1,0 +1,19 @@
+{
+   "$schema": "http://json-schema.org/draft/2020-12/schema",
+   "$id": "https://cedomir.tech",
+   "type": "object",
+   "properties": {
+      "limit": {
+         "type": "number",
+         "minimum": 0
+      },
+      "skip": {
+         "type": "number",
+         "minimum": 0
+      },
+      "search": {
+         "type": "string"
+      }
+   },
+   "required": ["limit", "skip"]
+}

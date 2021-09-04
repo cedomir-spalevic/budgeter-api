@@ -1,25 +1,21 @@
-import {
-   BudgeterRequestAuth,
-   GetListQueryStringParameters
-} from "models/requests";
-import { Payment, PublicPayment } from "models/schemas/payment";
-import { Recurrence } from "models/schemas/recurrence";
+import { BudgeterRequestAuth } from "models/requests";
+import { PublicPayment } from "models/schemas/payment";
 import { ObjectId } from "mongodb";
 import PaymentsProcessor from "./processor";
+import { validate as validateGet } from "../../utils/validators/get";
+import { validate as validateCreate } from "./validators/create";
+import { validate as validateUpdate } from "./validators/update";
 
 const resolvers = {
    payments: async (
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<PublicPayment[]> => {
-      const queryStringParameters: GetListQueryStringParameters = {
-         skip: args["skip"] as number,
-         limit: args["limit"] as number
-      };
+      const filters = validateGet(args);
       const paymentsProcessor = await PaymentsProcessor.getInstance(
          context.userId
       );
-      return paymentsProcessor.get(queryStringParameters);
+      return paymentsProcessor.get(filters);
    },
    paymentById: async (
       args: Record<string, unknown>,
@@ -36,15 +32,7 @@ const resolvers = {
       context: BudgeterRequestAuth
    ): Promise<PublicPayment> => {
       const input = args["income"] as Record<string, unknown>;
-      const request: Partial<Payment> = {
-         title: input["title"] as string,
-         amount: input["amount"] as number,
-         initialDay: input["initialDay"] as number,
-         initialDate: input["initialDate"] as number,
-         initialMonth: input["initialMonth"] as number,
-         initialYear: input["initialYear"] as number,
-         recurrence: input["recurrence"] as Recurrence
-      };
+      const request = validateCreate(input);
       const paymentsProcessor = await PaymentsProcessor.getInstance(
          context.userId
       );
@@ -54,17 +42,9 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<PublicPayment> => {
-      const paymentId = args["paymentId"] as string;
+      const paymentId = args["id"] as string;
       const input = args["payment"] as Record<string, unknown>;
-      const request: Partial<Payment> = {
-         title: input["title"] as string,
-         amount: input["amount"] as number,
-         initialDay: input["initialDay"] as number,
-         initialDate: input["initialDate"] as number,
-         initialMonth: input["initialMonth"] as number,
-         initialYear: input["initialYear"] as number,
-         recurrence: input["recurrence"] as Recurrence
-      };
+      const request = validateUpdate(input);
       const paymentsProcessor = await PaymentsProcessor.getInstance(
          context.userId
       );

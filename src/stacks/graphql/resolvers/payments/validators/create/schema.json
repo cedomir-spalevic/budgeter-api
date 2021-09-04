@@ -1,0 +1,45 @@
+{
+   "$schema": "http://json-schema.org/draft/2020-12/schema",
+   "$id": "https://cedomir.tech",
+   "type": "object",
+   "properties": {
+      "title": {
+         "type": "string"
+      },
+      "amount": {
+         "type": "number"
+      },
+      "initialDay": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 6
+      },
+      "intialDate": {
+         "type": "number",
+         "minimum": 1,
+         "maximum": 31
+      },
+      "initialMonth": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 11
+      },
+      "initialYear": {
+         "type": "number",
+         "minimum": -999999,
+         "maximum": 999999
+      },
+      "recurrence": {
+         "type": "string",
+         "enum": ["oneTime", "daily", "weekly", "biweekly", "monthly", "yearly"]
+      }
+   },
+   "required": [
+      "title",
+      "amount",
+      "initialDay",
+      "intialDate",
+      "intialMonth",
+      "initialYear"
+   ]
+}
