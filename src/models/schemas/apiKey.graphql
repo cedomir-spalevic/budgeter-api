@@ -9,5 +9,5 @@ type Query {
 
 type Mutation {
    createApiKey: ApiKey
-   deleteApiKey(apiKeyId: ObjectID): ObjectID
+   deleteApiKey(id: ObjectID): ObjectID
 }

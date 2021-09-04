@@ -1,31 +1,27 @@
-import {
-   BudgeterRequestAuth,
-   GetListQueryStringParameters
-} from "models/requests";
-import { Income, PublicIncome } from "models/schemas/income";
-import { Recurrence } from "models/schemas/recurrence";
+import { BudgeterRequestAuth } from "models/requests";
+import { PublicIncome } from "models/schemas/income";
 import { ObjectId } from "mongodb";
 import IncomesProcessor from "./processor";
+import { validate as validateGet } from "../../utils/validators/get";
+import { validate as validateCreate } from "./validators/create";
+import { validate as validateUpdate } from "./validators/update";
 
 const resolvers = {
    incomes: async (
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<PublicIncome[]> => {
-      const queryStringParameters: GetListQueryStringParameters = {
-         skip: args["skip"] as number,
-         limit: args["limit"] as number
-      };
+      const filters = validateGet(args);
       const incomesProcessor = await IncomesProcessor.getInstance(
          context.userId
       );
-      return incomesProcessor.get(queryStringParameters);
+      return incomesProcessor.get(filters);
    },
    incomeById: async (
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<PublicIncome> => {
-      const incomeId = args["incomeId"] as string;
+      const incomeId = args["id"] as string;
       const incomesProcessor = await IncomesProcessor.getInstance(
          context.userId
       );
@@ -36,15 +32,7 @@ const resolvers = {
       context: BudgeterRequestAuth
    ): Promise<PublicIncome> => {
       const input = args["income"] as Record<string, unknown>;
-      const request: Partial<Income> = {
-         title: input["title"] as string,
-         amount: input["amount"] as number,
-         initialDay: input["initialDay"] as number,
-         initialDate: input["initialDate"] as number,
-         initialMonth: input["initialMonth"] as number,
-         initialYear: input["initialYear"] as number,
-         recurrence: input["recurrence"] as Recurrence
-      };
+      const request = validateCreate(input);
       const incomesProcessor = await IncomesProcessor.getInstance(
          context.userId
       );
@@ -54,17 +42,9 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<PublicIncome> => {
-      const incomeId = args["incomeId"] as string;
+      const incomeId = args["id"] as string;
       const input = args["income"] as Record<string, unknown>;
-      const request: Partial<Income> = {
-         title: input["title"] as string,
-         amount: input["amount"] as number,
-         initialDay: input["initialDay"] as number,
-         initialDate: input["initialDate"] as number,
-         initialMonth: input["initialMonth"] as number,
-         initialYear: input["initialYear"] as number,
-         recurrence: input["recurrence"] as Recurrence
-      };
+      const request = validateUpdate(input);
       const incomesProcessor = await IncomesProcessor.getInstance(
          context.userId
       );
@@ -74,7 +54,7 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<ObjectId> => {
-      const incomeId = args["incomeId"] as string;
+      const incomeId = args["id"] as string;
       const incomesProcessor = await IncomesProcessor.getInstance(
          context.userId
       );

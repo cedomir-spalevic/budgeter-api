@@ -1,6 +1,7 @@
 import { BudgeterRequestAuth } from "models/requests";
 import { PublicUser, User } from "models/schemas/user";
 import UsersProcessor from "./processor";
+import { validate } from "./validators";
 
 const resolvers = {
    me: async (
@@ -15,21 +16,7 @@ const resolvers = {
       context: BudgeterRequestAuth
    ): Promise<PublicUser> => {
       const meInput = args["me"] as Record<string, unknown>;
-      const notificationPreferencesInput = meInput[
-         "notificationPreferences"
-      ] as Record<string, unknown>;
-      const input: Partial<User> = {
-         firstName: meInput["firstName"] as string,
-         lastName: meInput["lastName"] as string,
-         notificationPreferences: {
-            incomeNotifications: notificationPreferencesInput[
-               "incomeNotifications"
-            ] as boolean,
-            paymentNotifications: notificationPreferencesInput[
-               "paymentNotifications"
-            ] as boolean
-         }
-      };
+      const input = validate(meInput);
       const usersProcessor = await UsersProcessor.getInstance(context.userId);
       return await usersProcessor.update(input);
    }

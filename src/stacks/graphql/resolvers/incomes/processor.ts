@@ -6,7 +6,6 @@ import { NotFoundError } from "models/errors";
 import { BudgeterEntityCollection } from "services/external/mongodb/entityCollection";
 import { GetListQueryStringParameters } from "models/requests";
 import { transformResponse } from "./utils";
-import { BudgetTypeValue } from "models/schemas/budget";
 
 class IncomesProcessor {
    static instance: IncomesProcessor;

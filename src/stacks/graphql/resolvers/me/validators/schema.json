@@ -1,0 +1,29 @@
+{
+   "$schema": "http://json-schema.org/draft/2020-12/schema",
+   "$id": "https://cedomir.tech",
+   "type": "object",
+   "properties": {
+      "firstName": {
+         "type": "string",
+         "minLength": 1,
+         "maxLength": 100
+      },
+      "lastName": {
+         "type": "string",
+         "minLength": 1,
+         "maxLength": 100
+      },
+      "notificationPreferences": {
+         "type": "object",
+         "properties": {
+            "incomeNotifications": {
+               "type": "boolean"
+            },
+            "paymentNotifications": {
+               "type": "boolean"
+            }
+         }
+      }
+   },
+   "required": []
+}

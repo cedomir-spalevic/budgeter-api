@@ -23,11 +23,11 @@ input IncomeInput {
 
 type Query {
    incomes(limit: Int = 5, skip: Int = 0, search: String): [Income]
-   incomeById(incomeId: ObjectID!): Income
+   incomeById(id: ObjectID!): Income
 }
 
 type Mutation {
    createIncome(income: IncomeInput): Income
-   deleteIncome(incomeId: ObjectID!): ObjectID
-   updateIncome(incomeId: ObjectID!, income: IncomeInput): Income
+   deleteIncome(id: ObjectID!): ObjectID
+   updateIncome(id: ObjectID!, income: IncomeInput): Income
 }

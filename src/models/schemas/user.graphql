@@ -32,11 +32,11 @@ input UserInput {
 
 type Query {
    users(limit: Int = 5, skip: Int = 0, search: String): [User]
-   userById(userId: ObjectID!): User
+   userById(id: ObjectID!): User
 }
 
 type Mutation {
    createUser(user: UserInput): User
-   deleteUser(userId: ObjectID!): ObjectID
-   updateUser(userId: ObjectID!, user: UserInput): User
+   deleteUser(id: ObjectID!): ObjectID
+   updateUser(id: ObjectID!, user: UserInput): User
 }
