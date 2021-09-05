@@ -7,11 +7,16 @@ import { validate as validateGet } from "../../utils/validators/get";
 
 // Admin access only
 const resolvers = {
+   PaymentTag: async (args: Record<string, unknown>, context: BudgeterRequestAuth): Promise<PublicPaymentTag> => {
+      console.log("in tags")
+      return { id: "something", tag: "something", createdOn: new Date(), modifiedOn: new Date() }
+   },
    paymentTags: async (
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<PublicPaymentTag[]> => {
       graphqlAdminAuth(context);
+      console.log("here");
       const filters = validateGet(args);
       const paymentTagsProcessor = await PaymentTagsProcessor.getInstance();
       return paymentTagsProcessor.get(filters);

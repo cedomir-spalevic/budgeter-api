@@ -21,18 +21,18 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<PublicPayment> => {
-      const paymentId = args["paymentId"] as string;
+      const id = args["id"] as string;
       const paymentsProcessor = await PaymentsProcessor.getInstance(
          context.userId
       );
-      return paymentsProcessor.getById(new ObjectId(paymentId));
+      return paymentsProcessor.getById(new ObjectId(id));
    },
    createPayment: async (
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<PublicPayment> => {
-      const input = args["income"] as Record<string, unknown>;
-      const request = validateCreate(input);
+      const input = args["payment"] as Record<string, unknown>;
+      const request = await validateCreate(input);
       const paymentsProcessor = await PaymentsProcessor.getInstance(
          context.userId
       );
@@ -42,24 +42,25 @@ const resolvers = {
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<PublicPayment> => {
-      const paymentId = args["id"] as string;
+      const id = args["id"] as string;
       const input = args["payment"] as Record<string, unknown>;
-      const request = validateUpdate(input);
+      const request = await validateUpdate(input);
       const paymentsProcessor = await PaymentsProcessor.getInstance(
          context.userId
       );
-      return await paymentsProcessor.update(new ObjectId(paymentId), request);
+      await paymentsProcessor.update(new ObjectId(id), request);
+      return await paymentsProcessor.getById(new ObjectId(id));
    },
    deletePayment: async (
       args: Record<string, unknown>,
       context: BudgeterRequestAuth
    ): Promise<ObjectId> => {
-      const paymentId = args["paymentId"] as string;
+      const id = args["id"] as string;
       const paymentsProcessor = await PaymentsProcessor.getInstance(
          context.userId
       );
-      await paymentsProcessor.delete(new ObjectId(paymentId));
-      return new ObjectId(paymentId);
+      await paymentsProcessor.delete(new ObjectId(id));
+      return new ObjectId(id);
    }
 };
 

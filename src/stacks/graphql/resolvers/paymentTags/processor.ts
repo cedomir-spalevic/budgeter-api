@@ -62,6 +62,16 @@ class PaymentTagsProcessor {
 
       return paymentTags.map(transformResponse);
    }
+
+   public async getById(id: ObjectId): Promise<PublicPaymentTag> {
+      const query: FilterQuery<PaymentTag> = {
+         _id: id
+      };
+      const paymentTag = await this._collection.find(query);
+      if (!paymentTag) throw new NotFoundError(`No Payment Tag found with the Id: ${id}`);
+
+      return transformResponse(paymentTag);
+   }
 }
 
 export default {
