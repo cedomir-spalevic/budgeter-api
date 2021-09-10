@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import BudgeterMongoClient from "services/external/mongodb/client";
 import { Payment, PublicPayment } from "models/schemas/payment";
-import { FilterQuery, FindOneOptions, ObjectId, WithId } from "mongodb";
+import { FilterQuery, ObjectId, WithId } from "mongodb";
 import { NotFoundError } from "models/errors";
 import { BudgeterEntityCollection } from "services/external/mongodb/entityCollection";
 import { GetListQueryStringParameters } from "models/requests";
@@ -58,7 +58,7 @@ class PaymentsProcessor {
    public async update(
       paymentId: ObjectId,
       request: Partial<WithId<Payment>>
-   ): Promise<PublicPayment> {
+   ): Promise<void> {
       const existingPayment: any = await this._collection.find({
          userId: this._userId,
          _id: paymentId
@@ -73,45 +73,71 @@ class PaymentsProcessor {
          )
             existingPayment[field] = request[field];
       });
+      if(request["tags"]) {
+         existingPayment["tags"] = request["tags"];
+      }
 
-      const updatedPayment = await this._collection.update(existingPayment);
-
-      return transformResponse(updatedPayment);
+      await this._collection.update(existingPayment);
    }
 
    public async get(
-      queryStringParameters: GetListQueryStringParameters
+      filters: GetListQueryStringParameters
    ): Promise<PublicPayment[]> {
-      const userPaymentsQuery: FilterQuery<Payment> = {
-         userId: this._userId
-      };
-      if (queryStringParameters.search) {
-         userPaymentsQuery.title = {
-            $regex: queryStringParameters.search,
-            $options: "$I"
-         };
+      const match: Record<string, FilterQuery<Payment>> = {
+         $match: {
+            userId: this._userId
+         }
       }
-      const queryOptions: FindOneOptions<Payment> = {
-         limit: queryStringParameters.limit,
-         skip: queryStringParameters.skip
-      };
-      const payments = await this._collection.findMany(
-         userPaymentsQuery,
-         queryOptions
-      );
+      if(filters.search) {
+         match["$match"].title = {
+            $regex: filters.search,
+            $options: "$I"
+         }
+      }
+      const pipeline: Record<string, unknown>[] = [
+         match,
+         {
+            $skip: filters.skip
+         },
+         {
+            $limit: filters.limit
+         },
+         {
+            $lookup: {
+               from: "paymentTags",
+               localField: "tags",
+               foreignField: "id",
+               as: "tags"
+            }
+         }
+      ];
+      const payments = await this._collection.aggregate(pipeline);
 
       return payments.map(transformResponse);
    }
 
    public async getById(paymentId: ObjectId): Promise<PublicPayment> {
-      const payment = await this._collection.find({
-         userId: this._userId,
-         _id: paymentId
-      });
-      if (!payment)
+      const pipeline: Record<string, unknown>[] = [
+         {
+            $match: {
+               userId: this._userId,
+               _id: paymentId
+            }
+         },
+         {
+            $lookup: {
+               from: "paymentTags",
+               localField: "tags",
+               foreignField: "id",
+               as: "tags"
+            }
+         }
+      ];
+      const payments = await this._collection.aggregate(pipeline);
+      if (payments.length !== 1)
          throw new NotFoundError("No Payment found with the given Id");
 
-      return transformResponse(payment);
+      return transformResponse(payments[0]);
    }
 }
 

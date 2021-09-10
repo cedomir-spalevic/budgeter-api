@@ -1,15 +1,17 @@
 import { Payment, PublicPayment } from "models/schemas/payment";
 import { WithId } from "mongodb";
+import { transformResponse as transformPaymentTags } from "../../paymentTags/utils";
 
-export const transformResponse = (income: WithId<Payment>): PublicPayment => ({
-   id: income._id.toHexString(),
-   title: income.title,
-   amount: income.amount,
-   initialDay: income.initialDay,
-   initialDate: income.initialDate,
-   initialMonth: income.initialMonth,
-   initialYear: income.initialYear,
-   recurrence: income.recurrence,
-   createdOn: income.createdOn,
-   modifiedOn: income.modifiedOn
+export const transformResponse = (payment: WithId<Payment>): PublicPayment => ({
+   id: payment._id.toHexString(),
+   title: payment.title,
+   amount: payment.amount,
+   initialDay: payment.initialDay,
+   initialDate: payment.initialDate,
+   initialMonth: payment.initialMonth,
+   initialYear: payment.initialYear,
+   recurrence: payment.recurrence,
+   createdOn: payment.createdOn,
+   modifiedOn: payment.modifiedOn,
+   tags: payment.tags.map(transformPaymentTags)
 });

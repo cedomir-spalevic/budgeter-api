@@ -1,0 +1,17 @@
+type PaymentTag {
+   id: ObjectID
+   tag: String
+}
+
+input PaymentTagInput {
+   tag: String
+}
+
+type Query {
+   paymentTags(limit: Int = 5, skip: Int = 0, search: String): [PaymentTag]
+}
+
+type Mutation {
+   createPaymentTag(paymentTag: PaymentTagInput): PaymentTag
+   deletePaymentTag(id: ObjectID!): ObjectID
+}

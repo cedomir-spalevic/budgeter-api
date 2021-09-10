@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { IEntity } from "./ientity";
+import { PaymentTag } from "./paymentTags";
 import { Recurrence } from "./recurrence";
 
 export interface Payment extends IEntity {
@@ -11,6 +12,7 @@ export interface Payment extends IEntity {
    initialMonth: number;
    initialYear: number;
    recurrence: Recurrence;
+   tags?: Partial<PaymentTag>[];
 }
 
 export interface PublicPayment {
@@ -24,4 +26,5 @@ export interface PublicPayment {
    recurrence: Recurrence;
    createdOn: Date;
    modifiedOn: Date;
+   tags?: Partial<PaymentTag>[];
 }

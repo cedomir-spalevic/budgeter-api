@@ -1,5 +1,6 @@
 import {
    Collection,
+   CollectionAggregationOptions,
    FilterQuery,
    FindOneOptions,
    ObjectId,
@@ -16,6 +17,10 @@ export class BudgeterEntityCollection<T extends IEntity> {
 
    constructor(collection: Collection<T>) {
       this.collection = collection;
+   }
+
+   public async aggregate(pipeline?: Record<string, unknown>[], options?: CollectionAggregationOptions): Promise<T[]> {
+      return await this.collection.aggregate(pipeline, options).toArray();
    }
 
    public async create(entity: Partial<T>): Promise<WithId<T>> {

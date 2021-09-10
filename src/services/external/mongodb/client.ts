@@ -2,6 +2,7 @@ import { ApiKey } from "models/schemas/apiKey";
 import { Income } from "models/schemas/income";
 import { OneTimeCode } from "models/schemas/oneTimeCode";
 import { Payment } from "models/schemas/payment";
+import { PaymentTag } from "models/schemas/paymentTags";
 import { RefreshToken } from "models/schemas/refreshToken";
 import { User } from "models/schemas/user";
 import { UserAuth } from "models/schemas/userAuth";
@@ -67,6 +68,11 @@ class BudgeterMongoClient {
    public getPaymentsCollection = () =>
       new BudgeterEntityCollection<Payment>(
          this._db.collection<Payment>("payments")
+      );
+
+   public getPaymentTagsCollection = () =>
+      new BudgeterEntityCollection<PaymentTag>(
+         this._db.collection<PaymentTag>("paymentTags")
       );
 }
 

@@ -9,16 +9,18 @@ type Payment {
    recurrence: Recurrence
    createdOn: DateTime
    modifiedOn: DateTime
+   tags: [PaymentTag]
 }
 
 input PaymentInput {
-   title: String!
-   amount: Float!
+   title: String
+   amount: Float
    initialDay: Int # day of week
    initialDate: Int # Day of month
    initialMonth: Int
    initialYear: Int
    recurrence: Recurrence
+   tags: [ObjectID]
 }
 
 type Query {
