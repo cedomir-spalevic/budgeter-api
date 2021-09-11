@@ -30,6 +30,6 @@ const resolvers = {
       const apiKeyProcessor = await ApiKeyProcessor.getInstance();
       return apiKeyProcessor.delete(new ObjectId(args["id"] as string));
    }
-}
+};
 
 export default resolvers;

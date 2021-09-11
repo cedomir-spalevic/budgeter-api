@@ -1,7 +1,7 @@
 import { middy } from "middleware/handler/lambda";
 import { graphql } from "graphql";
 import { auth } from "middleware/auth";
-import { UnauthorizedError } from "models/errors";
+import { UnauthorizedError, ValidationError } from "models/errors";
 import schema from "./utils/schema";
 import resolvers from "./utils/resolvers";
 import { BudgeterRequest } from "models/requests";
@@ -21,6 +21,7 @@ const executeGraphqlQuery = async (request: BudgeterRequest) => {
       if (executionResult.errors.some((e) => e.message === "Unauthorized")) {
          throw new UnauthorizedError();
       }
+      throw new ValidationError(executionResult.errors.map((e) => e.message));
    }
    return executionResult;
 };

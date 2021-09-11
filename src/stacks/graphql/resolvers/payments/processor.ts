@@ -73,7 +73,7 @@ class PaymentsProcessor {
          )
             existingPayment[field] = request[field];
       });
-      if(request["tags"]) {
+      if (request["tags"]) {
          existingPayment["tags"] = request["tags"];
       }
 
@@ -87,12 +87,12 @@ class PaymentsProcessor {
          $match: {
             userId: this._userId
          }
-      }
-      if(filters.search) {
+      };
+      if (filters.search) {
          match["$match"].title = {
             $regex: filters.search,
             $options: "$I"
-         }
+         };
       }
       const pipeline: Record<string, unknown>[] = [
          match,

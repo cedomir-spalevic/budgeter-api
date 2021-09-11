@@ -68,7 +68,8 @@ class PaymentTagsProcessor {
          _id: id
       };
       const paymentTag = await this._collection.find(query);
-      if (!paymentTag) throw new NotFoundError(`No Payment Tag found with the Id: ${id}`);
+      if (!paymentTag)
+         throw new NotFoundError(`No Payment Tag found with the Id: ${id}`);
 
       return transformResponse(paymentTag);
    }

@@ -14,6 +14,15 @@ export class GeneralError extends BudgeterError {
    }
 }
 
+export class ValidationError extends BudgeterError {
+   public validationErrors;
+
+   constructor(validationErrors: string[]) {
+      super("Validation errors occurred", 400);
+      this.validationErrors = validationErrors;
+   }
+}
+
 export class InvalidJSONBodyError extends GeneralError {
    constructor() {
       super("JSON body is not valid");
