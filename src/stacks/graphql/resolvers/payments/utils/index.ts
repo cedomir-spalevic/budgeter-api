@@ -11,6 +11,10 @@ export const transformResponse = (payment: WithId<Payment>): PublicPayment => ({
    initialMonth: payment.initialMonth,
    initialYear: payment.initialYear,
    recurrence: payment.recurrence,
+   endDay: payment.endDay,
+   endDate: payment.endDate,
+   endMonth: payment.endMonth,
+   endYear: payment.endYear,
    createdOn: payment.createdOn,
    modifiedOn: payment.modifiedOn,
    tags: payment.tags.map(transformPaymentTags)

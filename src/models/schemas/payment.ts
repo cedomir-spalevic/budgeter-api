@@ -11,6 +11,10 @@ export interface Payment extends IEntity {
    initialDate: number; // Day of month
    initialMonth: number;
    initialYear: number;
+   endDay?: number | null;
+   endDate?: number | null;
+   endMonth?: number | null;
+   endYear?: number | null;
    recurrence: Recurrence;
    tags?: Partial<PaymentTag>[];
 }
@@ -23,6 +27,10 @@ export interface PublicPayment {
    initialDate: number; // Day of month
    initialMonth: number;
    initialYear: number;
+   endDay: number | null;
+   endDate: number | null;
+   endMonth: number | null;
+   endYear: number | null;
    recurrence: Recurrence;
    createdOn: Date;
    modifiedOn: Date;

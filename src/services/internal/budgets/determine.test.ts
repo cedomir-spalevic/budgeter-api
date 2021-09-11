@@ -9,6 +9,67 @@ import { getBudgetPayments, getBudgetIncomes } from "./determine";
  * month 0-11
  * year [0-9][0-9][0-9][0-9]
  */
+describe("A payment ending in January, 1999", () => {
+   const items: PublicPayment[] = [
+      {
+         id: new ObjectId().toHexString(),
+         createdOn: new Date(),
+         modifiedOn: new Date(),
+         title: "",
+         amount: 10,
+         initialDay: 5,
+         initialDate: 30,
+         initialMonth: 3,
+         initialYear: 1997,
+         endDay: 1,
+         endDate: 1,
+         endMonth: 0,
+         endYear: 1999,
+         recurrence: "monthly"
+      }
+   ];
+   test("It should show up on the budget for April 1998", () => {
+      const budgetItems = getBudgetPayments(items, {
+         date: 3,
+         month: 3,
+         year: 1998
+      });
+      expect(budgetItems.length).toBe(1);
+   });
+   test("It should not show up on the budget for April 2000", () => {
+      const budgetItems = getBudgetPayments(items, {
+         date: 3,
+         month: 3,
+         year: 2000
+      });
+      expect(budgetItems.length).toBe(0);
+   });
+   test("It should not show up on the budget for February 1999", () => {
+      const budgetItems = getBudgetPayments(items, {
+         date: 3,
+         month: 1,
+         year: 1999
+      });
+      expect(budgetItems.length).toBe(0);
+   });
+   test("It should show up on the budget for January 2nd 1999", () => {
+      const budgetItems = getBudgetPayments(items, {
+         date: 2,
+         month: 0,
+         year: 1999
+      });
+      expect(budgetItems.length).toBe(1);
+   });
+   test("It should show up on the budget for December 1998", () => {
+      const budgetItems = getBudgetPayments(items, {
+         date: 2,
+         month: 11,
+         year: 1998
+      });
+      expect(budgetItems.length).toBe(1);
+   });
+});
+
 describe("A one time payment worth $10 due April 30th, 2021", () => {
    const items: PublicPayment[] = [
       {
@@ -20,6 +81,10 @@ describe("A one time payment worth $10 due April 30th, 2021", () => {
          initialDay: 5,
          initialDate: 30,
          initialMonth: 3,
+         endDay: null,
+         endDate: null,
+         endMonth: null,
+         endYear: null,
          initialYear: 2021,
          recurrence: "oneTime"
       }
@@ -107,6 +172,10 @@ describe("A payment worth $25.25 due every day starting January 10th, 2021", () 
          initialDate: 10,
          initialMonth: 0,
          initialYear: 2021,
+         endDay: null,
+         endDate: null,
+         endMonth: null,
+         endYear: null,
          recurrence: "daily"
       }
    ];
@@ -212,6 +281,10 @@ describe("A payment worth $1 due every day starting May 1st, 2021", () => {
          initialDate: 1,
          initialMonth: 4,
          initialYear: 2021,
+         endDay: null,
+         endDate: null,
+         endMonth: null,
+         endYear: null,
          recurrence: "daily"
       }
    ];
@@ -263,6 +336,10 @@ describe("A payment worth $300 every Month on the 10th day starting October 1999
          initialDate: 10,
          initialMonth: 9,
          initialYear: 1999,
+         endDay: null,
+         endDate: null,
+         endMonth: null,
+         endYear: null,
          recurrence: "monthly"
       }
    ];
@@ -392,6 +469,10 @@ describe("A payment worth $750 every year the 8th day of August starting in 2012
          initialDate: 8,
          initialMonth: 7,
          initialYear: 2012,
+         endDay: null,
+         endDate: null,
+         endMonth: null,
+         endYear: null,
          recurrence: "yearly"
       }
    ];

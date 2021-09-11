@@ -6,6 +6,10 @@ type Payment {
    initialDate: Int # Day of month
    initialMonth: Int
    initialYear: Int
+   endDay: Int
+   endDate: Int
+   endMonth: Int
+   endYear: Int
    recurrence: Recurrence
    createdOn: DateTime
    modifiedOn: DateTime
@@ -19,6 +23,10 @@ input PaymentInput {
    initialDate: Int # Day of month
    initialMonth: Int
    initialYear: Int
+   endDay: Int
+   endDate: Int
+   endMonth: Int
+   endYear: Int
    recurrence: Recurrence
    tags: [ObjectID]
 }
