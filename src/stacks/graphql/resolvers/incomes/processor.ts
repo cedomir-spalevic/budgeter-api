@@ -39,6 +39,7 @@ class IncomesProcessor {
    }
 
    public async create(request: Partial<Income>): Promise<PublicIncome> {
+      request.userId = this._userId;
       const income = await this._collection.create(request);
 
       return transformResponse(income);
