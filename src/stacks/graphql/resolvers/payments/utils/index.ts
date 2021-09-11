@@ -17,5 +17,5 @@ export const transformResponse = (payment: WithId<Payment>): PublicPayment => ({
    endYear: payment.endYear,
    createdOn: payment.createdOn,
    modifiedOn: payment.modifiedOn,
-   tags: payment.tags.map(transformPaymentTags)
+   tags: payment.tags ? payment.tags.map(transformPaymentTags) : []
 });

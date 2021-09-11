@@ -4,11 +4,14 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 import { sendVerification } from "services/internal/verification";
 import { User } from "models/schemas/user";
 import { ChallengeRequest } from "./type";
+import { logInfo } from "services/internal/logging";
 
 export const processChallenge = async (
    request: ChallengeRequest
 ): Promise<ConfirmationResponse> => {
    const { email, phoneNumber, type } = request;
+   logInfo("Challenge Request:");
+   logInfo(request);
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
@@ -23,6 +26,9 @@ export const processChallenge = async (
          }
       ]
    });
+   logInfo("User:");
+   logInfo(user);
+
    if (!user) {
       throw new NotFoundError(
          `No user found with the provided ${email ? "email" : "phone number"}`
@@ -38,6 +44,8 @@ export const processChallenge = async (
       phoneNumber: phoneNumber
    };
    const confirmationResponse = await sendVerification(userToChallenge, type);
+   logInfo("Confirmation response:");
+   logInfo(confirmationResponse);
 
    return {
       expires: confirmationResponse.expires,

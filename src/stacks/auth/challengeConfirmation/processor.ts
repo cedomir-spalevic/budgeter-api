@@ -1,6 +1,7 @@
 import { UnauthorizedError } from "models/errors";
 import { AuthResponse } from "models/responses";
 import BudgeterMongoClient from "services/external/mongodb/client";
+import { logInfo } from "services/internal/logging";
 import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
 import { ChallengeConfirmationRequest } from "./type";
@@ -9,6 +10,9 @@ export const processChallengeConfirmation = async (
    request: ChallengeConfirmationRequest
 ): Promise<AuthResponse> => {
    const { key, code } = request;
+   logInfo("Challenge Confirmation Request:");
+   logInfo(request);
+
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const oneTimeCodeService = budgeterClient.getOneTimeCodeCollection();
@@ -18,7 +22,11 @@ export const processChallengeConfirmation = async (
       key: key,
       code: code
    });
-   if (!oneTimeCode || oneTimeCode.expiresOn < Date.now())
+   const isExpired = oneTimeCode.expiresOn < Date.now();
+   logInfo("One time code:");
+   logInfo(oneTimeCode);
+   logInfo(`Is Expired?: ${isExpired}`);
+   if (!oneTimeCode || isExpired)
       throw new UnauthorizedError();
 
    oneTimeCode.completed = true;
@@ -32,6 +40,8 @@ export const processChallengeConfirmation = async (
       user.isMfaVerified = true;
       await usersService.update(user);
    }
+   logInfo("User:");
+   logInfo(user);
 
    const refreshToken = generateRefreshToken(oneTimeCode.userId, user.isAdmin);
    const accessToken = generateAccessToken(

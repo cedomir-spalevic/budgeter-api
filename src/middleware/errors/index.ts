@@ -1,5 +1,6 @@
 import { APIGatewayProxyResult } from "aws-lambda";
 import { BudgeterError, ValidationError } from "models/errors";
+import { logError } from "services/internal/logging";
 
 const transformErrorToResponse = (error: Error) =>
    JSON.stringify({ message: error.message, stack: error.stack });
@@ -7,6 +8,8 @@ const transformErrorToResponse = (error: Error) =>
 export const handleErrorResponse = async (
    error: Error
 ): Promise<APIGatewayProxyResult> => {
+   logError("Error caught:");
+   logError(error);
    let statusCode: number;
    let body: string;
    if (error instanceof ValidationError) {
@@ -19,8 +22,7 @@ export const handleErrorResponse = async (
       statusCode = error.statusCode;
       body = transformErrorToResponse(error);
    } else {
-      console.log("500 error received");
-      console.log(error);
+      logError("Throwing 500 error");
       statusCode = 500;
       body = transformErrorToResponse(error);
    }

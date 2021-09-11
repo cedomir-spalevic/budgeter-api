@@ -7,6 +7,7 @@
    "MONGO_CONNECTION_STRING": "mongodb+srv://admin:seWi3TfBAbLxriEa@cluster0.vvc2o.mongodb.net/budgeter?retryWrites=true&w=majority",
    "MONGO_DB_NAME": "budgeter-dev",
    "SERVERLESS_ACCESS_KEY": "AK2yBO4W4VQN9uhpUOK13vCxmRGJMuoD25v8xm3QvyYTl",
+   "SERVERLESS_ACCESS_KEYS": "AK2yBO4W4VQN9uhpUOK13vCxmRGJMuoD25v8xm3QvyYTl",
    "JWT_KEY": "DNBE2t$cWRWEmsQc7bI0",
    "JWT_ADMIN_KEY": "7DGZ7?AJ!D3jh$25hjEn",
    "BUDGETER_API_KEY": "budgeter/478878a316615c8ab6002c2386302797f4d6942b"

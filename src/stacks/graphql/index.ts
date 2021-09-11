@@ -10,6 +10,8 @@ const executeGraphqlQuery = async (request: BudgeterRequest) => {
    const body = request.body;
    const query = body["query"] as string;
    const variables = body["variables"] as Record<string, unknown>;
+   console.log("Graphql Request:");
+   console.log(request);
    const executionResult = await graphql({
       schema,
       source: query,
@@ -18,6 +20,8 @@ const executeGraphqlQuery = async (request: BudgeterRequest) => {
       variableValues: variables
    });
    if (executionResult.errors) {
+      console.log("Graphql Execution Errors found:");
+      console.log(executionResult.errors);
       if (executionResult.errors.some((e) => e.message === "Unauthorized")) {
          throw new UnauthorizedError();
       }

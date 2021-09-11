@@ -4,11 +4,15 @@ import {
    subscribeToTopic
 } from "services/external/aws/sns";
 import BudgeterMongoClient from "services/external/mongodb/client";
+import { logInfo } from "services/internal/logging";
 import { RegisterDeviceRequest } from "./type";
 
 export const processRegisterDevice = async (
    request: RegisterDeviceRequest
 ): Promise<void> => {
+   logInfo("Register device request:");
+   logInfo(request);
+
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
@@ -25,12 +29,16 @@ export const processRegisterDevice = async (
       request.device,
       request.token
    );
+   logInfo("Platform endpoint:");
+   logInfo(createPlatformEndpointResponse);
 
    // You can subscribe all platform applications to a specific topic. That way you can publish to that topic and notification will go out to each of its
    // subscribers. This might be nice for marketing purposes, but I will probably never use that
    const subscribeResponse = await subscribeToTopic(
       createPlatformEndpointResponse.EndpointArn
    );
+   logInfo("Subscription response:");
+   logInfo(subscribeResponse);
 
    // To send notifications to the specific device, you will need the Platform Application Endpoint ARN. So we store this data in the user object
    // which will then be used later by one of our notification jobs to actually send a notification

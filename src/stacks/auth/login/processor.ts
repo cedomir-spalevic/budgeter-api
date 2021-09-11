@@ -1,5 +1,6 @@
 import { NoUserEmailFoundError, UnauthorizedError } from "models/errors";
 import BudgeterMongoClient from "services/external/mongodb/client";
+import { logInfo } from "services/internal/logging";
 import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateHash } from "services/internal/security/hash";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
@@ -10,6 +11,9 @@ export const processLogin = async (
    request: LoginRequest
 ): Promise<LoginResponse> => {
    const { email, phoneNumber, password } = request;
+   logInfo("Login request:");
+   logInfo(request);
+
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
@@ -25,6 +29,8 @@ export const processLogin = async (
          }
       ]
    });
+   logInfo("User:");
+   logInfo(user);
    if (!user) throw new NoUserEmailFoundError();
 
    // We only want to check if the hashed password exists in the DB
@@ -34,6 +40,8 @@ export const processLogin = async (
       userId: user._id,
       hash: generateHash(password)
    });
+   logInfo("Auth records:");
+   logInfo(userAuthRecordsAmount);
    if (userAuthRecordsAmount < 1) throw new UnauthorizedError();
 
    // If the users email is not verified, then we want to force them to verify
