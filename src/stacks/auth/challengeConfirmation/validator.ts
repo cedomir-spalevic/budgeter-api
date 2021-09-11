@@ -1,16 +1,14 @@
 import { ChallengeConfirmationRequest } from "./type";
-import { Validator } from "jsonschema";
 import schema from "./schema.json";
 import { BudgeterRequest } from "models/requests";
-
-const validator = new Validator();
+import { runValidation } from "services/internal/validation";
 
 export const validate = (
    request: BudgeterRequest
 ): ChallengeConfirmationRequest => {
    const { pathParameters, body } = request;
    const input = { ...pathParameters, ...body };
-   validator.validate(input, schema, { throwError: true });
+   runValidation(input, schema);
 
    return {
       key: pathParameters["key"] as string,

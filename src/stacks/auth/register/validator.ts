@@ -1,8 +1,6 @@
-import { Validator } from "jsonschema";
 import { BudgeterRequest } from "models/requests";
+import { runValidation } from "services/internal/validation";
 import schema from "./schema.json";
-
-const validator = new Validator();
 
 export interface RegisterBody {
    firstName: string;
@@ -14,7 +12,7 @@ export interface RegisterBody {
 
 export const validate = (request: BudgeterRequest): RegisterBody => {
    const { body } = request;
-   validator.validate(body, schema, { throwError: true });
+   runValidation(body, schema);
 
    return {
       firstName: body["firstName"] as string,

@@ -1,5 +1,5 @@
 import { APIGatewayProxyResult } from "aws-lambda";
-import { BudgeterError } from "models/errors";
+import { BudgeterError, ValidationError } from "models/errors";
 
 const transformErrorToResponse = (error: Error) =>
    JSON.stringify({ message: error.message, stack: error.stack });
@@ -9,7 +9,11 @@ export const handleErrorResponse = async (
 ): Promise<APIGatewayProxyResult> => {
    let statusCode: number;
    let body: string;
-   if (error instanceof BudgeterError) {
+   if(error instanceof ValidationError) {
+      statusCode = error.statusCode;
+      body = JSON.stringify({ message: error.message, validationErrors: error.validationErrors });
+   }
+   else if (error instanceof BudgeterError) {
       statusCode = error.statusCode;
       body = transformErrorToResponse(error);
    } else {
