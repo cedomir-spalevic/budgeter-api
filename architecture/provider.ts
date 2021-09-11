@@ -2,6 +2,7 @@ import type { Provider } from "serverless/aws";
 
 const provider: Provider = {
    name: "aws",
+   stage: "${opt:stage, 'dev'}",
    runtime: "nodejs12.x",
    lambdaHashingVersion: 20201221,
    region: "us-east-1",

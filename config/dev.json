@@ -2,7 +2,7 @@
    "AWS_ACCESS_KEY_ID": "AKIARDEBV3Y6T2RYF26E",
    "AWS_SECRET_ACCESS_KEY": "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",
    "AWS_REGION": "us-east-1",
-   "AWS_PLATFORM_APPLICATION_IOS": "123",
+   "AWS_PLATFORM_APPLICATION_IOS": "arn:aws:sns:us-east-1:075433893437:app/APNS_SANDBOX/budgeter-dev-ios",
    "AWS_SNS_TOPIC": "arn:aws:sns:us-east-1:075433893437:budgeter-dev",
    "MONGO_CONNECTION_STRING": "mongodb+srv://admin:seWi3TfBAbLxriEa@cluster0.vvc2o.mongodb.net/budgeter?retryWrites=true&w=majority",
    "MONGO_DB_NAME": "budgeter-dev",
