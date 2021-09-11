@@ -26,9 +26,9 @@ jobs:
               aws-region: ${{ steps.dotenv.outputs.AWS_REGION }}
          - name: Build code
            run: npm run build
-         - name: Deploy
-           uses: serverless/github-action@master
-           with:
-              args: deploy --stage prod
+         - name: Prod Deploy
+           run: npm run deploy:prod
            env:
               SERVERLESS_ACCESS_KEYS: ${{ steps.dotenv.outputs.SERVERLESS_ACCESS_KEY }}
+         - name: Run any DB Scripts
+           run: npm run dbscripts
