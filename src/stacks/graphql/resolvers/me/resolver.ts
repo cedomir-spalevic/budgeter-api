@@ -1,5 +1,5 @@
 import { BudgeterRequestAuth } from "models/requests";
-import { PublicUser, User } from "models/schemas/user";
+import { PublicUser } from "models/schemas/user";
 import UsersProcessor from "./processor";
 import { validate } from "./validators";
 
