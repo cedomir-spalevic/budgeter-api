@@ -23,3 +23,5 @@ jobs:
               aws-region: ${{ steps.dotenv.outputs.AWS_REGION }}
          - name: Build code
            run: npm run build
+         - name: Run any DB Scripts (test)
+           run: npm run dbscripts

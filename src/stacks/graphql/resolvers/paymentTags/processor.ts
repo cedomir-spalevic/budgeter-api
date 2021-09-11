@@ -4,7 +4,7 @@ import { NotFoundError } from "models/errors";
 import { BudgeterEntityCollection } from "services/external/mongodb/entityCollection";
 import { GetListQueryStringParameters } from "models/requests";
 import { transformResponse } from "./utils";
-import { PaymentTag, PublicPaymentTag } from "models/schemas/paymentTags";
+import { PaymentTag, PublicPaymentTag } from "models/schemas/paymentTag";
 
 class PaymentTagsProcessor {
    static instance: PaymentTagsProcessor;

@@ -1,6 +1,6 @@
 import { Validator } from "jsonschema";
 import { Payment } from "models/schemas/payment";
-import { PaymentTag, PublicPaymentTag } from "models/schemas/paymentTags";
+import { PaymentTag, PublicPaymentTag } from "models/schemas/paymentTag";
 import { Recurrence } from "models/schemas/recurrence";
 import { ObjectId } from "mongodb";
 import PaymentTagsProcessor from "../../../paymentTags/processor";
