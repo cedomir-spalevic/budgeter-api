@@ -135,6 +135,7 @@ export const getBudgetPayments = (
    const budgetPayments: PublicBudgetPayment[] = [];
    items.forEach((item) => {
       let dueToday: boolean, totalAmount: number, numberOfOccurrences: number;
+
       if (item.recurrence === "oneTime") {
          if (year !== item.initialYear || month !== item.initialMonth) return;
          dueToday = item.initialDate === date;
@@ -143,7 +144,12 @@ export const getBudgetPayments = (
       } else if (item.recurrence === "monthly") {
          if (
             year < item.initialYear ||
-            (year === item.initialYear && month < item.initialMonth)
+            (year === item.initialYear && month < item.initialMonth) ||
+            (item.endYear !== null && item.endYear < year) ||
+            (item.endYear !== null &&
+               item.endMonth !== null &&
+               item.endYear === year &&
+               item.endMonth < month)
          )
             return;
          dueToday = item.initialDate === date;
@@ -152,7 +158,8 @@ export const getBudgetPayments = (
       } else if (item.recurrence === "yearly") {
          if (
             year < item.initialYear ||
-            (year >= item.initialYear && month !== item.initialMonth)
+            (year >= item.initialYear && month !== item.initialMonth) ||
+            (item.endYear !== null && item.endYear < year)
          )
             return;
          dueToday = item.initialDate === date;
@@ -161,7 +168,18 @@ export const getBudgetPayments = (
       } else if (item.recurrence === "daily") {
          if (
             year < item.initialYear ||
-            (year === item.initialYear && month < item.initialMonth)
+            (year === item.initialYear && month < item.initialMonth) ||
+            (item.endYear !== null && item.endYear < year) ||
+            (item.endYear !== null &&
+               item.endMonth !== null &&
+               item.endYear === year &&
+               item.endMonth < month) ||
+            (item.endYear !== null &&
+               item.endMonth !== null &&
+               item.endDate !== null &&
+               item.endYear === year &&
+               item.endMonth === month &&
+               item.endDate < date)
          )
             return;
          const daysInMonth = getNumberOfDaysInMonth(month, year);
@@ -176,7 +194,18 @@ export const getBudgetPayments = (
       } else if (item.recurrence === "weekly") {
          if (
             year < item.initialYear ||
-            (year === item.initialYear && month < item.initialMonth)
+            (year === item.initialYear && month < item.initialMonth) ||
+            (item.endYear !== null && item.endYear < year) ||
+            (item.endYear !== null &&
+               item.endMonth !== null &&
+               item.endYear === year &&
+               item.endMonth < month) ||
+            (item.endYear !== null &&
+               item.endMonth !== null &&
+               item.endDate !== null &&
+               item.endYear === year &&
+               item.endMonth === month &&
+               item.endDate < date)
          )
             return;
          dueToday = item.initialDay === new Date(year, month, date).getDay();
@@ -198,7 +227,18 @@ export const getBudgetPayments = (
       } else {
          if (
             year < item.initialYear ||
-            (year === item.initialYear && month < item.initialMonth)
+            (year === item.initialYear && month < item.initialMonth) ||
+            (item.endYear !== null && item.endYear < year) ||
+            (item.endYear !== null &&
+               item.endMonth !== null &&
+               item.endYear === year &&
+               item.endMonth < month) ||
+            (item.endYear !== null &&
+               item.endMonth !== null &&
+               item.endDate !== null &&
+               item.endYear === year &&
+               item.endMonth === month &&
+               item.endDate < date)
          )
             return;
          const original = new Date(
@@ -235,6 +275,10 @@ export const getBudgetPayments = (
          initialDate: item.initialDate,
          initialMonth: item.initialMonth,
          initialYear: item.initialYear,
+         endDay: item.endDay,
+         endDate: item.endDate,
+         endMonth: item.endMonth,
+         endYear: item.endYear,
          recurrence: item.recurrence,
          createdOn: item.createdOn,
          modifiedOn: item.modifiedOn,
