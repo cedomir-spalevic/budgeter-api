@@ -21,7 +21,7 @@ const executeGraphqlQuery = async (request: BudgeterRequest) => {
       if (executionResult.errors.some((e) => e.message === "Unauthorized")) {
          throw new UnauthorizedError();
       }
-      throw new ValidationError(executionResult.errors.map(e => e.message));
+      throw new ValidationError(executionResult.errors.map((e) => e.message));
    }
    return executionResult;
 };

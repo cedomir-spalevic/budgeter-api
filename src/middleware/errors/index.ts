@@ -9,11 +9,13 @@ export const handleErrorResponse = async (
 ): Promise<APIGatewayProxyResult> => {
    let statusCode: number;
    let body: string;
-   if(error instanceof ValidationError) {
+   if (error instanceof ValidationError) {
       statusCode = error.statusCode;
-      body = JSON.stringify({ message: error.message, validationErrors: error.validationErrors });
-   }
-   else if (error instanceof BudgeterError) {
+      body = JSON.stringify({
+         message: error.message,
+         validationErrors: error.validationErrors
+      });
+   } else if (error instanceof BudgeterError) {
       statusCode = error.statusCode;
       body = transformErrorToResponse(error);
    } else {

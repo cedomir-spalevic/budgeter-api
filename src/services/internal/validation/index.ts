@@ -7,13 +7,13 @@ const validator = new Validator();
 
 export const runValidation = (request: any, schema: Schema): void => {
    const result = validator.validate(request, schema, { nestedErrors: true });
-   if(result.errors.length > 0) {
+   if (result.errors.length > 0) {
       const errors = new Set<string>();
-      result.errors.forEach(error => {
-         if(error.name !== "anyOf" && error.name !== "oneOf") {
+      result.errors.forEach((error) => {
+         if (error.name !== "anyOf" && error.name !== "oneOf") {
             errors.add(error.message);
          }
       });
       throw new ValidationError(Array.from(errors));
    }
-}
+};

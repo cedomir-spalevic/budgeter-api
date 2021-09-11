@@ -14,10 +14,16 @@ export const validate = async (
    validator.validate(request, schema, { throwError: true });
    const tags = request["tags"] as ObjectId[];
    let paymentTags: Partial<PaymentTag>[] = [];
-   if(tags) {
+   if (tags) {
       const paymentTagsProcessor = await PaymentTagsProcessor.getInstance();
-      const allPaymentTags = await Promise.all(tags.map(id => paymentTagsProcessor.getById(new ObjectId(id))));
-      paymentTags = allPaymentTags.map((tag: PublicPaymentTag): Partial<PaymentTag> => ({ _id: new ObjectId(tag.id) }))
+      const allPaymentTags = await Promise.all(
+         tags.map((id) => paymentTagsProcessor.getById(new ObjectId(id)))
+      );
+      paymentTags = allPaymentTags.map(
+         (tag: PublicPaymentTag): Partial<PaymentTag> => ({
+            _id: new ObjectId(tag.id)
+         })
+      );
    }
    return {
       title: request["title"] as string,

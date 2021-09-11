@@ -19,7 +19,10 @@ export class BudgeterEntityCollection<T extends IEntity> {
       this.collection = collection;
    }
 
-   public async aggregate(pipeline?: Record<string, unknown>[], options?: CollectionAggregationOptions): Promise<T[]> {
+   public async aggregate(
+      pipeline?: Record<string, unknown>[],
+      options?: CollectionAggregationOptions
+   ): Promise<T[]> {
       return await this.collection.aggregate(pipeline, options).toArray();
    }
 
