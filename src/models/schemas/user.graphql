@@ -12,6 +12,18 @@ type User {
    notificationPreferences: UserNotificationPreferences
 }
 
+type Me {
+   firstName: String!
+   lastName: String!
+   email: String
+   phoneNumber: String
+   isMfaVerified: Boolean!
+   createdOn: DateTime!
+   modifiedOn: DateTime!
+   device: UserDevice
+   notificationPreferences: UserNotificationPreferences
+}
+
 type UserNotificationPreferences {
    incomeNotifications: Boolean
    paymentNotifications: Boolean
@@ -19,6 +31,17 @@ type UserNotificationPreferences {
 
 type UserDevice {
    os: String
+}
+
+input MeInput {
+   firstName: String
+   lastName: String
+   notificationPreferences: UserNotificationPreferencesInput
+}
+
+input UserNotificationPreferencesInput {
+   incomeNotifications: Boolean
+   paymentNotifications: Boolean
 }
 
 input UserInput {
@@ -31,11 +54,13 @@ input UserInput {
 }
 
 type Query {
+   me: Me
    users(limit: Int = 5, skip: Int = 0, search: String): [User]
    userById(id: ObjectID!): User
 }
 
 type Mutation {
+   updateMe(me: MeInput): Me
    createUser(user: UserInput): User
    deleteUser(id: ObjectID!): ObjectID
    updateUser(id: ObjectID!, user: UserInput): User
