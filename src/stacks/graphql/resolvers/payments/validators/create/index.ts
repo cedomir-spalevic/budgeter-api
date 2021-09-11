@@ -32,6 +32,10 @@ export const validate = async (
       initialDate: request["initialDate"] as number,
       initialMonth: request["initialMonth"] as number,
       initialYear: request["initialYear"] as number,
+      endDay: request["endDay"] as number ?? null,
+      endDate: request["endDate"] as number ?? null,
+      endMonth: request["endMonth"] as number ?? null,
+      endYear: request["endYear"] as number ?? null,
       recurrence: request["recurrence"] as Recurrence,
       tags: paymentTags
    };

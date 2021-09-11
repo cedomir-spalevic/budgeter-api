@@ -39,6 +39,7 @@ class PaymentsProcessor {
    }
 
    public async create(request: Partial<Payment>): Promise<PublicPayment> {
+      request.userId = this._userId;
       const payment = await this._collection.create(request);
 
       return transformResponse(payment);
