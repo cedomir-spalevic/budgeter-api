@@ -2,12 +2,14 @@ import providerConfig from "./provider";
 import functionsConfig from "./functions";
 import customConfig from "./custom";
 import stepFunctionsConfig from "./stepFunctions";
-//import poliiciesConfig from "./policies";
 import { Serverless } from "serverless/aws";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const configuration: Serverless = {
    org: "cedomirspalevic",
-   app: "budgeter",
+   app: process.env.SERVERLESS_APP_NAME,
    service: "budgeter",
    useDotenv: true,
    variablesResolutionMode: "20210326",

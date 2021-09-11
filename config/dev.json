@@ -6,6 +6,7 @@
    "AWS_SNS_TOPIC": "arn:aws:sns:us-east-1:075433893437:budgeter-dev",
    "MONGO_CONNECTION_STRING": "mongodb+srv://admin:seWi3TfBAbLxriEa@cluster0.vvc2o.mongodb.net/budgeter?retryWrites=true&w=majority",
    "MONGO_DB_NAME": "budgeter-dev",
+   "SERVERLESS_APP_NAME": "budgeter-dev",
    "SERVERLESS_ACCESS_KEY": "AK2yBO4W4VQN9uhpUOK13vCxmRGJMuoD25v8xm3QvyYTl",
    "SERVERLESS_ACCESS_KEYS": "AK2yBO4W4VQN9uhpUOK13vCxmRGJMuoD25v8xm3QvyYTl",
    "JWT_KEY": "DNBE2t$cWRWEmsQc7bI0",
