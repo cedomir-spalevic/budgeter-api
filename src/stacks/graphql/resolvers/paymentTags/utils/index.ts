@@ -1,4 +1,4 @@
-import { PaymentTag, PublicPaymentTag } from "models/schemas/paymentTags";
+import { PaymentTag, PublicPaymentTag } from "models/schemas/paymentTag";
 import { WithId } from "mongodb";
 
 export const transformResponse = (

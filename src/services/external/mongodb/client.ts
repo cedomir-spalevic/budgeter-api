@@ -2,7 +2,7 @@ import { ApiKey } from "models/schemas/apiKey";
 import { Income } from "models/schemas/income";
 import { OneTimeCode } from "models/schemas/oneTimeCode";
 import { Payment } from "models/schemas/payment";
-import { PaymentTag } from "models/schemas/paymentTags";
+import { PaymentTag } from "models/schemas/paymentTag";
 import { RefreshToken } from "models/schemas/refreshToken";
 import { User } from "models/schemas/user";
 import { UserAuth } from "models/schemas/userAuth";

@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { IEntity } from "./ientity";
-import { PaymentTag } from "./paymentTags";
+import { PaymentTag } from "./paymentTag";
 import { Recurrence } from "./recurrence";
 
 export interface Payment extends IEntity {

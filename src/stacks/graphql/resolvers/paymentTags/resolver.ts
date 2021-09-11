@@ -1,5 +1,5 @@
 import { BudgeterRequestAuth } from "models/requests";
-import { PaymentTag, PublicPaymentTag } from "models/schemas/paymentTags";
+import { PaymentTag, PublicPaymentTag } from "models/schemas/paymentTag";
 import { ObjectId } from "mongodb";
 import { graphqlAdminAuth } from "stacks/graphql/utils/auth";
 import PaymentTagsProcessor from "./processor";
