@@ -6,10 +6,13 @@ import { generateAccessToken } from "services/internal/security/accessToken";
 import { generateRefreshToken } from "services/internal/security/refreshToken";
 import { AuthResponse } from "models/responses";
 import { PasswordResetRequest } from "./type";
+import { logInfo } from "services/internal/logging";
 
 export const processPasswordReset = async (
    request: PasswordResetRequest
 ): Promise<AuthResponse> => {
+   logInfo("Reset password request:");
+   logInfo(request);
    if (!request.password) throw new GeneralError("Password cannot be blank");
 
    const budgeterClient = await BudgeterMongoClient.getInstance();

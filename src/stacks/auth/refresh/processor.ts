@@ -1,12 +1,16 @@
 import { UnauthorizedError } from "models/errors";
 import { AuthResponse } from "models/responses";
 import BudgeterMongoClient from "services/external/mongodb/client";
+import { logInfo } from "services/internal/logging";
 import { generateAccessToken } from "services/internal/security/accessToken";
 import { RefreshRequest } from "./type";
 
 export const processRefresh = async (
    request: RefreshRequest
 ): Promise<AuthResponse> => {
+   logInfo("Refresh request:");
+   logInfo(request);
+   
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const refreshTokenService = budgeterClient.getRefreshTokenCollection();
 

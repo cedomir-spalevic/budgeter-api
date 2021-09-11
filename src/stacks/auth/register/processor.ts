@@ -6,10 +6,14 @@ import { UserAuth } from "models/schemas/userAuth";
 import { generateHash } from "services/internal/security/hash";
 import { sendVerification } from "services/internal/verification";
 import { RegisterBody } from "./validator";
+import { logError, logInfo } from "services/internal/logging";
 
 export const processRegister = async (
    registerBody: RegisterBody
 ): Promise<ConfirmationResponse> => {
+   logInfo("Register request:");
+   logInfo(registerBody);
+
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersAuthService = budgeterClient.getUsersAuthCollection();
    const usersService = budgeterClient.getUsersCollection();
@@ -27,6 +31,8 @@ export const processRegister = async (
          }
       ]
    });
+   logInfo("Existing user:")
+   logInfo(existingUser);
    if (existingUser) throw new AlreadyExistsError();
 
    const newUser: Partial<User> = {
@@ -42,6 +48,8 @@ export const processRegister = async (
       }
    };
    const user = await usersService.create(newUser);
+   logInfo("New user created:");
+   logInfo(user);
 
    try {
       const userAuth: Partial<UserAuth> = {
@@ -50,6 +58,8 @@ export const processRegister = async (
       };
       await usersAuthService.create(userAuth);
    } catch (error) {
+      logError("Error thrown while creating users auth:");
+      logError(error);
       await usersService.delete(user._id);
       throw error;
    }
