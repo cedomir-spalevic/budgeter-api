@@ -21,7 +21,7 @@
       "env:dev": "ts-node scripts/env dev",
       "env:prod": "ts-node scripts/env prod",
       "deploy:dev": "sls deploy --stage dev",
-      "deploy:prod": "sls deploy --stage prod",
+      "deploy:prod": "sls deploy --stage dev",
       "dbscripts": "ts-node scripts/dbScripts",
       "login": "sls login",
       "postinstall": "patch-package"
