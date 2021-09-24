@@ -4,4 +4,5 @@ import { processIncomeNotifications } from "./processor";
 
 export const handler = middy()
    .useAuth(apiKeyAuth)
-   .use(processIncomeNotifications);
+   .use(processIncomeNotifications)
+   .go();
