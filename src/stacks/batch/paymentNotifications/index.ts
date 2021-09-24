@@ -4,4 +4,5 @@ import { processPaymentNotifications } from "./processor";
 
 export const handler = middy()
    .useAuth(apiKeyAuth)
-   .use(processPaymentNotifications);
+   .use(processPaymentNotifications)
+   .go();
