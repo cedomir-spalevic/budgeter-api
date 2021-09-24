@@ -7,23 +7,10 @@ const provider: Provider = {
    region: "us-east-1",
    stackName: "budgeter",
    apiName: "budgeter",
+   stage: `${process.env.AWS_STAGE}`,
    memorySize: 128,
    timeout: 10,
-   deploymentPrefix: "",
-   deploymentBucket: {
-      tags: {
-         "budgeter-env": "${opt:stage}"
-      }
-   },
-   environment: {
-      "AWS_PLATFORM_APPLICATION_IOS": "${env:AWS_PLATFORM_APPLICATION_IOS}",
-      "AWS_SNS_TOPIC": "${env:AWS_SNS_TOPIC}",
-      "MONGO_CONNECTION_STRING": "${env:MONGO_CONNECTION_STRING}",
-      "SERVERLESS_ACCESS_KEYS": "${env:SERVERLESS_ACCESS_KEYS}",
-      "JWT_KEY": "${env:JWT_KEY}",
-      "JWT_ADMIN_KEY": "${env:JWT_ADMIN_KEY}",
-      "BUDGETER_API_KEY": "${env:BUDGETER_API_KEY}"
-   }
+   deploymentPrefix: ""
 }
 
 export default provider;

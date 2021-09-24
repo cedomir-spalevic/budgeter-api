@@ -7,13 +7,13 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+console.log(`ENV = ${process.env.AWS_STAGE}`)
+
 const configuration: Serverless = {
    org: "cedomirspalevic",
-   app: process.env.SERVERLESS_APP_NAME,
-   service: "budgeter",
-   useDotenv: true,
-   variablesResolutionMode: "20210326",
-   frameworkVersion: "2.35",
+   app: "budgeter",
+   service: "budgeter-api",
+   frameworkVersion: "2.28.7",
    provider: providerConfig,
    functions: functionsConfig,
    plugins: [
@@ -22,7 +22,8 @@ const configuration: Serverless = {
       "serverless-offline",
       "serverless-step-functions",
       "serverless-pseudo-parameters",
-      "serverless-iam-roles-per-function"
+      "serverless-iam-roles-per-function",
+      "serverless-dotenv-plugin"
    ],
    stepFunctions: stepFunctionsConfig,
    custom: customConfig

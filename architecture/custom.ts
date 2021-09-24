@@ -1,22 +1,24 @@
 import type { Custom } from "serverless/aws";
 
 const custom: Custom = {
-   myEnvironment: {
-      sourcemaps: {
-         dev: true,
-         prod: false
-      }
-   },
    "serverless-offline": {
       httpPort: 4000,
       useChildProcesses: true
    },
    bundle: {
-      sourcemaps: "${self:custom.myEnvironment.sourcemaps.${opt:stage}}",
+      sourcemaps: "false",
       forceExclude: [
          "aws-sdk"
       ],
       linting: false
+   },
+   dotenv: {
+      exclude: [
+         "AWS_ACCESS_KEY_ID",
+         "AWS_SECRET_ACCESS_KEY",
+         "AWS_REGION",
+         "AWS_STAGE"
+      ]
    }
 }
 
