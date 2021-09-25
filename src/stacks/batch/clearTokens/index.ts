@@ -1,5 +1,5 @@
 import { apiKeyAuth } from "middleware/auth";
-import { middy } from "middleware/handler/stepFunction";
 import { clearTokens } from "./processor";
+import { middy } from "middleware/handler/stepFunction";
 
 export const handler = middy().useAuth(apiKeyAuth).use(clearTokens).go();

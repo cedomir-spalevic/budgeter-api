@@ -33,7 +33,7 @@ const attemptAccessTokenDecode = (
 
 export const apiKeyAuth = async (
    event: StepFunctionBatchJobRequest
-): Promise<void> => {
+): Promise<BudgeterRequestAuth> => {
    logInfo(`Api Key Auth payload:`);
    logInfo(event);
    const apiKey = event.Payload.Input.apiKey;
@@ -42,6 +42,10 @@ export const apiKeyAuth = async (
 
    const key = await apiKeyService.find({ key: generateHash(apiKey) });
    if (!key) throw new UnauthorizedError();
+   return {
+      isAdmin: false,
+      isAuthenticated: true
+   }
 };
 
 export const adminAuth = async (
