@@ -5,6 +5,7 @@ import BudgeterMongoClient from "services/external/mongodb/client";
 import { getBudgetPayments } from "services/internal/budgets/determine";
 import { getBudgetPaymentQuery } from "services/internal/budgets/query";
 import { transformResponse } from "stacks/graphql/resolvers/payments/utils";
+import { logInfo } from "services/internal/logging";
 
 const today = new Date();
 const date = today.getDate();
@@ -17,6 +18,7 @@ const numberFormat = new Intl.NumberFormat("en-us", {
 });
 
 export const processPaymentNotifications = async (): Promise<void> => {
+   logInfo("Processing payment notifications...");
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const usersService = budgeterClient.getUsersCollection();
 
@@ -28,6 +30,7 @@ export const processPaymentNotifications = async (): Promise<void> => {
          { "notificationPreferences.paymentNotifications": true }
       ]
    });
+   logInfo(`${usersToNotify.length} users to notify...`);
 
    // Determine their incomes for today and send notification
    // Now we want to go through each user and determine which payments are due today
@@ -36,6 +39,13 @@ export const processPaymentNotifications = async (): Promise<void> => {
 };
 
 const notifyUser = async (user: User): Promise<void> => {
+   logInfo(`Notifying user ${user._id}`);
+   if (!user.device?.platformApplicationEndpointArn) {
+      logInfo(
+         `User ${user._id} does not have a platformApplicationEndpointArn`
+      );
+      return;
+   }
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const paymentsService = budgeterClient.getPaymentsCollection();
 

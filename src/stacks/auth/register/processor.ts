@@ -31,7 +31,7 @@ export const processRegister = async (
          }
       ]
    });
-   logInfo("Existing user:")
+   logInfo("Existing user:");
    logInfo(existingUser);
    if (existingUser) throw new AlreadyExistsError();
 
