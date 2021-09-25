@@ -26,8 +26,7 @@ export const processChallengeConfirmation = async (
    logInfo("One time code:");
    logInfo(oneTimeCode);
    logInfo(`Is Expired?: ${isExpired}`);
-   if (!oneTimeCode || isExpired)
-      throw new UnauthorizedError();
+   if (!oneTimeCode || isExpired) throw new UnauthorizedError();
 
    oneTimeCode.completed = true;
    oneTimeCode = await oneTimeCodeService.update(oneTimeCode);

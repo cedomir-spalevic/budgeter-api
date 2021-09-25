@@ -1,7 +1,11 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { handleErrorResponse } from "middleware/errors";
 import { apply, asyncify, waterfall } from "async";
-import { BudgeterRequest, BudgeterRequestAuth, StepFunctionBatchJobRequest } from "models/requests";
+import {
+   BudgeterRequest,
+   BudgeterRequestAuth,
+   StepFunctionBatchJobRequest
+} from "models/requests";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type AsyncRoute<Req = any, Res = any> = (...args: Req[]) => Promise<Res>;
@@ -13,7 +17,10 @@ class Handler {
    private defaultResponseStatusCode: number;
    private routes: AsyncRoute[];
    private errorRoute: AsyncRoute<Error, APIGatewayProxyResult>;
-   private authRoute: AsyncRoute<StepFunctionBatchJobRequest, BudgeterRequestAuth>;
+   private authRoute: AsyncRoute<
+      StepFunctionBatchJobRequest,
+      BudgeterRequestAuth
+   >;
    private requestTransformerRoute: AsyncRoute<
       APIGatewayProxyEvent,
       BudgeterRequest

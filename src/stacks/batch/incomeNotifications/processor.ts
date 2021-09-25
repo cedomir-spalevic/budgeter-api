@@ -40,8 +40,10 @@ export const processIncomeNotifications = async (): Promise<void> => {
 
 const notifyUser = async (user: User): Promise<void> => {
    logInfo(`Notifying user ${user._id}`);
-   if(!user.device?.platformApplicationEndpointArn) {
-      logInfo(`User ${user._id} does not have a platformApplicationEndpointArn`);
+   if (!user.device?.platformApplicationEndpointArn) {
+      logInfo(
+         `User ${user._id} does not have a platformApplicationEndpointArn`
+      );
       return;
    }
    const budgeterClient = await BudgeterMongoClient.getInstance();

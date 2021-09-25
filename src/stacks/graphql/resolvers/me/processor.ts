@@ -44,14 +44,16 @@ class MeProcessor {
       )
          existingUser.lastName = input.lastName;
       if (
-         input.notificationPreferences && input.notificationPreferences.incomeNotifications !== undefined &&
+         input.notificationPreferences &&
+         input.notificationPreferences.incomeNotifications !== undefined &&
          existingUser.notificationPreferences.incomeNotifications !==
             input.notificationPreferences.incomeNotifications
       )
          existingUser.notificationPreferences.incomeNotifications =
             input.notificationPreferences.incomeNotifications;
       if (
-         input.notificationPreferences && input.notificationPreferences.paymentNotifications !== undefined &&
+         input.notificationPreferences &&
+         input.notificationPreferences.paymentNotifications !== undefined &&
          existingUser.notificationPreferences.paymentNotifications !==
             input.notificationPreferences.paymentNotifications
       )

@@ -45,7 +45,7 @@ export const apiKeyAuth = async (
    return {
       isAdmin: false,
       isAuthenticated: true
-   }
+   };
 };
 
 export const adminAuth = async (

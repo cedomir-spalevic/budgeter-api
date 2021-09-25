@@ -10,7 +10,7 @@ export const processRefresh = async (
 ): Promise<AuthResponse> => {
    logInfo("Refresh request:");
    logInfo(request);
-   
+
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const refreshTokenService = budgeterClient.getRefreshTokenCollection();
 
