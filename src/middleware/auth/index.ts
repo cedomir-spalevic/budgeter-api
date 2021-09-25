@@ -9,6 +9,7 @@ import {
    StepFunctionBatchJobRequest
 } from "models/requests";
 import { Token } from "models/auth";
+import { logInfo } from "services/internal/logging";
 
 const getAccessTokenFromHeader = (
    headers: APIGatewayProxyEventHeaders
@@ -33,6 +34,8 @@ const attemptAccessTokenDecode = (
 export const apiKeyAuth = async (
    event: StepFunctionBatchJobRequest
 ): Promise<void> => {
+   logInfo(`Api Key Auth payload:`);
+   logInfo(event);
    const apiKey = event.Payload.Input.apiKey;
    const budgeterClient = await BudgeterMongoClient.getInstance();
    const apiKeyService = budgeterClient.getApiKeyCollection();
