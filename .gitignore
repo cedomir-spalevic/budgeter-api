@@ -17,3 +17,7 @@ jspm_packages
 
 # Newman reports
 newman
+
+# Terraform
+.terraform
+.terraform.lock.hcl

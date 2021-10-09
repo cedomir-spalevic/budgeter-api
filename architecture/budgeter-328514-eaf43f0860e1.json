@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "budgeter-328514",
+  "private_key_id": "eaf43f0860e1deb4c380a998f5469015cd07d7e5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC5lfho3YdMUC6I\nh8BneQZFXI5kOUZk9bl+4utKhuCTNbE+RzhQeBszQOmmPq8rTvVXbRomhv5J6O9F\nBTYdN46WC667kKqoRAWAXXLaQ9aTCve1vTxRAPfTAUbIDFOJU+psQSyHvqnwSkb/\nG7xVwyeO/Vehg7SFLwZMfyzySYt637rZTnrM/2cknj4szwd5HZJDvs5BDl/YbWaj\nIO5SXb97DwWwUJa74miYsBIrXVCytzhA2zxLVuDDr126zWwOBCMHpxIJH7r4+AXW\n/4SmteD5I+McqjXH33rUu+/0uw3lFW8kh4V3eA/KHQBXEjVrX+MypXaJrT1biobP\niU8jEEe3AgMBAAECggEAIU/BgHUvCWwlBh2z0/7duMqFxoifUZTnwFZT3JM8MUBE\necTH323HmBoRNmVvBMuN7yzmsj6t2y9j71Qho/nqbpVXPlSXxU88W4+qg3IEzGz+\nDJGUh4ewdB/5CARqZC57WAYUy6LWFwsGFllwo0Y9zgU8WwHsf7FypH15YF4CGsJK\ndcRU4iNgLT3F0j7je3e9boFvX8smalrlC77AV8iBlB+iRS5saH8iKcr5Y0p0dX8n\njLu/azXDxlwDJJuzqykFIOpQiW15ATgg2gse5AWPQTd+nnNNVKp3/ytdKTbGbtHR\njmC1jlqdgiZ9hyhu/cc4TUseKK4zhSdHqobqeQxpBQKBgQDpWm9uwP1oTzyeCNKe\nNGnqI13Slqd1yEKlKkgjrML1VtS2NKFSQwcaJZfH9t+K4GKs1eoYsE1JqQuas/pJ\nNTOXBXTS6uc2ahrdt++Vwc55Fv3KI3+y2sxJgzGbqplkEG4Xhq3K1nqXqIkpFCh+\nlBkmM5g6wh9T5ftjh2nQ0XISHQKBgQDLmMXaoCM9xHDIFbHLYCkvlIQQ/59UDlUN\nhGKe6jloGY9FxTRBJ7RTqcqP51j9N+nzwlq3GZ0NLB6Q59a1wYDQj56O52xbXm3c\n9jRJ1d4H+KJ45wSgzmqWExuH0iLNfzWuSpJRVLh8aZxKpwJYh5mmjyQjqRRSbrgh\ngya6uH2Y4wKBgQCQXaus6Gad/s9wseKjj6eq++BSpXPKsW9RwVvJ/lrK78I/S0Y2\nn1MogPNq+beIspM5fEoMph3aoWOVfR0t52UYXH7O8hbDGleurdniW3mCfo/aW6Xo\nH+bc3/Zz6NJnDqcdlOu2HoTPiKv6pwb6cGMyuB7I00oQXKrvA1qanskknQKBgQCx\nHCZJyHK/wcpmlFDFXdKWPHkinGxK3+jnSFnOam0j/NAg3qtVXqfE+/hldNh59xEC\n5vipPZPcqJuybKvgEwPu6nEBWZpuZVfnFxpnfK+YeZdE25qwFMCt6tNRNODnqRjW\nlLJyI+QU/n5ihqRIxTVJqk3C48v05bIyHPgtCF7iBwKBgQDOwcO57bjoABdhuFxX\n6HJTBJhLgEJWBO3H4fUVrsgFkYCrSLH5GDXoIlyNVcVQt8qTfMqD/JczBDpKUvhW\n5psvtTYv+jKoCv2qUMNvMORTNUh7zWVzQiQZ2xfusk4oDwLuBQYNLeCoRwSDd8CV\nbEbCjxpUBg2MukpRC+JXxkes/Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "budgeter-terraform@budgeter-328514.iam.gserviceaccount.com",
+  "client_id": "111080010435151798990",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/budgeter-terraform%40budgeter-328514.iam.gserviceaccount.com"
+}
