@@ -20,3 +20,14 @@ export const budgeterErrorHandler = (err, req, res, next) => {
       res.status(500).send({ message: "Something went wrong. :/ "});
    }
 };
+
+export const asyncHandler = (fn) => {
+   return async (req, res, next) => {
+      try {
+         await fn(req, res, next);
+      }
+      catch(error) {
+         next(error);
+      }
+   };
+};
