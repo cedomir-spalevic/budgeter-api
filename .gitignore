@@ -1,0 +1,19 @@
+# Build folder
+dist
+
+# Node modules
+node_modules
+jspm_packages
+
+# ENV variables
+.env
+.aws.env
+
+# Serverless
+.serverless
+
+# Webpack
+.webpack
+
+# Newman reports
+newman
