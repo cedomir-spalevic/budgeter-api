@@ -1,4 +1,4 @@
-module.exports = {
+{
 	"env": {
       "es6": true,
       "node": true,
@@ -7,7 +7,7 @@ module.exports = {
    "plugins": ["jest"],
 	"extends": ["eslint:recommended"],
 	"parserOptions": {
-		"ecmaVersion": 13,
+		"ecmaVersion": "latest",
       "sourceType": "module"
 	},
 	"rules": {
@@ -31,4 +31,4 @@ module.exports = {
          }
       ]
 	}
-};
+}
