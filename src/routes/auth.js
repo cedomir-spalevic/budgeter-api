@@ -1,4 +1,4 @@
-import challenge from "../controllers/auth/challenge.js";
+import challenge from "../controllers/auth/challenge/index.js";
 import confirmation from "../controllers/auth/confirmation.js";
 import refresh from "../controllers/auth/refresh.js";
 import { asyncHandler } from "../lib/middleware/error.js";

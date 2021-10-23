@@ -1,16 +1,16 @@
-import challenge from "../challenge.js";
-import { generateOneTimeCode, getExpirationLength } from "../../../lib/security/oneTimeCode.js";
-import { oneTimeCodesService } from "../../../services/mongodb/index.js";
-import { sendOneTimeCodeVerification } from "../../../lib/verification/index.js";
+import challenge from "controllers/auth/challenge/index.js";
+import { generateOneTimeCode, getExpirationLength } from "lib/security/oneTimeCode.js";
+import { oneTimeCodesService } from "services/mongodb/index.js";
+import { sendOneTimeCodeVerification } from "lib/verification/index.js";
 import { ObjectId } from "mongodb";
 import { v4 as generateGuid } from "uuid";
 
-jest.mock("../../../lib/security/oneTimeCode.js", () => ({
-   ...jest.requireActual("../../../lib/security/oneTimeCode.js"),
+jest.mock("lib/security/oneTimeCode.js", () => ({
+   ...jest.requireActual("lib/security/oneTimeCode.js"),
    generateOneTimeCode: jest.fn()
 }));
-jest.mock("../../../services/mongodb/index.js");
-jest.mock("../../../lib/verification/index.js");
+jest.mock("services/mongodb/index.js");
+jest.mock("lib/verification/index.js");
 
 let req;
 let res;
@@ -36,10 +36,6 @@ describe("Challenge controller invalid inputs", () => {
       key = generateGuid();
       code = "123456";
       expires = getExpirationLength();
-   });
-
-   afterEach(() => {
-      jest.unmock("../../../services/mongodb/index.js");
    });
 
    test("Missing userIdentifier", async () => {

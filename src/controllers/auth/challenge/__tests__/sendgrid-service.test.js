@@ -1,16 +1,16 @@
-import challenge from "../challenge.js";
-import { generateOneTimeCode } from "../../../lib/security/oneTimeCode.js";
-import { oneTimeCodesService } from "../../../services/mongodb/index.js";
+import challenge from "controllers/auth/challenge/index.js";
+import { generateOneTimeCode } from "lib/security/oneTimeCode.js";
+import { oneTimeCodesService } from "services/mongodb/index.js";
 import { v4 as generateGuid } from "uuid";
-import { getClient } from "../../../services/sendgrid/connection";
+import { getClient } from "services/sendgrid/connection";
 import { ObjectId } from "mongodb";
 
-jest.mock("../../../lib/security/oneTimeCode.js", () => ({
-   ...jest.requireActual("../../../lib/security/oneTimeCode.js"),
+jest.mock("lib/security/oneTimeCode.js", () => ({
+   ...jest.requireActual("lib/security/oneTimeCode.js"),
    generateOneTimeCode: jest.fn()
 }));
-jest.mock("../../../services/sendgrid/connection");
-jest.mock("../../../services/mongodb/index.js");
+jest.mock("services/sendgrid/connection");
+jest.mock("services/mongodb/index.js");
 jest.mock("@sendgrid/mail");
 
 let req;
