@@ -4,6 +4,7 @@ import { oneTimeCodesService } from "services/mongodb/index.js";
 import { sendOneTimeCodeVerification } from "lib/verification/index.js";
 import { ObjectId } from "mongodb";
 import { v4 as generateGuid } from "uuid";
+import { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } from "../../../../utils/constants";
 
 jest.mock("lib/security/oneTimeCode.js", () => ({
    ...jest.requireActual("lib/security/oneTimeCode.js"),
@@ -46,14 +47,13 @@ describe("Challenge controller invalid inputs", () => {
          error = e;
       }
       finally {
-         expect(res.send).not.toHaveBeenCalled();
-         expect(error).toBeTruthy();
+         expect(error.message).toBe("userIdentifier is required");
       }
    });
 
    test("Null userIdentifier", async () => {
       req.body = {
-         email: null
+         userIdentifier: null
       };
       try {
          await challenge(req, res);
@@ -62,8 +62,7 @@ describe("Challenge controller invalid inputs", () => {
          error = e;
       }
       finally {
-         expect(res.send).not.toHaveBeenCalled();
-         expect(error).toBeTruthy();
+         expect(error.message).toBe("email is not valid");
       }
    });
    
@@ -76,8 +75,7 @@ describe("Challenge controller invalid inputs", () => {
          error = e;
       }
       finally {
-         expect(res.send).not.toHaveBeenCalled();
-         expect(error).toBeTruthy();
+         expect(error.message).toBe("email is not valid");
       }
    });
    
@@ -90,8 +88,7 @@ describe("Challenge controller invalid inputs", () => {
          error = e;
       }
       finally {
-         expect(res.send).not.toHaveBeenCalled();
-         expect(error).toBeTruthy();
+         expect(error.message).toBe("email is not valid");
       }
    });
 
@@ -104,8 +101,7 @@ describe("Challenge controller invalid inputs", () => {
          error = e;
       }
       finally {
-         expect(res.send).not.toHaveBeenCalled();
-         expect(error).toBeTruthy();
+         expect(error.message).toBe("email is not valid");
       }
    });
 
@@ -118,8 +114,7 @@ describe("Challenge controller invalid inputs", () => {
          error = e;
       }
       finally {
-         expect(res.send).not.toHaveBeenCalled();
-         expect(error).toBeTruthy();
+         expect(error.message).toBe("phoneNumber is not valid");
       }
    });   
 
@@ -132,8 +127,7 @@ describe("Challenge controller invalid inputs", () => {
          error = e;
       }
       finally {
-         expect(res.send).not.toHaveBeenCalled();
-         expect(error).toBeTruthy();
+         expect(error.message).toBe("email is not valid");
       }
    });
 });
@@ -180,12 +174,16 @@ describe("Challenge controller valid inputs", () => {
       try {
          await challenge(req, res);
       }
+      catch(e) {
+         error = e;
+      }
       finally {
+         expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
             key,
             expires,
-            type: "email"
+            type: EMAIL_USER_IDENTIFIER_TYPE
          });
       }
    });
@@ -199,12 +197,12 @@ describe("Challenge controller valid inputs", () => {
          error = e;
       }
       finally {
-         expect(error).toBeFalsy();
+         expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
             key,
             expires,
-            type: "phone"
+            type: PHONE_USER_IDENTIFIER_TYPE
          });
       }
    });
@@ -219,12 +217,12 @@ describe("Challenge controller valid inputs", () => {
          error = e;
       }
       finally {
-         expect(error).toBeFalsy();
+         expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
             key,
             expires,
-            type: "phone"
+            type: PHONE_USER_IDENTIFIER_TYPE
          });
       }
    });
@@ -238,12 +236,12 @@ describe("Challenge controller valid inputs", () => {
          error = e;
       }
       finally {
-         expect(error).toBeFalsy();
+         expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
             key,
             expires,
-            type: "phone"
+            type: PHONE_USER_IDENTIFIER_TYPE
          });
       }
    });
@@ -257,12 +255,12 @@ describe("Challenge controller valid inputs", () => {
          error = e;
       }
       finally {
-         expect(error).toBeFalsy();
+         expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
             key,
             expires,
-            type: "phone"
+            type: PHONE_USER_IDENTIFIER_TYPE
          });
       }
    });
@@ -276,12 +274,12 @@ describe("Challenge controller valid inputs", () => {
          error = e;
       }
       finally {
-         expect(error).toBeFalsy();
+         expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
             key,
             expires,
-            type: "phone"
+            type: PHONE_USER_IDENTIFIER_TYPE
          });
       }
    });
@@ -295,12 +293,12 @@ describe("Challenge controller valid inputs", () => {
          error = e;
       }
       finally {
-         expect(error).toBeFalsy();
+         expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
             key,
             expires,
-            type: "email"
+            type: EMAIL_USER_IDENTIFIER_TYPE
          });
       }
    });

@@ -88,7 +88,6 @@ describe("Challenge valid inputs with Twilio errors", () => {
          expect(getClient).toHaveBeenCalled();
          expect(res.json).not.toHaveBeenCalled();
          expect(res.send).not.toHaveBeenCalled();
-         expect(error).toBeTruthy();
       }
    });
 });

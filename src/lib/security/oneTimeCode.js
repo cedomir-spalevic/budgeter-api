@@ -1,6 +1,6 @@
-import { v4 as generateGuid } from "uuid";
+import { generateGuid } from "./guid.js";
 
-const generateCode = () => Math.floor(100000 + Math.random() * 900000);
+const generateCode = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 const getExpiration = () => {
    const now = Date.now();
@@ -18,7 +18,7 @@ export const getExpirationLength = () => 1000 * 60 * 5;
  * @param {*} req - express req object
  * @param {*} userIdentifier - email or phone number
  */
-export const generateOneTimeCode = (req, userIdentifier) => {
+export const generateOneTimeCode = (req, userIdentifier, type) => {
    const key = generateGuid();
    const code = generateCode();
    const expiresOn = getExpiration();
@@ -26,9 +26,12 @@ export const generateOneTimeCode = (req, userIdentifier) => {
       userIdentifier,
       key,
       code,
-      expiresOn
+      expiresOn,
+      type
    };
    req.logger.info("One Time Code generated");
    req.logger.info(oneTimeCode);
    return oneTimeCode;
 };
+
+export const isOneTimeCode = (code) => code && code.toString().match(/^[0-9]{6}$/);

@@ -1,0 +1,2 @@
+export const EMAIL_USER_IDENTIFIER_TYPE = "EMAIL";
+export const PHONE_USER_IDENTIFIER_TYPE = "PHONE";
