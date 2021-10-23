@@ -1,7 +1,18 @@
-export const sendEmail = async (email) => {
-   return new Promise((resolve, reject) => {
-      setTimeout(() => {
-         resolve();
-      }, 1000);
-   });
+import { sendEmail } from "../../services/sendgrid/index.js";
+
+export const sendOneTimeCodeEmail = async (req, email, code) => {
+   const subject = "Your Budgeter verification code";
+   const html = `
+      <html>
+         <body>
+            <div style="display: flex;flex-direction: row;align-items: center;">
+               <img src="https://budgeter-api.s3.amazonaws.com/app-icon.png" width="25"
+                  style="border-radius: 5px;margin-right: 5px;" />
+            </div>
+            <p>Your Budgeter verification code is:</p>
+            <b>${code}</b>
+         </body>
+      </html>
+   `;
+   await sendEmail(req, email, subject, html);
 };

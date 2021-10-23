@@ -3,7 +3,7 @@ import { normalizePhoneNumber, normalizeStr } from "../../utils/normalizers.js";
 import { BudgeterError } from "../../lib/middleware/error.js";
 import { generateOneTimeCode, getExpirationLength } from "../../lib/security/oneTimeCode.js";
 import { oneTimeCodesService } from "../../services/mongodb/index.js";
-import { sendVerification } from "../../lib/verification/index.js";
+import { sendOneTimeCodeVerification } from "../../lib/verification/index.js";
 
 const validate = (req) => {
    let email = null;
@@ -47,7 +47,10 @@ const createCode = async (req, input) => {
 const challenge = async (req, res, next) => {
    const input = validate(req);
    const oneTimeCode = await createCode(req, input);
-   await sendVerification(input);
+   await sendOneTimeCodeVerification(req, { 
+      ...input,
+      code: oneTimeCode.code
+   });
    res.json({
       type: input.type,
       expires: getExpirationLength(),

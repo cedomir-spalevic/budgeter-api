@@ -12,7 +12,7 @@ export const getClient = async () => {
          await client.connect();
       }
       catch(error) {
-         throw new BudgeterError(500, "Most likely cannot connect to MongoDB");
+         throw new BudgeterError(400, "Downstream error: Mongodb connection error", error);
       }
    }
    return client;

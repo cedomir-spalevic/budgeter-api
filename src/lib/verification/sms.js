@@ -1,7 +1,6 @@
-export const sendSms = async (phoneNumber) => {
-   return new Promise((resolve, reject) => {
-      setTimeout(() => {
-         resolve();
-      }, 1000);
-   });
+import { sendSms } from "../../services/twilio/index.js";
+
+export const sendOneTImeCodeSms = async (req, phoneNumber, code) => {
+   const message = `Your Budgeter verification code is: ${code}`;
+   await sendSms(req, phoneNumber, message);
 };

@@ -1,14 +1,5 @@
 import challenge from "../challenge.js";
 import { jest } from "@jest/globals";
-import { oneTimeCodesService } from "../../../services/mongodb/index.js";
-
-jest.mock("../../../services/mongodb/index.js", () => {
-   const original = jest.requireActual("../../../services/mongodb/index.js");
-   return {
-      ...original,
-      oneTimeCodesService: jest.fn()
-   };
-});
 
 let req;
 let res;
@@ -140,9 +131,12 @@ describe("Challenge controller valid requests", () => {
    });
 
    test("All caps email", async () => {
-      oneTimeCodesService.mockImplementation(async () => ({
-         oneTimeCode: "test"
-      }));
+      // eslint-disable-next-line no-undef
+      const mongoDbService = require("../../../services/mongodb/index");
+      const mock = jest.spyOn(mongoDbService, "oneTimeCodesService");
+      mock.mockImplementation(() => Promise.resolve({}));
+      //mongoDbService.oneTimeCodesService = jest.fn(() => Promise.resolve({}));
+      //mongoDbService.oneTimeCodesService.mockImplementation(() => Promise.resolve({}));
       req.body = { userIdentifier: "CEDOMIR.SPALEVIC@GMAIL.COM" };
       await challenge(req, res);
       expect(res.send).toHaveBeenCalledTimes(1);

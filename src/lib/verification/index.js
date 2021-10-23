@@ -1,16 +1,16 @@
 import { BudgeterError } from "../middleware/error.js";
-import { sendEmail } from "./email.js";
-import { sendSms } from "./sms.js";
+import { sendOneTimeCodeEmail } from "./email.js";
+import { sendOneTImeCodeSms } from "./sms.js";
 
-export const sendVerification = async ({ email, phoneNumber, type }) => {
+export const sendOneTimeCodeVerification = async (req, { email, phoneNumber, type, code }) => {
    switch(type) {
       case "email": 
-         await sendEmail(email);
+         await sendOneTimeCodeEmail(req, email, code);
          break;
       case "phone":
-         await sendSms(phoneNumber);
+         await sendOneTImeCodeSms(req, phoneNumber, code);
          break;
       default:
-         throw new BudgeterError(500, "Incorrect type for verification");
+         throw new BudgeterError(400, "Verification lib: invalid type");
    }
 };

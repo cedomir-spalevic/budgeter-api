@@ -10,7 +10,7 @@ export default class EntityCollection {
    }
 
    #logMessage(message, obj) {
-      this.#req.logger.info(`${this.#collection.collectionName} service: ${message}`);
+      this.#req.logger.info(`MongoDb ${this.#collection.collectionName} service: ${message}`);
       if(obj) {
          this.#req.logger.info(obj);
       }
