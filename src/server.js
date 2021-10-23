@@ -2,9 +2,9 @@ import express from "express";
 import { setupRoutes as setupAuthRoutes } from "./routes/auth.js";
 import { setupRoutes as setupApolloServer } from "./routes/apolloServer.js";
 import bodyParser from "body-parser";
-import { budgeterErrorHandler } from "./middleware/error.js";
+import { budgeterErrorHandler } from "./lib/middleware/error.js";
 import * as setup from "./setup.js";
-import { getLogger } from "./middleware/logger.js";
+import { getLogger } from "./lib/middleware/logger.js";
 
 setup.loadConfigs();
 

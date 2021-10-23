@@ -17,7 +17,7 @@ export const budgeterErrorHandler = (err, req, res, next) => {
    else {
       req.logger.error("Unknown error thrown");
       req.logger.error(err);
-      res.status(500).send({ message: "Something went wrong. :/ "});
+      res.status(500).send({ message: "Something went wrong. :/"});
    }
 };
 

@@ -1,8 +1,18 @@
 import challenge from "../challenge.js";
-import sinon from "sinon";
+import { jest } from "@jest/globals";
+import { oneTimeCodesService } from "../../../services/mongodb/index.js";
+
+jest.mock("../../../services/mongodb/index.js", () => {
+   const original = jest.requireActual("../../../services/mongodb/index.js");
+   return {
+      ...original,
+      oneTimeCodesService: jest.fn()
+   };
+});
 
 let req;
 let res;
+let error;
 
 describe("Challenge controller invalid requests", () => {
    beforeEach(() => {
@@ -10,138 +20,195 @@ describe("Challenge controller invalid requests", () => {
          body: {}
       };
       res = {
-         send: sinon.stub()
+         send: jest.fn()
       };
+      error = null;
    });
 
-   test("Missing email and phone number", () => {
-      expect(() => {
-         challenge(req, res);
-      }).toThrowError();
+   test("Missing userIdentifier", async () => {
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(res.send).not.toHaveBeenCalled();
+         expect(error).toBeTruthy();
+      }
    });
 
-   test("Null email", () => {
-      expect(() => {
-         req.body = {
-            email: null
-         };
-         challenge(req, res);
-      }).toThrowError();
+   test("Null userIdentifier", async () => {
+      req.body = {
+         email: null
+      };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(res.send).not.toHaveBeenCalled();
+         expect(error).toBeTruthy();
+      }
    });
    
-   test("Invalid email", () => {
-      expect(() => {
-         req.body = { email: "charlie.gmail.com" };
-         challenge(req, res);
-      }).toThrowError();
+   test("Blank userIdentifier", async () => {
+      req.body = { userIdentifier: "" };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(res.send).not.toHaveBeenCalled();
+         expect(error).toBeTruthy();
+      }
    });
    
-   test("Blank email and phone number", () => {
-      expect(() => {
-         req.body = { email: "", phoneNumber: "" };
-         challenge(req, res);
-      }).toThrowError();
+   test("Invalid email", async () => {
+      req.body = { userIdentifier: "@charlie.gmail.com" };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(res.send).not.toHaveBeenCalled();
+         expect(error).toBeTruthy();
+      }
    });
 
-   test("Email with only spaces", () => {
-      expect(() => {
-         req.body = { email: "                  " };
-         challenge(req, res);
-      }).toThrowError();
+   test("Email with only spaces", async () => {
+      req.body = { userIdentifier: "       @           " };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(res.send).not.toHaveBeenCalled();
+         expect(error).toBeTruthy();
+      }
    });
 
-   test("Phone number with only spaces", () => {
-      expect(() => {
-         req.body = { phoneNumber: "                  " };
-         challenge(req, res);
-      }).toThrowError();
+   test("Phone number with only spaces", async () => {
+      req.body = { userIdentifier: "                  " };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(res.send).not.toHaveBeenCalled();
+         expect(error).toBeTruthy();
+      }
    });   
 
-   test("Email with spaces", () => {
-      expect(() => {
-         req.body = { email: "      CEDOMIR.SPALEVIC@GMAIL.COM         " };
-         challenge(req, res);
-      }).toThrowError();
+   test("Email with spaces", async () => {
+      req.body = { userIdentifier: "      CEDOMIR.SPALEVIC@GMAIL.COM         " };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(res.send).not.toHaveBeenCalled();
+         expect(error).toBeTruthy();
+      }
    });
 });
 
 describe("Challenge controller valid requests", () => {
    beforeEach(() => {
       req = {
-         body: {}
+         body: {}, 
+         logger: {
+            info: jest.fn(),
+            error: jest.fn()
+         }
       };
       res = {
-         send: sinon.spy()
+         send: jest.fn()
       };
    });
 
-   test("All caps email", () => {
-      req.body = { email: "CEDOMIR.SPALEVIC@GMAIL.COM" };
-      challenge(req, res);
-      sinon.assert.calledOnce(res.send);
-      sinon.assert.calledWithMatch(res.send, { email: "cedomir.spalevic@gmail.com", phoneNumber: null });
+   test("All caps email", async () => {
+      oneTimeCodesService.mockImplementation(async () => ({
+         oneTimeCode: "test"
+      }));
+      req.body = { userIdentifier: "CEDOMIR.SPALEVIC@GMAIL.COM" };
+      await challenge(req, res);
+      expect(res.send).toHaveBeenCalledTimes(1);
+      expect(res.send).toHaveBeenCalledWith({ email: "cedomir.spalevic@gmail.com", phoneNumber: null });
    });
 
-   test("Null email but valid phone number", () => {
-      req.body = { email: null, phoneNumber: "6309152350" };
-      challenge(req, res);
-      sinon.assert.calledOnce(res.send);
-      sinon.assert.calledWithMatch(res.send, { email: null, phoneNumber: "+1 630 915 2350"});
-   });
+//    test("Null email but valid phone number", () => {
+//       req.body = { email: null, phoneNumber: "6309152350" };
+//       challenge(req, res);
+//       sinon.assert.calledOnce(res.send);
+//       sinon.assert.calledWithMatch(res.send, { email: null, phoneNumber: "+1 630 915 2350"});
+//    });
 
-   test("Valid email but blank phone number", () => {
-      req.body = {
-         email: "charlie.spalevic@gmail.com",
-         phoneNumber: null
-      };      
-      challenge(req, res);
-      sinon.assert.calledOnce(res.send);
-      sinon.assert.calledWith(res.send, { email: "charlie.spalevic@gmail.com", phoneNumber: null });
-   });
+//    test("Valid email but blank phone number", () => {
+//       req.body = {
+//          email: "charlie.spalevic@gmail.com",
+//          phoneNumber: null
+//       };      
+//       challenge(req, res);
+//       sinon.assert.calledOnce(res.send);
+//       sinon.assert.calledWith(res.send, { email: "charlie.spalevic@gmail.com", phoneNumber: null });
+//    });
    
-   test("Valid email but blank phone number", () => {
-      req.body = {
-         email: "charlie.spalevic@gmail.com",
-         phoneNumber: ""
-      };
-      challenge(req, res);
-      sinon.assert.calledOnce(res.send);
-      sinon.assert.calledWith(res.send, { email: "charlie.spalevic@gmail.com", phoneNumber: null });
-   });
+//    test("Valid email but blank phone number", () => {
+//       req.body = {
+//          email: "charlie.spalevic@gmail.com",
+//          phoneNumber: ""
+//       };
+//       challenge(req, res);
+//       sinon.assert.calledOnce(res.send);
+//       sinon.assert.calledWith(res.send, { email: "charlie.spalevic@gmail.com", phoneNumber: null });
+//    });
    
-   test("Valid email but undefined phone number", () => {
-      req.body = {
-         email: "charlie.spalevic@gmail.com"
-      };
-      challenge(req, res);
-      sinon.assert.calledOnce(res.send);
-      sinon.assert.calledWith(res.send, { email: "charlie.spalevic@gmail.com", phoneNumber: null });
-   });
+//    test("Valid email but undefined phone number", () => {
+//       req.body = {
+//          email: "charlie.spalevic@gmail.com"
+//       };
+//       challenge(req, res);
+//       sinon.assert.calledOnce(res.send);
+//       sinon.assert.calledWith(res.send, { email: "charlie.spalevic@gmail.com", phoneNumber: null });
+//    });
    
-   test("Valid phone number but blank email", () => {
-      req.body = { phoneNumber: "6309152350" };
-      challenge(req, res);
-      sinon.assert.calledOnce(res.send);
-      sinon.assert.calledWith(res.send, { email: null, phoneNumber: "+1 630 915 2350" });
-   });
+//    test("Valid phone number but blank email", () => {
+//       req.body = { phoneNumber: "6309152350" };
+//       challenge(req, res);
+//       sinon.assert.calledOnce(res.send);
+//       sinon.assert.calledWith(res.send, { email: null, phoneNumber: "+1 630 915 2350" });
+//    });
    
-   test("Valid phone number but blank email", () => {
-      req.body = {
-         phoneNumber: "6309152350",
-         email: null
-      };
-      challenge(req, res);
-      sinon.assert.calledOnce(res.send);
-      sinon.assert.calledWith(res.send, { email: null, phoneNumber: "+1 630 915 2350" });
-   });
+//    test("Valid phone number but blank email", () => {
+//       req.body = {
+//          phoneNumber: "6309152350",
+//          email: null
+//       };
+//       challenge(req, res);
+//       sinon.assert.calledOnce(res.send);
+//       sinon.assert.calledWith(res.send, { email: null, phoneNumber: "+1 630 915 2350" });
+//    });
    
-   test("Valid phone number but blank email", () => {
-      req.body = {
-         phoneNumber: "6309152350",
-         email: ""
-      };
-      challenge(req, res);
-      sinon.assert.calledOnce(res.send);
-      sinon.assert.calledWith(res.send, { email: null, phoneNumber: "+1 630 915 2350" });
-   });
+//    test("Valid phone number but blank email", () => {
+//       req.body = {
+//          phoneNumber: "6309152350",
+//          email: ""
+//       };
+//       challenge(req, res);
+//       sinon.assert.calledOnce(res.send);
+//       sinon.assert.calledWith(res.send, { email: null, phoneNumber: "+1 630 915 2350" });
+//    });
 });

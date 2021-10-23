@@ -1,7 +1,7 @@
 import challenge from "../controllers/auth/challenge.js";
 import confirmation from "../controllers/auth/confirmation.js";
 import refresh from "../controllers/auth/refresh.js";
-import { asyncHandler } from "../middleware/error.js";
+import { asyncHandler } from "../lib/middleware/error.js";
 
 export const setupRoutes = (app) => {
    app.post("/auth/challenge", asyncHandler(challenge));

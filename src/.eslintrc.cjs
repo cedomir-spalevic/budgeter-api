@@ -1,9 +1,11 @@
 module.exports = {
 	"env": {
 		"browser": true,
-		"es2021": true
+		"es2021": true,
+      "jest/globals": true
 	},
-	"extends": "eslint:recommended",
+   "plugins": ["jest"],
+	"extends": ["eslint:recommended"],
 	"parserOptions": {
 		"ecmaVersion": 13,
 		"sourceType": "module"
@@ -21,13 +23,15 @@ module.exports = {
 			"error",
 			"always"
 		],
-      "no-unused-vars": "off"
+      "no-unused-vars": "off",
+      "jest/consistent-test-it": [
+         "error",
+         {
+            "fn": "test"
+         }
+      ]
 	},
    "globals": {
-      "process": "readonly",
-      "test": "readonly",
-      "describe": "readonly",
-      "expect": "readonly",
-      "beforeEach": "readonly"
+      "process": "readonly"
    }
 };

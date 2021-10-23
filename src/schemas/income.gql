@@ -1,0 +1,4 @@
+type Income {
+   title: String!
+   amount: Int
+}
