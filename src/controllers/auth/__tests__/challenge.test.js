@@ -1,19 +1,45 @@
 import challenge from "../challenge.js";
-import { jest } from "@jest/globals";
+import { generateOneTimeCode, getExpirationLength } from "../../../lib/security/oneTimeCode.js";
+import { oneTimeCodesService } from "../../../services/mongodb/index.js";
+import { sendOneTimeCodeVerification } from "../../../lib/verification/index.js";
+import { ObjectId } from "mongodb";
+import { v4 as generateGuid } from "uuid";
+
+jest.mock("../../../lib/security/oneTimeCode.js", () => ({
+   ...jest.requireActual("../../../lib/security/oneTimeCode.js"),
+   generateOneTimeCode: jest.fn()
+}));
+jest.mock("../../../services/mongodb/index.js");
+jest.mock("../../../lib/verification/index.js");
 
 let req;
 let res;
 let error;
+let key;
+let code;
+let expires;
 
-describe("Challenge controller invalid requests", () => {
+describe("Challenge controller invalid inputs", () => {
    beforeEach(() => {
       req = {
-         body: {}
+         body: {},
+         logger: {
+            info: jest.fn(),
+            error: jest.fn()
+         }
       };
       res = {
+         json: jest.fn(),
          send: jest.fn()
       };
       error = null;
+      key = generateGuid();
+      code = "123456";
+      expires = getExpirationLength();
+   });
+
+   afterEach(() => {
+      jest.unmock("../../../services/mongodb/index.js");
    });
 
    test("Missing userIdentifier", async () => {
@@ -116,93 +142,170 @@ describe("Challenge controller invalid requests", () => {
    });
 });
 
-describe("Challenge controller valid requests", () => {
+describe("Challenge controller valid inputs", () => {
    beforeEach(() => {
       req = {
-         body: {}, 
+         body: {
+            userIdentifier: ""
+         }, 
          logger: {
             info: jest.fn(),
             error: jest.fn()
          }
       };
       res = {
+         json: jest.fn(),
          send: jest.fn()
       };
+      error = null;
+      key = generateGuid();
+      code = "123456";
+      expires = getExpirationLength();
+      generateOneTimeCode.mockImplementation(() => ({
+         userIdentifier: req.body.userIdentifier,
+         key,
+         code,
+         expiresOn: Date.now()
+      }));
+      oneTimeCodesService.mockImplementation(() => Promise.resolve({
+         create: async () => Promise.resolve({
+            _id: ObjectId(),
+            modifiedOn: new Date(),
+            createdOn: new Date(),
+            code,
+            key
+         })
+      }));
+      sendOneTimeCodeVerification.mockImplementation(() => Promise.resolve({}));
    });
 
    test("All caps email", async () => {
-      // eslint-disable-next-line no-undef
-      const mongoDbService = require("../../../services/mongodb/index");
-      const mock = jest.spyOn(mongoDbService, "oneTimeCodesService");
-      mock.mockImplementation(() => Promise.resolve({}));
-      //mongoDbService.oneTimeCodesService = jest.fn(() => Promise.resolve({}));
-      //mongoDbService.oneTimeCodesService.mockImplementation(() => Promise.resolve({}));
       req.body = { userIdentifier: "CEDOMIR.SPALEVIC@GMAIL.COM" };
-      await challenge(req, res);
-      expect(res.send).toHaveBeenCalledTimes(1);
-      expect(res.send).toHaveBeenCalledWith({ email: "cedomir.spalevic@gmail.com", phoneNumber: null });
+      try {
+         await challenge(req, res);
+      }
+      finally {
+         expect(res.json).toHaveBeenCalledTimes(1);
+         expect(res.json).toHaveBeenCalledWith({
+            key,
+            expires,
+            type: "email"
+         });
+      }
    });
 
-//    test("Null email but valid phone number", () => {
-//       req.body = { email: null, phoneNumber: "6309152350" };
-//       challenge(req, res);
-//       sinon.assert.calledOnce(res.send);
-//       sinon.assert.calledWithMatch(res.send, { email: null, phoneNumber: "+1 630 915 2350"});
-//    });
+   test("Valid phone number", async () => {
+      req.body = { userIdentifier: "6309152350" };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(error).toBeFalsy();
+         expect(res.json).toHaveBeenCalledTimes(1);
+         expect(res.json).toHaveBeenCalledWith({
+            key,
+            expires,
+            type: "phone"
+         });
+      }
+   });
 
-//    test("Valid email but blank phone number", () => {
-//       req.body = {
-//          email: "charlie.spalevic@gmail.com",
-//          phoneNumber: null
-//       };      
-//       challenge(req, res);
-//       sinon.assert.calledOnce(res.send);
-//       sinon.assert.calledWith(res.send, { email: "charlie.spalevic@gmail.com", phoneNumber: null });
-//    });
    
-//    test("Valid email but blank phone number", () => {
-//       req.body = {
-//          email: "charlie.spalevic@gmail.com",
-//          phoneNumber: ""
-//       };
-//       challenge(req, res);
-//       sinon.assert.calledOnce(res.send);
-//       sinon.assert.calledWith(res.send, { email: "charlie.spalevic@gmail.com", phoneNumber: null });
-//    });
+   test("Valid phone number", async () => {
+      req.body = { userIdentifier: "(630) 915-2350" };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(error).toBeFalsy();
+         expect(res.json).toHaveBeenCalledTimes(1);
+         expect(res.json).toHaveBeenCalledWith({
+            key,
+            expires,
+            type: "phone"
+         });
+      }
+   });
+
+   test("Valid phone number", async () => {
+      req.body = { userIdentifier: "1 630 915 2350" };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(error).toBeFalsy();
+         expect(res.json).toHaveBeenCalledTimes(1);
+         expect(res.json).toHaveBeenCalledWith({
+            key,
+            expires,
+            type: "phone"
+         });
+      }
+   });
    
-//    test("Valid email but undefined phone number", () => {
-//       req.body = {
-//          email: "charlie.spalevic@gmail.com"
-//       };
-//       challenge(req, res);
-//       sinon.assert.calledOnce(res.send);
-//       sinon.assert.calledWith(res.send, { email: "charlie.spalevic@gmail.com", phoneNumber: null });
-//    });
-   
-//    test("Valid phone number but blank email", () => {
-//       req.body = { phoneNumber: "6309152350" };
-//       challenge(req, res);
-//       sinon.assert.calledOnce(res.send);
-//       sinon.assert.calledWith(res.send, { email: null, phoneNumber: "+1 630 915 2350" });
-//    });
-   
-//    test("Valid phone number but blank email", () => {
-//       req.body = {
-//          phoneNumber: "6309152350",
-//          email: null
-//       };
-//       challenge(req, res);
-//       sinon.assert.calledOnce(res.send);
-//       sinon.assert.calledWith(res.send, { email: null, phoneNumber: "+1 630 915 2350" });
-//    });
-   
-//    test("Valid phone number but blank email", () => {
-//       req.body = {
-//          phoneNumber: "6309152350",
-//          email: ""
-//       };
-//       challenge(req, res);
-//       sinon.assert.calledOnce(res.send);
-//       sinon.assert.calledWith(res.send, { email: null, phoneNumber: "+1 630 915 2350" });
-//    });
+   test("Valid phone number", async () => {
+      req.body = { userIdentifier: "16309152350" };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(error).toBeFalsy();
+         expect(res.json).toHaveBeenCalledTimes(1);
+         expect(res.json).toHaveBeenCalledWith({
+            key,
+            expires,
+            type: "phone"
+         });
+      }
+   });
+
+   test("Valid phone number", async () => {
+      req.body = { userIdentifier: "+16309152350" };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(error).toBeFalsy();
+         expect(res.json).toHaveBeenCalledTimes(1);
+         expect(res.json).toHaveBeenCalledWith({
+            key,
+            expires,
+            type: "phone"
+         });
+      }
+   });
+
+   test("Valid email", async () => {
+      req.body = { userIdentifier: "charlie.spalevic@gmail.com" };
+      try {
+         await challenge(req, res);
+      }
+      catch(e) {
+         error = e;
+      }
+      finally {
+         expect(error).toBeFalsy();
+         expect(res.json).toHaveBeenCalledTimes(1);
+         expect(res.json).toHaveBeenCalledWith({
+            key,
+            expires,
+            type: "email"
+         });
+      }
+   });
 });

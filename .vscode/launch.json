@@ -8,15 +8,23 @@
          "type": "node",
          "request": "launch",
          "name": "Debug API",
-         "skipFiles": [
-            "<node_internals>/**"
-         ],
          "runtimeExecutable": "npm",
          "runtimeArgs": [
             "run-script", 
             "dev"
          ],
          "cwd": "${workspaceFolder}/src"
-      }
+      },
+      {
+         "type": "node",
+         "request": "launch",
+         "name": "Debug Jest Tests",
+         "runtimeExecutable": "npm",
+         "runtimeArgs": [
+            "run-script", 
+            "test:debug"
+         ],
+         "cwd": "${workspaceFolder}/src"
+      },
    ]
 }
