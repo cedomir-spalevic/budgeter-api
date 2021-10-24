@@ -27,9 +27,9 @@ export default class EntityCollection {
          createdOn: date,
          modifiedOn: date
       };
-      this.#logMessage("Creating entity", entityToCreate);
+      this.#logMessage("Creating record", entityToCreate);
       const response = await this.#collection.insertOne(entityToCreate);
-      this.#logMessage("Created entity Id", response.insertedId);
+      this.#logMessage("Create response", response.insertedId);
       return {
          ...entityToCreate,
          _id: response.insertedId
@@ -44,11 +44,17 @@ export default class EntityCollection {
    }
 
    async find(filter, options) {
-      return await this.#collection.findOne(filter, options);
+      this.#logMessage("Finding one record", filter);
+      const response = await this.#collection.findOne(filter, options);
+      this.#logMessage("Find one response", response);
+      return response;
    }
 
    async findMany(query, options) {
-      return await this.#collection.find(query, options).toArray();
+      this.#logMessage("Finding many records", query);
+      const response = await this.#collection.find(query, options).toArray();
+      this.#logMessage("Find many response", response);
+      return response;
    }
 
    async update(entity) {
@@ -56,10 +62,12 @@ export default class EntityCollection {
          ...entity,
          modifiedOn: new Date()
       };
+      this.#logMessage("Updating record", entityToUpdate);
       const response = await this.#collection.replaceOne(
          { _id: entity._id },
          entityToUpdate
       );
+      this.#logMessage("Update response", response);
       return response.ops[0];
    }
 

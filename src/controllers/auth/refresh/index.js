@@ -1,5 +1,5 @@
 import { BudgeterError } from "../../../lib/middleware/error.js";
-import { generateUserAuth } from "../../../lib/security/userAuth";
+import { generateUserAuth } from "../../../lib/security/userAuth.js";
 import { getRefreshTokensCollection } from "../../../services/mongodb/index.js";
 
 const validate = (req) => {
@@ -31,7 +31,7 @@ const findRefreshToken = async (req, token) => {
 
 const refresh = async (req, res, next) => {
    const tokenInput = validate(req);
-   const refreshToken = await findRefreshToken(tokenInput);
+   const refreshToken = await findRefreshToken(req, tokenInput);
    const userAuth = await generateUserAuth(req, refreshToken.userId);
    res.json({ ...userAuth });
 };

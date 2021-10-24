@@ -34,7 +34,7 @@ const validate = (req) => {
    return { key, code };
 };
 
-const findOneTimeCode  = async (req, input) => {
+const findOneTimeCode  = async (req, input) => {   
    const oneTimeCodesCollection = await getOneTimeCodesCollection(req);
    const oneTimeCode = await oneTimeCodesCollection.find({
       key: input.key,

@@ -2,15 +2,15 @@ import { generateAccessToken } from "./accessToken.js";
 import { generateRefreshToken } from "./refreshToken.js";
 import { getRefreshTokensCollection } from "../../services/mongodb/index.js";
 
-const saveRefreshToken = async (refreshToken) => {
-   const refreshTokenCollection = await getRefreshTokensCollection();
+const saveRefreshToken = async (req, refreshToken) => {
+   const refreshTokenCollection = await getRefreshTokensCollection(req);
    await refreshTokenCollection.create(refreshToken);
 };
 
 export const generateUserAuth = async (req, userId) => {
    const refreshToken = generateRefreshToken(userId);
    const accessToken = generateAccessToken(userId, refreshToken.token);
-   await saveRefreshToken(refreshToken);
+   await saveRefreshToken(req, refreshToken);
    return {
       accessToken: accessToken.token,
       expires: accessToken.expires,

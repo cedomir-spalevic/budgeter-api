@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { BudgeterError } from "../middleware/error";
+import { BudgeterError } from "../middleware/error.js";
 
 const getExpiration = () => {
    const now = Date.now();

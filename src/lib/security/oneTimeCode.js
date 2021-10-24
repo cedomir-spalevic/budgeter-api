@@ -1,4 +1,4 @@
-import { generateCode, generateKey } from "../../utils/random";
+import { generateCode, generateKey } from "../../utils/random.js";
 
 const getExpiration = () => {
    const now = Date.now();
