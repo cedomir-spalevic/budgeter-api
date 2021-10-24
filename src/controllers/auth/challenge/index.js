@@ -2,58 +2,46 @@ import { isPhoneNumber, normalizePhoneNumber } from "../../../lib/phoneNumber.js
 import { isEmail } from "../../../lib/email.js";
 import { BudgeterError } from "../../../lib/middleware/error.js";
 import { generateOneTimeCode, getExpirationLength } from "../../../lib/security/oneTimeCode.js";
-import { oneTimeCodesService } from "../../../services/mongodb/index.js";
+import { getOneTimeCodesCollection } from "../../../services/mongodb/index.js";
 import { sendOneTimeCodeVerification } from "../../../lib/verification/index.js";
 import { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } from "../../../utils/constants.js";
 
-const validate = (req) => {
-   let email = null;
-   let phoneNumber = null;
-   let type = null;
+const getCode = (req) => {
    if(!req.body || req.body.userIdentifier === undefined) {
       req.logger.error("No user identifier found");
       throw new BudgeterError(400, "userIdentifier is required"); 
    }
 
-   const userIdentifier = req.body.userIdentifier ? req.body.userIdentifier.toString() : "@";
+   let type = null;
+   let userIdentifier = req.body.userIdentifier ? req.body.userIdentifier.toString() : "@";
    if(userIdentifier.includes("@")) {
       if(!isEmail(userIdentifier)) {
          req.logger.error(`Invalid email = ${userIdentifier}`);
          throw new BudgeterError(400, "email is not valid");
       }
-      email = userIdentifier.toLowerCase().trim();
+      userIdentifier = userIdentifier.toLowerCase().trim();
       type = EMAIL_USER_IDENTIFIER_TYPE;
-      req.logger.info(`Email provided = ${email}`);
+      req.logger.info(`Email provided = ${userIdentifier}`);
    }
    else {
       if(!isPhoneNumber(userIdentifier)) {
          req.logger.error(`Invalid phone number = ${userIdentifier}`);
          throw new BudgeterError(400, "phoneNumber is not valid");
       }
-      phoneNumber = normalizePhoneNumber(userIdentifier);
+      userIdentifier = normalizePhoneNumber(userIdentifier);
       type = PHONE_USER_IDENTIFIER_TYPE;
-      req.logger.info(`Phone number provided = ${phoneNumber}`);
+      req.logger.info(`Phone number provided = ${userIdentifier}`);
    }
 
-   return { email, phoneNumber, type };
-};
-
-const createCode = async (req, input) => {
-   const userIdentifier = input.type === PHONE_USER_IDENTIFIER_TYPE ? input.phoneNumber : input.email;
-   const oneTimeCode = generateOneTimeCode(req, userIdentifier, input.type);
-   const service = await oneTimeCodesService(req);
-   return await service.create(oneTimeCode);
+   return generateOneTimeCode(req, userIdentifier, type);
 };
 
 const challenge = async (req, res, next) => {
-   const input = validate(req);
-   const oneTimeCode = await createCode(req, input);
-   await sendOneTimeCodeVerification(req, { 
-      ...input,
-      code: oneTimeCode.code
-   });
+   const oneTimeCode = getCode(req);
+   const oneTimeCodesCollection = await getOneTimeCodesCollection(req);
+   await oneTimeCodesCollection.create(oneTimeCode);
+   await sendOneTimeCodeVerification(req, oneTimeCode);
    res.json({
-      type: input.type,
       expires: getExpirationLength(),
       key: oneTimeCode.key
    });

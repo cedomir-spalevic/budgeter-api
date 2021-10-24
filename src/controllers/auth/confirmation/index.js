@@ -1,7 +1,9 @@
 import { BudgeterError } from "../../../lib/middleware/error.js";
+import { generateUserAuth } from "../../../lib/security/userAuth.js";
 import { isGuid } from "../../../lib/security/guid.js";
 import { isOneTimeCode } from "../../../lib/security/oneTimeCode.js";
-import { oneTimeCodesService } from "../../../services/mongodb/index.js";
+import { getOneTimeCodesCollection, getUsersCollection } from "../../../services/mongodb/index.js";
+import { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } from "../../../utils/constants.js";
 
 const validate = (req) => {
    let key = null;
@@ -33,22 +35,56 @@ const validate = (req) => {
    return { key, code };
 };
 
-const findRecord  = async (req, input) => {
-   const service = await oneTimeCodesService(req);
-   const record = await service.find({
+const findOneTimeCode  = async (req, input) => {
+   const oneTimeCodesCollection = await getOneTimeCodesCollection(req);
+   const oneTimeCode = await oneTimeCodesCollection.find({
       key: input.key,
       code: input.code
    });
-   if(!record || record.expiresOn < Date.now()) {
+   if(!oneTimeCode || oneTimeCode.expiresOn < Date.now()) {
       throw new BudgeterError(401, "Unauthorized");
    }
-   return record;
+   return oneTimeCode;
+};
+
+const getUser = async (req, oneTimeCode) => {
+   const usersCollection = await getUsersCollection(req);
+   let user = await usersCollection.find({
+      $or: [
+         {
+            $and: [{ email: { $ne: null } }, { email: oneTimeCode.userIdentifier }]
+         },
+         {
+            $and: [{ phoneNumber: { $ne: null } }, { phoneNumber: oneTimeCode.userIdentifier }]
+         }
+      ]
+   });
+   if(!user) {
+      user = {
+         email:  oneTimeCode.userIdentifierType === EMAIL_USER_IDENTIFIER_TYPE ? oneTimeCode.userIdentifier : null,
+         phoneNumber: oneTimeCode.userIdentifierType === PHONE_USER_IDENTIFIER_TYPE ? oneTimeCode.userIdentifier : null
+      };
+      user = await usersCollection.create(user);
+   }
+   else {
+      if(user.email === null && oneTimeCode.userIdentifierType === EMAIL_USER_IDENTIFIER_TYPE) {
+         user.email = oneTimeCode.userIdentifier;
+         await usersCollection.update(user);
+      }
+      if(user.phoneNumber === null && oneTimeCode.userIdentifierType === PHONE_USER_IDENTIFIER_TYPE) {
+         user.phoneNumber = oneTimeCode.userIdentifier;
+         await usersCollection.update(user);
+      }
+   }
+   return user;
 };
 
 const confirmation = async (req, res, next) => {
    const input = validate(req);
-   const record = await findRecord(req, input);
-   res.send("Confirmation");
+   const oneTimeCode = await findOneTimeCode(req, input);
+   const user = await getUser(req, oneTimeCode);
+   const userAuth = await generateUserAuth(req, user._id);
+   res.json({ ...userAuth });
 };
 
 export default confirmation;

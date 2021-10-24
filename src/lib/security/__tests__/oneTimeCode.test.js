@@ -61,7 +61,7 @@ describe("One Time Code tests", () => {
       expect(otc).toHaveProperty("code");
       expect(otc).toHaveProperty("key");
       expect(otc).toHaveProperty("userIdentifier");
-      expect(otc).toHaveProperty("type");
+      expect(otc).toHaveProperty("userIdentifierType");
       expect(otc).toHaveProperty("expiresOn");
    });
 });
