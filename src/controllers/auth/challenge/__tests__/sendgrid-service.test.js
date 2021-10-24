@@ -1,16 +1,16 @@
-import challenge from "controllers/auth/challenge/index.js";
-import { generateOneTimeCode } from "lib/security/oneTimeCode.js";
-import { oneTimeCodesService } from "services/mongodb/index.js";
+import challenge from "controllers/auth/challenge";
+import { generateOneTimeCode } from "lib/security/oneTimeCode";
+import { getOneTimeCodesCollection } from "services/mongodb";
 import { v4 as generateGuid } from "uuid";
-import { getClient } from "services/sendgrid/connection";
 import { ObjectId } from "mongodb";
+import { EMAIL_USER_IDENTIFIER_TYPE } from "utils/constants";
+import sendgridMail from "@sendgrid/mail";
 
-jest.mock("lib/security/oneTimeCode.js", () => ({
-   ...jest.requireActual("lib/security/oneTimeCode.js"),
+jest.mock("lib/security/oneTimeCode", () => ({
+   ...jest.requireActual("lib/security/oneTimeCode"),
    generateOneTimeCode: jest.fn()
 }));
-jest.mock("services/sendgrid/connection");
-jest.mock("services/mongodb/index.js");
+jest.mock("services/mongodb");
 jest.mock("@sendgrid/mail");
 
 let req;
@@ -19,7 +19,7 @@ let error;
 let key;
 let code;
 
-describe("Challenge valid inputs with Sendgrid errors", () => {
+describe("challenge valid inputs with Sendgrid errors", () => {
    beforeEach(() => {
       req = {
          body: {
@@ -39,11 +39,12 @@ describe("Challenge valid inputs with Sendgrid errors", () => {
       code = "123456";
       generateOneTimeCode.mockImplementation(() => ({
          userIdentifier: req.body.userIdentifier,
+         userIdentifierType: EMAIL_USER_IDENTIFIER_TYPE,
          key,
          code,
          expiresOn: Date.now()
       }));
-      oneTimeCodesService.mockImplementation(() => Promise.resolve({
+      getOneTimeCodesCollection.mockImplementation(() => Promise.resolve({
          create: async () => Promise.resolve({
             _id: ObjectId(),
             modifiedOn: new Date(),
@@ -54,8 +55,8 @@ describe("Challenge valid inputs with Sendgrid errors", () => {
       }));
    });
 
-   test("Sendgrid service threw an error on connection", async () => {
-      getClient.mockImplementation(() => {
+   test("sendgrid service threw an error on connection", async () => {
+      sendgridMail.setApiKey.mockImplementation(() => {
          throw new Error();
       });
       try {
@@ -65,19 +66,13 @@ describe("Challenge valid inputs with Sendgrid errors", () => {
          error = e;
       }
       finally {
-         expect(getClient).toHaveBeenCalled();
-         expect(res.json).not.toHaveBeenCalled();
-         expect(res.send).not.toHaveBeenCalled();
-         expect(error).toBeTruthy();
+         expect(error.message).toBe("Downstream error: Sendgrid connection error");
       }
    });
 
-   
-
-   test("Sendgrid service threw an error on send", async () => {
-      getClient.mockImplementation(() => ({
-         send: () => Promise.reject({})
-      }));
+   test("sendgrid service threw an error on send", async () => {
+      sendgridMail.setApiKey.mockImplementation(() => {});
+      sendgridMail.send.mockImplementation(() => Promise.reject({}));
       try {
          await challenge(req, res);
       }
@@ -85,10 +80,7 @@ describe("Challenge valid inputs with Sendgrid errors", () => {
          error = e;
       }
       finally {
-         expect(getClient).toHaveBeenCalled();
-         expect(res.json).not.toHaveBeenCalled();
-         expect(res.send).not.toHaveBeenCalled();
-         expect(error).toBeTruthy();
+         expect(error.message).toBe("Downstream error: Sendgrid email error");
       }
    });
 });

@@ -1,4 +1,4 @@
-import { getRandomKey } from "../../utils/random.js";
+import { generateKey } from "../../utils/random.js";
 
 const getExpiration = () => {
    const now = Date.now();
@@ -13,7 +13,7 @@ const getExpiration = () => {
 export const getExpirationLength = () => 1000 * 60 * 60 * 24 * 7;
 
 export const generateRefreshToken = (userId) => {
-   const token = getRandomKey();
+   const token = generateKey();
    const expires = getExpiration();
    return {
       userId,

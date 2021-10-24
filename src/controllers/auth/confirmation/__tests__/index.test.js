@@ -1,17 +1,16 @@
-import confirm from "controllers/auth/confirmation/index.js";
-import { generateGuid } from "../../../../lib/security/guid";
-import { oneTimeCodesService } from "services/mongodb/index.js";
+import confirm from "controllers/auth/confirmation";
+import { getOneTimeCodesCollection, getUsersCollection, getRefreshTokensCollection } from "services/mongodb";
 import { ObjectId } from "mongodb";
-import { getExpirationLength } from "../../../../lib/security/oneTimeCode";
-import { EMAIL_USER_IDENTIFIER_TYPE } from "../../../../utils/constants";
+import { generateKey } from "utils/random";
 
 jest.mock("services/mongodb/index.js");
+jest.mock("jsonwebtoken");
 
 let req;
 let res;
 let error;
 
-describe("Confirmation controller invalid inputs", () => {
+describe("confirmation controller invalid inputs", () => {
    beforeEach(() => {
       req = {
          body: {
@@ -28,7 +27,7 @@ describe("Confirmation controller invalid inputs", () => {
       error = null;
    });
 
-   test("Missing key and code", async () => {
+   test("missing key and code", async () => {
       try {
          await confirm(req, res);
       }
@@ -40,9 +39,9 @@ describe("Confirmation controller invalid inputs", () => {
       }
    });
 
-   test("Missing code", async () => {
+   test("missing code", async () => {
       req.body = {
-         key: generateGuid()
+         key: generateKey()
       };
       try {
          await confirm(req, res);
@@ -55,7 +54,7 @@ describe("Confirmation controller invalid inputs", () => {
       }
    });
 
-   test("Undefined key", async () => {
+   test("undefined key", async () => {
       req.body = {
          key: undefined
       };
@@ -70,54 +69,7 @@ describe("Confirmation controller invalid inputs", () => {
       }
    });
 
-   test("'Undefined' key", async () => {
-      req.body = {
-         key: "undefined"
-      };
-      try {
-         await confirm(req, res);
-      }
-      catch(e) {
-         error = e;
-      }
-      finally {
-         expect(error.message).toBe("code is required");
-      }
-   });
-
-   test("Non guid key", async () => {
-      req.body = {
-         key: "123",
-         code: ""
-      };
-      try {
-         await confirm(req, res);
-      }
-      catch(e) {
-         error = e;
-      }
-      finally {
-         expect(error.message).toBe("key is not valid");
-      }
-   });
-
-   test("Numeric key", async () => {
-      req.body = {
-         key: 123,
-         code: "123456"
-      };
-      try {
-         await confirm(req, res);
-      }
-      catch(e) {
-         error = e;
-      }
-      finally {
-         expect(error.message).toBe("key is not valid");
-      }
-   });
-
-   test("Null key", async () => {
+   test("null key", async () => {
       req.body = {
          key: null,
          code: "123456"
@@ -133,9 +85,9 @@ describe("Confirmation controller invalid inputs", () => {
       }
    });
 
-   test("Missing code", async () => {
+   test("missing code", async () => {
       req.body = {
-         key: generateGuid()
+         key: generateKey()
       };
       try {
          await confirm(req, res);
@@ -148,9 +100,9 @@ describe("Confirmation controller invalid inputs", () => {
       }
    });
 
-   test("Null code", async () => {
+   test("null code", async () => {
       req.body = {
-         key: generateGuid(),
+         key: generateKey(),
          code: null
       };
       try {
@@ -164,9 +116,9 @@ describe("Confirmation controller invalid inputs", () => {
       }
    });
 
-   test("Code with more than 6 digits", async () => {
+   test("code with more than 6 digits", async () => {
       req.body = {
-         key: generateGuid(),
+         key: generateKey(),
          code: 1234567
       };
       try {
@@ -180,10 +132,10 @@ describe("Confirmation controller invalid inputs", () => {
       }
    });
 
-   test("Code with less than 6 digits", async () => {
+   test("code with less than 6 digits", async () => {
       req.body = {
          code: 123,
-         key: generateGuid()
+         key: generateKey()
       };
       try {
          await confirm(req, res);
@@ -196,10 +148,10 @@ describe("Confirmation controller invalid inputs", () => {
       }
    });
 
-   test("Code with a word character", async () => {
+   test("code with a word character", async () => {
       req.body = {
          code: "123A56",
-         key: generateGuid()
+         key: generateKey()
       };
       try {
          await confirm(req, res);
@@ -213,7 +165,7 @@ describe("Confirmation controller invalid inputs", () => {
    });
 });
 
-describe("Confirmation controller valid inputs", () => {
+describe("confirmation controller valid inputs", () => {
    beforeEach(() => {
       req = {
          body: {
@@ -228,24 +180,27 @@ describe("Confirmation controller valid inputs", () => {
          send: jest.fn()
       };
       error = null;
-      oneTimeCodesService.mockImplementation(() => Promise.resolve({
+      getOneTimeCodesCollection.mockImplementation(() => Promise.resolve({
          find: async () => Promise.resolve({
             _id: ObjectId(),
             modifiedOn: new Date(),
-            createdOn: new Date(),
-            code: "123456",
-            userIdentifier: "cedomir.spalevic@gmail.com",
-            expiresOn: Date.now(),
-            type: EMAIL_USER_IDENTIFIER_TYPE,
-            key: generateGuid()
+            createdOn: new Date()
          })
+      }));
+      getUsersCollection.mockImplementation(() => Promise.resolve({
+         find: async () => Promise.resolve({}),
+         create: async () => Promise.resolve({}),
+         update: async () => Promise.resolve({})
+      }));
+      getRefreshTokensCollection.mockImplementation(() => Promise.resolve({
+         create: async () => Promise.resolve({})
       }));
    });
 
-   test("Code is string of length 6", async () => {
+   test("code is string of length 6", async () => {
       req.body = {
          code: "123456",
-         key: generateGuid()
+         key: generateKey()
       };
       try {
          await confirm(req, res);
@@ -255,14 +210,14 @@ describe("Confirmation controller valid inputs", () => {
       }
       finally {
          expect(error).toBe(null);
-         expect(res.send).toHaveBeenCalled();
+         expect(res.json).toHaveBeenCalled();
       }
    });
 
-   test("Code is all numbers", async () => {
+   test("code is all numbers", async () => {
       req.body = {
          code: 123456,
-         key: generateGuid()
+         key: generateKey()
       };
       try {
          await confirm(req, res);
@@ -272,7 +227,7 @@ describe("Confirmation controller valid inputs", () => {
       }
       finally {
          expect(error).toBe(null);
-         expect(res.send).toHaveBeenCalled();
+         expect(res.json).toHaveBeenCalled();
       }
    });
 });

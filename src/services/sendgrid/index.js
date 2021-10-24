@@ -17,6 +17,6 @@ export const sendEmail = async (req, to, subject, html) => {
       req.logger.info(response);
    }
    catch(error) {
-      throw new BudgeterError(400, "Downstream error: Send email error", error);
+      throw new BudgeterError(400, "Downstream error: Sendgrid email error", error);
    }
 };

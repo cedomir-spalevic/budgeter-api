@@ -1,5 +1,5 @@
 import { BudgeterError } from "../../../lib/middleware/error.js";
-import { generateUserAuth } from "../../../lib/security/auth.js";
+import { generateUserAuth } from "../../../lib/security/userAuth";
 import { getRefreshTokensCollection } from "../../../services/mongodb/index.js";
 
 const validate = (req) => {

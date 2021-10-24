@@ -1,6 +1,5 @@
 import { BudgeterError } from "../../../lib/middleware/error.js";
 import { generateUserAuth } from "../../../lib/security/userAuth.js";
-import { isGuid } from "../../../lib/security/guid.js";
 import { isOneTimeCode } from "../../../lib/security/oneTimeCode.js";
 import { getOneTimeCodesCollection, getUsersCollection } from "../../../services/mongodb/index.js";
 import { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } from "../../../utils/constants.js";
@@ -19,7 +18,7 @@ const validate = (req) => {
    }
 
    key = req.body.key?.toString().trim();
-   if(!isGuid(key)) {
+   if(!key) {
       req.logger.error(`Invalid key = ${key}`);
       throw new BudgeterError(400, "key is not valid");
    }
@@ -41,7 +40,7 @@ const findOneTimeCode  = async (req, input) => {
       key: input.key,
       code: input.code
    });
-   if(!oneTimeCode || oneTimeCode.expiresOn < Date.now()) {
+   if(!oneTimeCode || oneTimeCode.expires < Date.now()) {
       throw new BudgeterError(401, "Unauthorized");
    }
    return oneTimeCode;

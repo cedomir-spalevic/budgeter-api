@@ -1,6 +1,6 @@
 import { generateAccessToken } from "./accessToken.js";
 import { generateRefreshToken } from "./refreshToken.js";
-import { getRefreshTokensCollection } from "../../services/mongodb.js";
+import { getRefreshTokensCollection } from "../../services/mongodb/index.js";
 
 const saveRefreshToken = async (refreshToken) => {
    const refreshTokenCollection = await getRefreshTokensCollection();
