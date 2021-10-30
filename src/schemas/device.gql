@@ -1,0 +1,7 @@
+type Device {
+   os: String!
+}
+
+input DeviceInput {
+   os: String!
+}

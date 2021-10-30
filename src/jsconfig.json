@@ -1,6 +1,9 @@
 {
    "compilerOptions": {
-      "baseUrl": "./"
-   },
-   "include": ["*.test.js"]
+      "allowSyntheticDefaultImports": true,
+      "baseUrl": ".",
+      "paths": {
+         "utils/*": ["utils/*"]
+      }
+   }
 }

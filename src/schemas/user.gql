@@ -1,0 +1,14 @@
+type User {
+   id: ObjectID!
+   email: String
+   phoneNumber: String
+   createdOn: DateTime!
+   modifiedOn: DateTime!
+   devices: [Device]
+   preferences: Preferences
+}
+
+input UserInput {
+   devices: [DeviceInput]
+   preferences: PreferencesInput
+}

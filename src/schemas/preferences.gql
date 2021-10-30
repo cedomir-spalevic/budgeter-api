@@ -1,0 +1,9 @@
+type Preferences {
+   incomeNotifications: Boolean
+   paymentNotifications: Boolean
+}
+
+input PreferencesInput {
+   incomeNotifications: Boolean
+   paymentNotifications: Boolean
+}

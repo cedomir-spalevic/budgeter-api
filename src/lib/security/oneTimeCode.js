@@ -1,16 +1,13 @@
 import { generateCode, generateKey } from "../../utils/random.js";
+import ms from "ms";
 
-const getExpiration = () => {
-   const now = Date.now();
-   const expirationLength = getExpirationLength();
-   return now + expirationLength;
-};
+const getExpiration = () => Date.now() + getExpirationLength();
 
 /**
  * 
  * @returns Expiration length (5 minutes)
  */
-export const getExpirationLength = () => 1000 * 60 * 5;
+export const getExpirationLength = () => ms(process.env.ONE_TIME_CODE_EXPIRATION);
 
 /**
  * @param {*} req - express req object

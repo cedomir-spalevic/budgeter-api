@@ -4,10 +4,10 @@ import { setupRoutes as setupApolloServer } from "./routes/apolloServer.js";
 import bodyParser from "body-parser";
 import { budgeterErrorHandler } from "./lib/middleware/error.js";
 import { verifyAuthenticatedRequest } from "./lib/middleware/auth.js";
-import * as setup from "./setup.js";
+import setup from "./setup.js";
 import { getLogger } from "./lib/middleware/logger.js";
 
-setup.loadConfigs();
+setup();
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -20,7 +20,7 @@ const startServer = async () => {
    app.use(loggingMiddleware);
    app.use(verifyAuthenticatedRequest);
    app.use(bodyParser.json());
-   
+
    setupAuthRoutes(app);
    setupApolloServer(app);
    

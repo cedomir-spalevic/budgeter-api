@@ -2,19 +2,44 @@ import * as constants from "../../utils/constants.js";
 import { BudgeterError } from "./error.js";
 import { decodeAccessToken } from "../security/accessToken.js";
 
-const blocklistedRoutes = [
-   constants.CHALLENGE_PATH,
-   constants.CONFIRM_PATH,
-   constants.REFRESH_PATH
+const prodBlocklistedRoutes = [
+   {
+      path: constants.CHALLENGE_PATH,
+      method: constants.HTTP_METHODS.POST
+   },
+   {
+      path: constants.CONFIRM_PATH,
+      method: constants.HTTP_METHODS.POST
+   },
+   {
+      path: constants.REFRESH_PATH,
+      method: constants.HTTP_METHODS.POST
+   }
+];
+
+const localBlocklistedRoutes = [
+   ...prodBlocklistedRoutes,
+   {
+      path: constants.GRAPHQL_PATH,
+      method: constants.HTTP_METHODS.GET
+   }
 ];
 
 export const verifyAuthenticatedRequest = (req, res, next) => {
-   if(blocklistedRoutes.includes(req.originalUrl))
+   const blocklistedRoutes = process.env.LOCAL ? localBlocklistedRoutes : prodBlocklistedRoutes;
+   if(blocklistedRoutes.some(route => route.path === req.originalUrl && route.method === req.method)) {
       next();
+      return;
+   }
    let token = req.headers["authorization"];
-   if(!token) 
-      throw new BudgeterError(401, "Unauthorized");
+   if(!token) {
+      next(new BudgeterError(401, "Unauthorized"));
+      return;
+   }
    token = token.replace("Bearer ", "");
-   decodeAccessToken(token);
+   const payload = decodeAccessToken(token);
+   req.user = {
+      id: payload.userId
+   };
    next();
 };

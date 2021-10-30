@@ -1,16 +1,13 @@
 import { generateKey } from "../../utils/random.js";
+import ms from "ms";
 
-const getExpiration = () => {
-   const now = Date.now();
-   const expirationLength = getExpirationLength();
-   return now + expirationLength;
-};
+const getExpiration = () => Date.now() + getExpirationLength();
 
 /**
  * 
  * @returns Expiration length (7 days)
  */
-export const getExpirationLength = () => 1000 * 60 * 60 * 24 * 7;
+export const getExpirationLength = () => ms(process.env.REFRESH_TOKEN_EXPIRATION);
 
 export const generateRefreshToken = (userId) => {
    const token = generateKey();

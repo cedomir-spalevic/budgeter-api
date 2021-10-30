@@ -1,17 +1,14 @@
 import jwt from "jsonwebtoken";
 import { BudgeterError } from "../middleware/error.js";
+import ms from "ms";
 
-const getExpiration = () => {
-   const now = Date.now();
-   const expirationLength = getExpirationLength();
-   return now + expirationLength;
-};
+const getExpiration = () => Date.now() + getExpirationLength();
 
 /**
  * 
  * @returns Expiration length (15 minutes)
  */
-export const getExpirationLength = () => 1000 * 60 * 15;
+export const getExpirationLength = () => ms(process.env.ACCESS_TOKEN_EXPIRATION);
 
 export const generateAccessToken = (userId, refreshToken) => {
    const expires = getExpiration();
@@ -25,7 +22,7 @@ export const generateAccessToken = (userId, refreshToken) => {
 
 export const decodeAccessToken = (token) => {
    try {
-      jwt.verify(token, process.env.JWT_ACCESS_TOKEN, {
+      return jwt.verify(token, process.env.JWT_ACCESS_TOKEN, {
          algorithms: ["HS256"]
       });
    }
