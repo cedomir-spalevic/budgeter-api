@@ -1,19 +1,55 @@
-const { getDevicesCollection, getPreferencesCollection } = require("services/mongodb");
-const { findUserById } = require("./utils");
+const { removeDevice, addDevice } = require("./utils/device");
+const { updateUserPreferences } = require("./utils/preferences");
+
+const tryMutation = async (req, asyncFunc, errorMessage) => {
+   let message = "", success = true, funcResponse = {};
+   try {
+      funcResponse = await asyncFunc();
+   }
+   catch(error) {
+      req.logger.error(`Error during tryMutation: ${errorMessage}`);
+      req.logger.error(error);
+      message = errorMessage;
+      success = false;
+   }
+   return {
+      message,
+      success,
+      funcResponse
+   };
+};
 
 module.exports.resolvers = {
    Mutation: {
-      updateUser: async function(parent, args, context, info) {
+      addDevice: async (parent, args, context, info) => {
          const { req } = context;
-         const updatePreferences = async () => {
-            if(!args.preferences) return;
+         const asyncFunc = async () => addDevice(req, args.device);
+         const response = await tryMutation(req, asyncFunc, "Unable to add device");
+         return {
+            success: response.success,
+            message: response.message,
+            devices: response.success ? response.funcResponse : null
          };
-         const updateDevices = async () => {
-            if(!args.devices) return;
+      },
+      removeDevice: async (parent, args, context, info) => {
+         const { req } = context;
+         const asyncFunc = async () => removeDevice(req, args.device);
+         const response = await tryMutation(req, asyncFunc, "Unable to remove device");
+         return {
+            success: response.success,
+            message: response.message,
+            devices: response.success ? response.funcResponse : null
          };
-         const getUser = async () => await findUserById(req);
-         const results = await Promise.all([updateDevices, updatePreferences, getUser]);
-
+      },
+      updateUserPreferences: async (parent, args, context, info) => {
+         const { req } = context;
+         const asyncFunc = async () => updateUserPreferences(req, args.preferences);
+         const response = await tryMutation(req, asyncFunc, "Unable to update preferences");
+         return {
+            success: response.success,
+            message: response.message,
+            preferences: response.success ? response.funcResponse : null
+         };
       }
    }
 };

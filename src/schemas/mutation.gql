@@ -1,9 +1,12 @@
 interface MutationResponse {
-   code: String!
    success: Boolean!
    message: String!
 }
 
 type Mutation {
-   updateUser(user: UserInput): UserMutationResponse
+   addDevice(device: DeviceInput): DeviceMutationeResponse
+   removeDevice(device: DeviceInput): DeviceMutationeResponse
+   updateUserPreferences(
+      preferences: PreferencesInput
+   ): UpdatePreferencesResponse
 }

@@ -7,3 +7,9 @@ input PreferencesInput {
    incomeNotifications: Boolean
    paymentNotifications: Boolean
 }
+
+type UpdatePreferencesResponse implements MutationResponse {
+   success: Boolean!
+   message: String!
+   preferences: Preferences
+}

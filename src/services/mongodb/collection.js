@@ -68,7 +68,7 @@ class EntityCollection {
          entityToUpdate
       );
       this.#logMessage("Update response", response);
-      return response.ops[0];
+      return entityToUpdate;
    }
 
    async replace(filter, entity) {

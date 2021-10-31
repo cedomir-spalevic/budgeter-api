@@ -1,5 +1,5 @@
-const { getDevicesCollection, getPreferencesCollection } = require("services/mongodb");
-const { getUserDevices, getUserPreferences } = require("./utils/user.js");
+const { getUserDevices } = require("./utils/device");
+const { getUserPreferences } = require("./utils/preferences");
 
 module.exports.resolvers = {
    User: {
@@ -7,7 +7,7 @@ module.exports.resolvers = {
          const { req } = context;
          return getUserDevices(req);
       },
-      preferences: async function(parent, args, context, info) {
+      preferences: async (parent, args, context, info) => {
          const { req } = context;
          return getUserPreferences(req);
       }

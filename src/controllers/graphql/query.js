@@ -1,4 +1,4 @@
-const { findUserById } = require("./utils");
+const { findUserById } = require("./utils/user");
 
 module.exports.resolvers = {
    Query: {

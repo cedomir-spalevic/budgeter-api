@@ -7,15 +7,3 @@ type User {
    devices: [Device]
    preferences: Preferences
 }
-
-input UserInput {
-   devices: [DeviceInput]
-   preferences: PreferencesInput
-}
-
-type UserMutationResponse implements MutationResponse {
-   code: String!
-   success: Boolean!
-   message: String!
-   user: User
-}
