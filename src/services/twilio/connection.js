@@ -1,9 +1,9 @@
-import Twilio from "twilio";
-import { BudgeterError } from "../../lib/middleware/error.js";
+const Twilio = require("twilio");
+const { BudgeterError } = require("lib/middleware/error");
 
 let client = null;
 
-export const getClient = (req) => {
+module.exports.getClient = (req) => {
    if(!client) {
       try {
          req.logger.info("Sendgrid service: attempting to set connection");

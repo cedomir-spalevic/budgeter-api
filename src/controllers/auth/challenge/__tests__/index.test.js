@@ -1,16 +1,16 @@
-import challenge from "controllers/auth/challenge/index";
-import { generateOneTimeCode, getExpirationLength } from "lib/security/oneTimeCode";
-import { getOneTimeCodesCollection } from "services/mongodb/index";
-import { sendOneTimeCodeVerification } from "lib/verification/index";
-import { ObjectId } from "mongodb";
-import { v4 as generateGuid } from "uuid";
+const challenge = require("controllers/auth/challenge");
+const { generateOneTimeCode, getExpirationLength } = require("lib/security/oneTimeCode");
+const { getOneTimeCodesCollection } = require("services/mongodb");
+const { sendOneTimeCodeVerification } = require("lib/verification");
+const { ObjectId } = require("mongodb");
+const { v4 } = require("uuid");
 
 jest.mock("lib/security/oneTimeCode", () => ({
    ...jest.requireActual("lib/security/oneTimeCode"),
    generateOneTimeCode: jest.fn()
 }));
-jest.mock("services/mongodb/index");
-jest.mock("lib/verification/index");
+jest.mock("services/mongodb");
+jest.mock("lib/verification");
 
 let req;
 let res;
@@ -33,7 +33,7 @@ describe("challenge controller invalid inputs", () => {
          send: jest.fn()
       };
       error = null;
-      key = generateGuid();
+      key = v4();
       code = "123456";
       expires = getExpirationLength();
    });
@@ -147,7 +147,7 @@ describe("challenge controller valid inputs", () => {
          send: jest.fn()
       };
       error = null;
-      key = generateGuid();
+      key = v4();
       code = "123456";
       expires = getExpirationLength();
       generateOneTimeCode.mockImplementation(() => ({

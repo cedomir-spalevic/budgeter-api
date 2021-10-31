@@ -1,10 +1,10 @@
-import { isPhoneNumber, normalizePhoneNumber } from "../../../lib/phoneNumber.js";
-import { isEmail } from "../../../lib/email.js";
-import { BudgeterError } from "../../../lib/middleware/error.js";
-import { generateOneTimeCode, getExpirationLength } from "../../../lib/security/oneTimeCode.js";
-import { getOneTimeCodesCollection } from "../../../services/mongodb/index.js";
-import { sendOneTimeCodeVerification } from "../../../lib/verification/index.js";
-import { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } from "../../../utils/constants.js";
+const { isPhoneNumber, normalizePhoneNumber } = require("lib/phoneNumber");
+const { isEmail } = require("lib/email");
+const { BudgeterError } = require("lib/middleware/error");
+const { generateOneTimeCode, getExpirationLength } = require("lib/security/oneTimeCode");
+const { getOneTimeCodesCollection } = require("services/mongodb");
+const { sendOneTimeCodeVerification } = require("lib/verification");
+const { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } = require("utils/constants");
 
 const getCode = (req) => {
    if(!req.body || req.body.userIdentifier === undefined) {
@@ -47,4 +47,4 @@ const challenge = async (req, res, next) => {
    });
 };
 
-export default challenge;
+module.exports = challenge;

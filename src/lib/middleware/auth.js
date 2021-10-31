@@ -1,6 +1,6 @@
-import * as constants from "../../utils/constants.js";
-import { BudgeterError } from "./error.js";
-import { decodeAccessToken } from "../security/accessToken.js";
+const constants = require("utils/constants");
+const { BudgeterError } = require("./error");
+const { decodeAccessToken } = require("../security/accessToken");
 
 const prodBlocklistedRoutes = [
    {
@@ -22,10 +22,14 @@ const localBlocklistedRoutes = [
    {
       path: constants.GRAPHQL_PATH,
       method: constants.HTTP_METHODS.GET
+   },
+   {
+      path: constants.GRAPHQL_PATH,
+      method: constants.HTTP_METHODS.OPTIONS
    }
 ];
 
-export const verifyAuthenticatedRequest = (req, res, next) => {
+module.exports.verifyAuthenticatedRequest = (req, res, next) => {
    const blocklistedRoutes = process.env.LOCAL ? localBlocklistedRoutes : prodBlocklistedRoutes;
    if(blocklistedRoutes.some(route => route.path === req.originalUrl && route.method === req.method)) {
       next();

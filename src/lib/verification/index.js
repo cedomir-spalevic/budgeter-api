@@ -1,9 +1,9 @@
-import { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } from "../../utils/constants.js";
-import { BudgeterError } from "../middleware/error.js";
-import { sendOneTimeCodeEmail } from "./email.js";
-import { sendOneTImeCodeSms } from "./sms.js";
+const { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } = require("utils/constants");
+const { BudgeterError } = require("lib/middleware/error");
+const { sendOneTimeCodeEmail } = require("./email");
+const { sendOneTImeCodeSms } = require("./sms");
 
-export const sendOneTimeCodeVerification = async (req, { userIdentifier, userIdentifierType, code }) => {
+module.exports.sendOneTimeCodeVerification = async (req, { userIdentifier, userIdentifierType, code }) => {
    switch(userIdentifierType) {
       case EMAIL_USER_IDENTIFIER_TYPE: 
          await sendOneTimeCodeEmail(req, userIdentifier, code);

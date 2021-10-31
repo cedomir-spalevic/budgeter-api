@@ -1,5 +1,5 @@
-import { generateOneTimeCode, isOneTimeCode } from "lib/security/oneTimeCode";
-import { EMAIL_USER_IDENTIFIER_TYPE } from "../../../utils/constants";
+const { generateOneTimeCode, isOneTimeCode } = require("lib/security/oneTimeCode");
+const { EMAIL_USER_IDENTIFIER_TYPE } = require("utils/constants");
 
 let req;
 

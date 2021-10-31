@@ -1,28 +1,31 @@
-import { gql, ApolloServer } from "apollo-server-express";
-import { Neo4jGraphQL } from "@neo4j/graphql";
-import { getDriver } from "../services/neo4j/connection.js";
-import { loadFiles } from "../utils/graphql.js";
-import { mergeTypeDefs, mergeResolvers } from "@graphql-tools/merge";
-import {
+const { gql, ApolloServer } = require("apollo-server-express");
+const { Neo4jGraphQL } = require("@neo4j/graphql");
+const { getDriver } = require("services/neo4j/connection");
+const { loadFiles } = require("utils/graphql");
+const { mergeTypeDefs, mergeResolvers } = require("@graphql-tools/merge");
+const {
    DateTimeTypeDefinition,
    ObjectIDTypeDefinition
-} from "graphql-scalars";
-import path from "path";
+} = require("graphql-scalars");
+const path = require("path");
 
-export const setupRoutes = async (app) => {
-   const typesArray = await loadFiles(path.join(__dirname, "schemas"), { extensions: ["gql"] });
+const setupRoutes = async (app) => {
+   const typesArray = await loadFiles(path.join("schemas"), { extensions: ["gql"] });
    typesArray.push(
       DateTimeTypeDefinition,
       ObjectIDTypeDefinition
    );
-
    const typeDefs = mergeTypeDefs(typesArray);
 
-   const resolversArray = await loadFiles(path.join(__dirname, "controllers", "graphql"), { extensions: ["js"] });
+   const resolversArray = await loadFiles(path.join("controllers", "graphql"), { extensions: ["js"] });
    const resolvers = mergeResolvers(resolversArray);
    
    const server = new ApolloServer({ typeDefs, resolvers, context: ({ req }) => ({ req }) });
    await server.start();
 
    server.applyMiddleware({ app });
+};
+
+module.exports = {
+   setupApolloServer: setupRoutes
 };

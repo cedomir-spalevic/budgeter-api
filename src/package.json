@@ -2,7 +2,6 @@
    "name": "budgeter-api",
    "version": "1.0.0",
    "description": "",
-   "type": "module",
    "engines": {
       "node": ">=6.0.0"
    },
@@ -13,7 +12,8 @@
       "lint": "eslint . --ext .js",
       "test": "jest --coverage",
       "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
-      "deploy": "gcloud app deploy"
+      "deploy": "gcloud app deploy",
+      "postinstall": "link-module-alias"
    },
    "author": "Cedomir Spalevic",
    "license": "ISC",
@@ -39,16 +39,20 @@
       "twilio": "^3.70.0"
    },
    "devDependencies": {
-      "@babel/core": "^7.15.8",
-      "@babel/plugin-transform-modules-commonjs": "^7.15.4",
-      "@babel/polyfill": "^7.12.1",
-      "@babel/register": "^7.15.3",
-      "babel-plugin-module-resolver": "^4.1.0",
       "eslint": "^8.0.0",
       "eslint-plugin-jest": "^25.2.2",
       "jest": "^27.2.5",
+      "link-module-alias": "^1.2.0",
       "nodemon": "^2.0.13",
       "npm-run-all": "^4.1.5",
       "prettier": "^2.4.1"
+   },
+   "_moduleAliases": {
+      "controllers": "./controllers",
+      "lib": "./lib",
+      "routes": "./routes",
+      "schemas": "./schemas",
+      "services": "./services",
+      "utils": "./utils"
    }
 }

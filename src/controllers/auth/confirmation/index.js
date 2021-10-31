@@ -1,8 +1,8 @@
-import { BudgeterError } from "../../../lib/middleware/error.js";
-import { generateUserAuth } from "../../../lib/security/userAuth.js";
-import { isOneTimeCode } from "../../../lib/security/oneTimeCode.js";
-import { getOneTimeCodesCollection, getUsersCollection } from "../../../services/mongodb/index.js";
-import { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } from "../../../utils/constants.js";
+const { BudgeterError } = require("lib/middleware/error");
+const { generateUserAuth } = require("lib/security/userAuth");
+const { isOneTimeCode } = require("lib/security/oneTimeCode");
+const { getOneTimeCodesCollection, getUsersCollection } = require("services/mongodb");
+const { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } = require("utils/constants");
 
 const validate = (req) => {
    let key = null;
@@ -86,4 +86,4 @@ const confirmation = async (req, res, next) => {
    res.json({ ...userAuth });
 };
 
-export default confirmation;
+module.exports = confirmation;

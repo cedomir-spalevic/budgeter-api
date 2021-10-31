@@ -1,6 +1,6 @@
-import { sendEmail } from "../../services/sendgrid/index.js";
+const { sendEmail } = require("services/sendgrid");
 
-export const sendOneTimeCodeEmail = async (req, email, code) => {
+module.exports.sendOneTimeCodeEmail = async (req, email, code) => {
    const subject = "Your Budgeter verification code";
    const html = `
       <html>

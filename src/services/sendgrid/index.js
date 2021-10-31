@@ -1,7 +1,7 @@
-import { getClient } from "./connection.js";
-import { BudgeterError } from "../../lib/middleware/error.js";
+const { getClient } = require("./connection.js");
+const { BudgeterError } = require("lib/middleware/error");
 
-export const sendEmail = async (req, to, subject, html) => {
+module.exports.sendEmail = async (req, to, subject, html) => {
    const client = getClient(req);
 
    try {

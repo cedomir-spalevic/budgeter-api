@@ -1,16 +1,16 @@
-import challenge from "controllers/auth/challenge";
-import { generateOneTimeCode } from "lib/security/oneTimeCode";
-import { getOneTimeCodesCollection } from "services/mongodb";
-import { v4 as generateGuid } from "uuid";
-import { ObjectId } from "mongodb";
-import twilio from "twilio";
-import { PHONE_USER_IDENTIFIER_TYPE } from "utils/constants";
+const challenge = require("controllers/auth/challenge");
+const { generateOneTimeCode } = require("lib/security/oneTimeCode");
+const { getOneTimeCodesCollection } = require("services/mongodb");
+const { v4 } = require("uuid");
+const { ObjectId } = require("mongodb");
+const twilio = require("twilio");
+const { PHONE_USER_IDENTIFIER_TYPE } = require("utils/constants");
 
 jest.mock("lib/security/oneTimeCode", () => ({
    ...jest.requireActual("lib/security/oneTimeCode"),
    generateOneTimeCode: jest.fn()
 }));
-jest.mock("services/mongodb/index");
+jest.mock("services/mongodb");
 jest.mock("twilio");
 
 let req;
@@ -35,7 +35,7 @@ describe("challenge valid inputs with Twilio errors", () => {
          send: jest.fn()
       };
       error = null;
-      key = generateGuid();
+      key = v4();
       code = "123456";
       generateOneTimeCode.mockImplementation(() => ({
          userIdentifier: req.body.userIdentifier,

@@ -1,9 +1,9 @@
-import confirm from "controllers/auth/confirmation";
-import { getOneTimeCodesCollection, getUsersCollection, getRefreshTokensCollection } from "services/mongodb";
-import { ObjectId } from "mongodb";
-import { generateKey } from "utils/random";
+const confirm = require("controllers/auth/confirmation");
+const { getOneTimeCodesCollection, getUsersCollection, getRefreshTokensCollection } = require("services/mongodb");
+const { ObjectId } = require("mongodb");
+const { generateKey } = require("utils/random");
 
-jest.mock("services/mongodb/index.js");
+jest.mock("services/mongodb");
 jest.mock("jsonwebtoken");
 
 let req;

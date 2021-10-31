@@ -1,4 +1,4 @@
-import { isEmail } from "lib/email";
+const { isEmail } = require("lib/email");
 
 describe("email validation", () => {
    test("invalid email", () => {

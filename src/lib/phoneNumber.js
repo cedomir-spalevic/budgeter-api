@@ -1,10 +1,10 @@
-import glibPhoneNumber from "libphonenumber-js";
+const glibPhoneNumber = require("libphonenumber-js");
 
 const countryCode = "US";
 
-export const isPhoneNumber = (phoneNumber) => glibPhoneNumber.isValidPhoneNumber(phoneNumber, countryCode);
+module.exports.isPhoneNumber = (phoneNumber) => glibPhoneNumber.isValidPhoneNumber(phoneNumber, countryCode);
 
-export const normalizePhoneNumber = (phoneNumber) => {
+module.exports.normalizePhoneNumber = (phoneNumber) => {
    const parsedNumber = glibPhoneNumber(phoneNumber, countryCode);
    return parsedNumber.formatInternational();
 };

@@ -1,30 +1,15 @@
-import { getDevicesCollection, getPreferencesCollection } from "../../services/mongodb/index.js";
+const { getDevicesCollection, getPreferencesCollection } = require("services/mongodb");
+const { getUserDevices, getUserPreferences } = require("./utils/user.js");
 
-export const resolvers = {
+module.exports.resolvers = {
    User: {
-      devices: async function(parent, args, { req }, info) {
-         const devicesCollection = await getDevicesCollection(req);
-         const devices = await devicesCollection.findMany({
-            _id: req.user.id
-         });
-         return devices.map(device => ({
-            os: device.os
-         }));
+      devices: async (parent, args, context, info) => {
+         const { req } = context;
+         return getUserDevices(req);
       },
-      preferences: async function(parent, args, { req }, info) {
-         const preferencesCollection = await getPreferencesCollection(req);
-         const preferences = await preferencesCollection.find({
-            _id: req.user.id
-         });
-         return {
-            incomeNotifications: preferences ? preferences.incomeNotifications : false,
-            paymentNotifications: preferences ? preferences.paymentNotifications : false
-         };
-      }
-   },
-   UserInput: {
-      devices: async function(parent, args, { req }, info) {
-         let test = "test";
+      preferences: async function(parent, args, context, info) {
+         const { req } = context;
+         return getUserPreferences(req);
       }
    }
 };

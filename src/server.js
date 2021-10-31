@@ -1,11 +1,11 @@
-import express from "express";
-import { setupRoutes as setupAuthRoutes } from "./routes/auth.js";
-import { setupRoutes as setupApolloServer } from "./routes/apolloServer.js";
-import bodyParser from "body-parser";
-import { budgeterErrorHandler } from "./lib/middleware/error.js";
-import { verifyAuthenticatedRequest } from "./lib/middleware/auth.js";
-import setup from "./setup.js";
-import { getLogger } from "./lib/middleware/logger.js";
+const express = require("express");
+const { setupAuthRoutes } = require("routes/auth");
+const { setupApolloServer } = require("routes/apolloServer");
+const bodyParser = require("body-parser");
+const { budgeterErrorHandler } = require("lib/middleware/error");
+const { verifyAuthenticatedRequest } = require("lib/middleware/auth");
+const setup = require("./setup");
+const { getLogger } = require("lib/middleware/logger");
 
 setup();
 
@@ -40,4 +40,4 @@ const startServer = async () => {
 
 startServer();
 
-export default app;
+module.exports = app;

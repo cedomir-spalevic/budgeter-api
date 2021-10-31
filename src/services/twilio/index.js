@@ -1,7 +1,7 @@
-import { getClient } from "./connection.js";
-import { BudgeterError } from "../../lib/middleware/error.js";
+const { getClient } = require("./connection");
+const { BudgeterError } = require("lib/middleware/error");
 
-export const sendSms = async (req, phoneNumber, text) => {
+module.exports.sendSms = async (req, phoneNumber, text) => {
    const client = await getClient(req);
    
    try {

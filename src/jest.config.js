@@ -1,6 +1,6 @@
-import { readFileSync } from "fs";
-import babelRegister from "@babel/register";
-import "@babel/polyfill";
+const { readFileSync } = require("fs";
+const babelRegister = require("@babel/register";
+const "@babel/polyfill";
 
 const babelConfig = JSON.parse(readFileSync("./.babelrc", "utf8"));
 babelRegister(babelConfig);

@@ -1,4 +1,4 @@
-import { isPhoneNumber } from "lib/phoneNumber";
+const { isPhoneNumber } = require("lib/phoneNumber");
 
 describe("phone number validation", () => {
    test("invalid phone number", () => {

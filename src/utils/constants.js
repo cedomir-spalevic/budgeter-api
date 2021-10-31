@@ -1,27 +1,28 @@
-export const EMAIL_USER_IDENTIFIER_TYPE = "EMAIL";
-export const PHONE_USER_IDENTIFIER_TYPE = "PHONE";
+module.exports.EMAIL_USER_IDENTIFIER_TYPE = "EMAIL";
+module.exports.PHONE_USER_IDENTIFIER_TYPE = "PHONE";
 
-export const AUTH_ENDPOINT = "auth";
-export const CHALLENGE_ENDPOINT = "challenge";
-export const CONFIRM_ENDPOINT = "confirm";
-export const REFRESH_ENDPOINT = "refresh";
-export const GRAPHQL_ENDPOINT = "graphql";
+module.exports.AUTH_ENDPOINT = "auth";
+module.exports.CHALLENGE_ENDPOINT = "challenge";
+module.exports.CONFIRM_ENDPOINT = "confirm";
+module.exports.REFRESH_ENDPOINT = "refresh";
+module.exports.GRAPHQL_ENDPOINT = "graphql";
 
-export const CHALLENGE_PATH = `/${AUTH_ENDPOINT}/${CHALLENGE_ENDPOINT}`;
-export const CONFIRM_PATH = `/${AUTH_ENDPOINT}/${CONFIRM_ENDPOINT}`;
-export const REFRESH_PATH = `/${AUTH_ENDPOINT}/${REFRESH_ENDPOINT}`;
-export const GRAPHQL_PATH = `/${GRAPHQL_ENDPOINT}`;
+module.exports.CHALLENGE_PATH = `/${module.exports.AUTH_ENDPOINT}/${module.exports.CHALLENGE_ENDPOINT}`;
+module.exports.CONFIRM_PATH = `/${module.exports.AUTH_ENDPOINT}/${module.exports.CONFIRM_ENDPOINT}`;
+module.exports.REFRESH_PATH = `/${module.exports.AUTH_ENDPOINT}/${module.exports.REFRESH_ENDPOINT}`;
+module.exports.GRAPHQL_PATH = `/${module.exports.GRAPHQL_ENDPOINT}`;
 
-export const HTTP_METHODS = {
+module.exports.HTTP_METHODS = {
    POST: "POST",
-   GET: "GET"
+   GET: "GET",
+   OPTIONS: "OPTIONS"
 };
 
-export const MONGO_DATABASES = {
+module.exports.MONGO_DATABASES = {
    ACCOUNTS: "accounts",
    SECURITY: "security"
 };
-export const MONGO_COLLECTIONS = {
+module.exports.MONGO_COLLECTIONS = {
    ONE_TIME_CODES: "oneTimeCodes",
    REFRESH_TOKENS: "refreshTokens",
    USERS: "users",

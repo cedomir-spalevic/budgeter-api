@@ -1,6 +1,6 @@
-import jwt from "jsonwebtoken";
-import { BudgeterError } from "../middleware/error.js";
-import ms from "ms";
+const jwt = require("jsonwebtoken");
+const { BudgeterError } = require("lib/middleware/error");
+const ms = require("ms");
 
 const getExpiration = () => Date.now() + getExpirationLength();
 
@@ -8,9 +8,9 @@ const getExpiration = () => Date.now() + getExpirationLength();
  * 
  * @returns Expiration length (15 minutes)
  */
-export const getExpirationLength = () => ms(process.env.ACCESS_TOKEN_EXPIRATION);
+const getExpirationLength = () => ms(process.env.ACCESS_TOKEN_EXPIRATION);
 
-export const generateAccessToken = (userId, refreshToken) => {
+const generateAccessToken = (userId, refreshToken) => {
    const expires = getExpiration();
    const payload = { userId, refreshToken };
    const token = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN, {
@@ -20,7 +20,7 @@ export const generateAccessToken = (userId, refreshToken) => {
    return { token, expires };
 };
 
-export const decodeAccessToken = (token) => {
+const decodeAccessToken = (token) => {
    try {
       return jwt.verify(token, process.env.JWT_ACCESS_TOKEN, {
          algorithms: ["HS256"]
@@ -29,4 +29,10 @@ export const decodeAccessToken = (token) => {
    catch(error) {
       throw new BudgeterError(401, "Unauthorized");
    }
+};
+
+module.exports = {
+   getExpirationLength,
+   generateAccessToken,
+   decodeAccessToken
 };

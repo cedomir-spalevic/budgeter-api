@@ -1,6 +1,6 @@
-import { BudgeterError } from "../../../lib/middleware/error.js";
-import { generateUserAuth } from "../../../lib/security/userAuth.js";
-import { getRefreshTokensCollection } from "../../../services/mongodb/index.js";
+const { BudgeterError } = require("lib/middleware/error");
+const { generateUserAuth } = require("lib/security/userAuth");
+const { getRefreshTokensCollection } = require("services/mongodb");
 
 const validate = (req) => {
    let refreshToken = null;
@@ -36,4 +36,4 @@ const refresh = async (req, res, next) => {
    res.json({ ...userAuth });
 };
 
-export default refresh;
+module.exports = refresh;

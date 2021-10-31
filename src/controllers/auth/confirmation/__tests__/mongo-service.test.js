@@ -1,10 +1,10 @@
-import confirm from "controllers/auth/confirmation";
-import { getOneTimeCodesCollection, getUsersCollection, getRefreshTokensCollection } from "services/mongodb";
-import { ObjectId } from "mongodb";
-import { generateKey, generateCode } from "utils/random";
-import { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } from "../../../../utils/constants";
+const confirm = require("controllers/auth/confirmation");
+const { getOneTimeCodesCollection, getUsersCollection, getRefreshTokensCollection } = require("services/mongodb");
+const { ObjectId } = require("mongodb");
+const { generateKey, generateCode } = require("utils/random");
+const { EMAIL_USER_IDENTIFIER_TYPE, PHONE_USER_IDENTIFIER_TYPE } = require("utils/constants");
 
-jest.mock("services/mongodb/index.js");
+jest.mock("services/mongodb");
 jest.mock("jsonwebtoken");
 
 let req;

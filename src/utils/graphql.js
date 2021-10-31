@@ -1,10 +1,8 @@
-import url from "url";
-import { loadFiles as graphqlLoadFiles } from "@graphql-tools/load-files";
+const graphqlTools = require("@graphql-tools/load-files");
 
-export const loadFiles = async (path, { extensions } = { extensions: [] }) => {
-   return await graphqlLoadFiles(path, {
+module.exports.loadFiles = async (path, { extensions } = { extensions: [] }) => {
+   return await graphqlTools.loadFiles(path, {
       extensions,
-      ignoreIndex: true,
-      requireMethod: async (path) => import(url.pathToFileURL(path))
+      recursive: false
    });
 };

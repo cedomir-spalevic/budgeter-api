@@ -1,4 +1,4 @@
-export class BudgeterError extends Error {
+class BudgeterError extends Error {
    constructor(statusCode, message, error) {
       super();
       this.statusCode = statusCode;
@@ -9,7 +9,7 @@ export class BudgeterError extends Error {
    format = () => ({ message: this.message });
 }
 
-export const budgeterErrorHandler = (err, req, res, next) => {
+const budgeterErrorHandler = (err, req, res, next) => {
    if(err instanceof BudgeterError) {
       req.logger.error(`Custom error thrown: Status code = ${err.statusCode}, Message = ${err.message}`);
       if(err.originalError) {
@@ -26,7 +26,7 @@ export const budgeterErrorHandler = (err, req, res, next) => {
    }
 };
 
-export const asyncHandler = (fn) => {
+const asyncHandler = (fn) => {
    return async (req, res, next) => {
       try {
          await fn(req, res, next);
@@ -35,4 +35,10 @@ export const asyncHandler = (fn) => {
          next(error);
       }
    };
+};
+
+module.exports = {
+   asyncHandler,
+   budgeterErrorHandler,
+   BudgeterError
 };

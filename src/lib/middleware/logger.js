@@ -1,6 +1,6 @@
-import lb from "@google-cloud/logging-bunyan";
+const lb = require("@google-cloud/logging-bunyan");
 
-export const getLogger = async () => {
+module.exports.getLogger = async () => {
    let logger, loggingMiddleware;
    if(process.env.LOCAL) {
       logger = {

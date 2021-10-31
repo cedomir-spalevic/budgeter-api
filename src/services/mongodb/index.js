@@ -1,6 +1,6 @@
-import EntityCollection from "./collection.js";
-import { getClient } from "./connection.js";
-import { MONGO_COLLECTIONS, MONGO_DATABASES } from "../../utils/constants.js";
+const EntityCollection = require("./collection");
+const { getClient } = require("./connection");
+const { MONGO_COLLECTIONS, MONGO_DATABASES } = require("utils/constants");
 
 const collectionMap = {
    [MONGO_COLLECTIONS.ONE_TIME_CODES]: MONGO_DATABASES.SECURITY,
@@ -17,12 +17,12 @@ const getCollection = async (req, collectionName) => {
    return new EntityCollection(req, collection);
 };
 
-export const getOneTimeCodesCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.ONE_TIME_CODES);
+module.exports.getOneTimeCodesCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.ONE_TIME_CODES);
 
-export const getRefreshTokensCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.REFRESH_TOKENS);
+module.exports.getRefreshTokensCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.REFRESH_TOKENS);
 
-export const getUsersCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.USERS);
+module.exports.getUsersCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.USERS);
 
-export const getDevicesCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.DEVICES);
+module.exports.getDevicesCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.DEVICES);
 
-export const getPreferencesCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.PREFERENCES);
+module.exports.getPreferencesCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.PREFERENCES);

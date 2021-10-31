@@ -1,8 +1,8 @@
-import refresh from "controllers/auth/refresh";
-import { getRefreshTokensCollection } from "services/mongodb";
-import { generateKey } from "../../../../utils/random";
+const refresh = require("controllers/auth/refresh");
+const { getRefreshTokensCollection } = require("services/mongodb");
+const { generateKey } = require("utils/random");
 
-jest.mock("services/mongodb/index.js");
+jest.mock("services/mongodb");
 jest.mock("jsonwebtoken");
 
 let req;

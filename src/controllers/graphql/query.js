@@ -1,20 +1,10 @@
-import { getUsersCollection } from "../../services/mongodb/index.js";
-import { ObjectId } from "mongodb";
+const { findUserById } = require("./utils");
 
-export const resolvers = {
+module.exports.resolvers = {
    Query: {
-      user: async (parent, args, { req }, info) => {
-         const usersCollection = await getUsersCollection(req);
-         const user = await usersCollection.find({
-            _id: ObjectId(req.user.id)
-         });
-         return {
-            id: user._id,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            createdOn: user.createdOn,
-            modifiedOn: user.modifiedOn
-         };
+      user: async (parent, args, context, info) => {
+         const { req } = context;
+         return findUserById(req);
       }
    }
 };

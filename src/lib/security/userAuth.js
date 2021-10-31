@@ -1,13 +1,13 @@
-import { generateAccessToken } from "./accessToken.js";
-import { generateRefreshToken } from "./refreshToken.js";
-import { getRefreshTokensCollection } from "../../services/mongodb/index.js";
+const { generateAccessToken } = require("./accessToken");
+const { generateRefreshToken } = require("./refreshToken");
+const { getRefreshTokensCollection } = require("services/mongodb");
 
 const saveRefreshToken = async (req, refreshToken) => {
    const refreshTokenCollection = await getRefreshTokensCollection(req);
    await refreshTokenCollection.create(refreshToken);
 };
 
-export const generateUserAuth = async (req, userId) => {
+module.exports.generateUserAuth = async (req, userId) => {
    const refreshToken = generateRefreshToken(userId);
    const accessToken = generateAccessToken(userId, refreshToken.token);
    await saveRefreshToken(req, refreshToken);

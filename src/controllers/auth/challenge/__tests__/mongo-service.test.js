@@ -1,6 +1,6 @@
-import challenge from "controllers/auth/challenge";
-import { generateOneTimeCode } from "lib/security/oneTimeCode";
-import { v4 as generateGuid } from "uuid";
+const challenge = require("controllers/auth/challenge");
+const { generateOneTimeCode } = require("lib/security/oneTimeCode");
+const { v4 } = require("uuid");
 
 jest.mock("lib/security/oneTimeCode", () => ({
    ...jest.requireActual("lib/security/oneTimeCode"),
@@ -36,7 +36,7 @@ describe("challenge valid inputs with mongodb errors", () => {
          send: jest.fn()
       };
       error = null;
-      key = generateGuid();
+      key = v4();
       code = "123456";
       generateOneTimeCode.mockImplementation(() => ({
          userIdentifier: req.body.userIdentifier,

@@ -1,5 +1,5 @@
-import { generateCode, generateKey } from "../../utils/random.js";
-import ms from "ms";
+const { generateCode, generateKey } = require("utils/random");
+const ms = require("ms");
 
 const getExpiration = () => Date.now() + getExpirationLength();
 
@@ -7,14 +7,14 @@ const getExpiration = () => Date.now() + getExpirationLength();
  * 
  * @returns Expiration length (5 minutes)
  */
-export const getExpirationLength = () => ms(process.env.ONE_TIME_CODE_EXPIRATION);
+const getExpirationLength = () => ms(process.env.ONE_TIME_CODE_EXPIRATION);
 
 /**
  * @param {*} req - express req object
  * @param {*} userIdentifier - email or phone number,
  * @param {*} userIdentifierType - 'EMAIL' or 'PHONE'
  */
-export const generateOneTimeCode = (req, userIdentifier, userIdentifierType) => {
+const generateOneTimeCode = (req, userIdentifier, userIdentifierType) => {
    const key = generateKey();
    const code = generateCode();
    const expires = getExpiration();
@@ -30,4 +30,10 @@ export const generateOneTimeCode = (req, userIdentifier, userIdentifierType) => 
    return oneTimeCode;
 };
 
-export const isOneTimeCode = (code) => code && code.toString().match(/^[0-9]{6}$/);
+const isOneTimeCode = (code) => code && code.toString().match(/^[0-9]{6}$/);
+
+module.exports = {
+   isOneTimeCode,
+   generateOneTimeCode,
+   getExpirationLength
+};

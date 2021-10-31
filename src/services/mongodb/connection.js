@@ -1,9 +1,9 @@
-import { MongoClient } from "mongodb";
-import { BudgeterError } from "../../lib/middleware/error.js";
+const { MongoClient } = require("mongodb");
+const { BudgeterError } = require("lib/middleware/error");
 
 let client = null;
 
-export const getClient = async () => {
+module.exports.getClient = async () => {
    if(!client) {
       try {
          client = new MongoClient(process.env.MONGODB_CONNECTION_STRING, {

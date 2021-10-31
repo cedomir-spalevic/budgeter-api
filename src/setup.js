@@ -1,6 +1,4 @@
-import fs from "fs";
-import url from "url";
-import path from "path";
+const fs = require("fs");
 
 const loadConfigs = () => {
    const configPath = process.env.LOCAL === "true" ? "./config/development.json" : "./config/production.json";
@@ -11,11 +9,6 @@ const loadConfigs = () => {
    });
 };
 
-const setupGlobal = () => {
-   global.__dirname = path.dirname(url.fileURLToPath(import.meta.url));
-};
-
-export default  () => {
+module.exports = () => {
    loadConfigs();
-   setupGlobal();
 };

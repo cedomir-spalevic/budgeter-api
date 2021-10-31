@@ -1,6 +1,6 @@
-import { ObjectId } from "mongodb";
+const { ObjectId } = require("mongodb");
 
-export default class EntityCollection {
+class EntityCollection {
    #req = null;
    #collection = null;
 
@@ -91,3 +91,5 @@ export default class EntityCollection {
       return await this.#collection.countDocuments(query);
    }
 } 
+
+module.exports = EntityCollection;
