@@ -1,5 +1,6 @@
 const { generateCode, generateKey } = require("utils/random");
 const ms = require("ms");
+const { getConfig } = require("config");
 
 const getExpiration = () => Date.now() + getExpirationLength();
 
@@ -7,7 +8,7 @@ const getExpiration = () => Date.now() + getExpirationLength();
  * 
  * @returns Expiration length (5 minutes)
  */
-const getExpirationLength = () => ms(process.env.ONE_TIME_CODE_EXPIRATION);
+const getExpirationLength = () => ms(getConfig("ONE_TIME_CODE_EXPIRATION"));
 
 /**
  * @param {*} req - express req object

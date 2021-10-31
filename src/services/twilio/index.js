@@ -1,5 +1,6 @@
 const { getClient } = require("./connection");
 const { BudgeterError } = require("lib/middleware/error");
+const { getConfig } = require("config");
 
 module.exports.sendSms = async (req, phoneNumber, text) => {
    const client = await getClient(req);
@@ -10,7 +11,7 @@ module.exports.sendSms = async (req, phoneNumber, text) => {
                               .messages
                               .create({ 
                                  body: text,
-                                 from: process.env.TWILIO_PHONE_NUMBER,
+                                 from: getConfig("TWILIO_PHONE_NUMBER"),
                                  to: phoneNumber
                               });
       req.logger.info("Twilio service: SMS response");

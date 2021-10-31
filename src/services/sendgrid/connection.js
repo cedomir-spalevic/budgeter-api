@@ -1,10 +1,11 @@
 const sendgridMail = require("@sendgrid/mail");
 const { BudgeterError } = require("lib/middleware/error");
+const { getConfig } = require("config");
 
 module.exports.getClient = (req) => {
    try {
       req.logger.info("Sendgrid service: attempting to set connection");
-      sendgridMail.setApiKey(process.env.SENDGRID_API_KEY);
+      sendgridMail.setApiKey(getConfig("SENDGRID_API_KEY"));
       return sendgridMail;
    }
    catch(error) {

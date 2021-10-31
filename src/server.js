@@ -4,10 +4,8 @@ const { setupApolloServer } = require("routes/apolloServer");
 const bodyParser = require("body-parser");
 const { budgeterErrorHandler } = require("lib/middleware/error");
 const { verifyAuthenticatedRequest } = require("lib/middleware/auth");
-const setup = require("./setup");
+const { setupConfigs } = require("config");
 const { getLogger } = require("lib/middleware/logger");
-
-setup();
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -15,8 +13,10 @@ const app = express();
 app.set("trust proxy", true);
 
 const startServer = async () => {
+   await setupConfigs();
+
    const { logger, loggingMiddleware } = await getLogger();
-   
+
    app.use(loggingMiddleware);
    app.use(verifyAuthenticatedRequest);
    app.use(bodyParser.json());

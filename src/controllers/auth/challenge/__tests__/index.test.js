@@ -11,6 +11,7 @@ jest.mock("lib/security/oneTimeCode", () => ({
 }));
 jest.mock("services/mongodb");
 jest.mock("lib/verification");
+jest.mock("services/gcp/secrets");
 
 let req;
 let res;

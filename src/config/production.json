@@ -1,9 +1,13 @@
 {
-   "ENV": "production",
+   "GCP_PROJECT": "budgeter-329301",
    "NEO4J_USER": "neo4j",
-   "NEO4J_PASSWORD": "nOp4W9nlwh6skh13E3PO7YpC3W9yoejXXQcj5ZSS57g",
    "NEO4J_URI": "neo4j+s://b96f4289.databases.neo4j.io",
-   "MONGO_CONNECTION_STRING": "mongodb+srv://admin:seWi3TfBAbLxriEa@cluster0.vvc2o.mongodb.net/budgeter?retryWrites=true&w=majority",
-   "MONGO_DB_NAME": "budgeter-dev",
-   "SENDGRID_API_KEY": "SG.mN1vnynRS1iyP1NZEZp3XA.CpvA2w_7PoN1GkGsOCPNKqB1KZ2u22SBijU3RiV8wXQ"
+   "MONGODB_USER": "admin",
+   "MONGODB_URI": "mongodb+srv://${user}:${password}@budgeter-dev.vvc2o.mongodb.net?retryWrites=true&w=majority",
+   "SENDGRID_FROM_EMAIL": "budgeterbot@cedomir.tech",
+   "TWILIO_ACCOUNT_SID": "AC901d832d661f11408487be8e9b7d3250",
+   "TWILIO_PHONE_NUMBER": "+15703768274",
+   "ACCESS_TOKEN_EXPIRATION": "10 mins",
+   "REFRESH_TOKEN_EXPIRATION": "30 days",
+   "ONE_TIME_CODE_EXPIRATION": "5 mins"
 }
