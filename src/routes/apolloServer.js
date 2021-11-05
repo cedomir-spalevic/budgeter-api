@@ -9,12 +9,14 @@ const path = require("path");
 
 const setupRoutes = async (app) => {
    const typesArray = await loadFiles(path.join("schemas"), {
+      recursive: true,
       extensions: ["gql"]
    });
    typesArray.push(DateTimeTypeDefinition, ObjectIDTypeDefinition);
    const typeDefs = mergeTypeDefs(typesArray);
 
    const resolversArray = await loadFiles(path.join("controllers", "graphql"), {
+      recursive: false,
       extensions: ["js"]
    });
    const resolvers = mergeResolvers(resolversArray);

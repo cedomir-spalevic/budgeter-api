@@ -13,5 +13,5 @@ type Payment {
    recurrence: Recurrence!
    createdOn: DateTime!
    modifiedOn: DateTime!
-   tags: [PaymentTag]
+   tags: [PaymentTag] @relationship(type: "TAGGED_WITH", direction: out)
 }
