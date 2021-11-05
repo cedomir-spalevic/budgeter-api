@@ -1,5 +1,5 @@
 type User {
-   id: ObjectID!
+   id: ID!
    email: String
    phoneNumber: String
    createdOn: DateTime!

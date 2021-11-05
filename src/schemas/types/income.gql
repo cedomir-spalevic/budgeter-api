@@ -1,5 +1,5 @@
 type Income {
-   id: ObjectID!
+   id: ID!
    title: String!
    amount: Float!
    initialDay: Int!

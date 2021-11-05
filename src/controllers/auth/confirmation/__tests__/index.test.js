@@ -1,7 +1,11 @@
 const confirm = require("controllers/auth/confirmation");
-const { getOneTimeCodesCollection, getUsersCollection, getRefreshTokensCollection } = require("services/mongodb");
+const {
+   getOneTimeCodesCollection,
+   getUsersCollection,
+   getRefreshTokensCollection
+} = require("services/mongodb");
 const { ObjectId } = require("mongodb");
-const { generateKey } = require("utils/random");
+const { generateKey, generateGuid } = require("utils/random");
 
 jest.mock("services/mongodb");
 jest.mock("jsonwebtoken");
@@ -13,8 +17,7 @@ let error;
 describe("confirmation controller invalid inputs", () => {
    beforeEach(() => {
       req = {
-         body: {
-         },
+         body: {},
          logger: {
             info: jest.fn(),
             error: jest.fn()
@@ -30,11 +33,9 @@ describe("confirmation controller invalid inputs", () => {
    test("missing key and code", async () => {
       try {
          await confirm(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("key is required");
       }
    });
@@ -45,11 +46,9 @@ describe("confirmation controller invalid inputs", () => {
       };
       try {
          await confirm(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("code is required");
       }
    });
@@ -60,11 +59,9 @@ describe("confirmation controller invalid inputs", () => {
       };
       try {
          await confirm(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("key is required");
       }
    });
@@ -76,11 +73,9 @@ describe("confirmation controller invalid inputs", () => {
       };
       try {
          await confirm(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("key is not valid");
       }
    });
@@ -91,11 +86,9 @@ describe("confirmation controller invalid inputs", () => {
       };
       try {
          await confirm(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("code is required");
       }
    });
@@ -107,11 +100,9 @@ describe("confirmation controller invalid inputs", () => {
       };
       try {
          await confirm(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("code is not valid");
       }
    });
@@ -123,11 +114,9 @@ describe("confirmation controller invalid inputs", () => {
       };
       try {
          await confirm(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("code is not valid");
       }
    });
@@ -139,11 +128,9 @@ describe("confirmation controller invalid inputs", () => {
       };
       try {
          await confirm(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("code is not valid");
       }
    });
@@ -155,11 +142,9 @@ describe("confirmation controller invalid inputs", () => {
       };
       try {
          await confirm(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("code is not valid");
       }
    });
@@ -168,8 +153,7 @@ describe("confirmation controller invalid inputs", () => {
 describe("confirmation controller valid inputs", () => {
    beforeEach(() => {
       req = {
-         body: {
-         },
+         body: {},
          logger: {
             info: jest.fn(),
             error: jest.fn()
@@ -180,21 +164,28 @@ describe("confirmation controller valid inputs", () => {
          send: jest.fn()
       };
       error = null;
-      getOneTimeCodesCollection.mockImplementation(() => Promise.resolve({
-         find: async () => Promise.resolve({
-            _id: ObjectId(),
-            modifiedOn: new Date(),
-            createdOn: new Date()
+      getOneTimeCodesCollection.mockImplementation(() =>
+         Promise.resolve({
+            find: async () =>
+               Promise.resolve({
+                  id: generateGuid(),
+                  modifiedOn: new Date(),
+                  createdOn: new Date()
+               })
          })
-      }));
-      getUsersCollection.mockImplementation(() => Promise.resolve({
-         find: async () => Promise.resolve({}),
-         create: async () => Promise.resolve({}),
-         update: async () => Promise.resolve({})
-      }));
-      getRefreshTokensCollection.mockImplementation(() => Promise.resolve({
-         create: async () => Promise.resolve({})
-      }));
+      );
+      getUsersCollection.mockImplementation(() =>
+         Promise.resolve({
+            find: async () => Promise.resolve({}),
+            create: async () => Promise.resolve({}),
+            update: async () => Promise.resolve({})
+         })
+      );
+      getRefreshTokensCollection.mockImplementation(() =>
+         Promise.resolve({
+            create: async () => Promise.resolve({})
+         })
+      );
    });
 
    test("code is string of length 6", async () => {
@@ -204,11 +195,9 @@ describe("confirmation controller valid inputs", () => {
       };
       try {
          await confirm(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error).toBe(null);
          expect(res.json).toHaveBeenCalled();
       }
@@ -221,11 +210,9 @@ describe("confirmation controller valid inputs", () => {
       };
       try {
          await confirm(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error).toBe(null);
          expect(res.json).toHaveBeenCalled();
       }

@@ -1,4 +1,4 @@
-const { ObjectId } = require("mongodb");
+const { generateGuid } = require("utils/random");
 
 class EntityCollection {
    #req = null;
@@ -10,20 +10,23 @@ class EntityCollection {
    }
 
    #logMessage(message, obj) {
-      this.#req.logger.info(`MongoDb ${this.#collection.collectionName} service: ${message}`);
-      if(obj) {
+      this.#req.logger.info(
+         `MongoDb ${this.#collection.collectionName} service: ${message}`
+      );
+      if (obj) {
          this.#req.logger.info(obj);
       }
    }
 
    async aggregate(pipeline, options) {
-      return await this.#collection.aggregate(pipeline,options).toArray();
+      return await this.#collection.aggregate(pipeline, options).toArray();
    }
 
    async create(entity) {
       const date = new Date();
       const entityToCreate = {
          ...entity,
+         id: generateGuid(),
          createdOn: date,
          modifiedOn: date
       };
@@ -31,15 +34,12 @@ class EntityCollection {
       const response = await this.#collection.insertOne(entityToCreate);
       this.#logMessage("Create response", response.insertedId);
       return {
-         ...entityToCreate,
-         _id: response.insertedId
+         ...entityToCreate
       };
    }
 
    async getById(id) {
-      const entity = await this.#collection.findOne({
-         _id: new ObjectId(id)
-      });
+      const entity = await this.#collection.findOne({ id });
       return entity;
    }
 
@@ -64,7 +64,7 @@ class EntityCollection {
       };
       this.#logMessage("Updating record", entityToUpdate);
       const response = await this.#collection.replaceOne(
-         { _id: entity._id },
+         { id: entity.id },
          entityToUpdate
       );
       this.#logMessage("Update response", response);
@@ -80,7 +80,7 @@ class EntityCollection {
    }
 
    async delete(id) {
-      await this.#collection.deleteOne({ _id: id });
+      await this.#collection.deleteOne({ id });
    }
 
    async deleteAll(filter) {
@@ -90,6 +90,6 @@ class EntityCollection {
    async count(query) {
       return await this.#collection.countDocuments(query);
    }
-} 
+}
 
 module.exports = EntityCollection;

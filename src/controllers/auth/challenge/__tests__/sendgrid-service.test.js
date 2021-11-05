@@ -5,6 +5,7 @@ const { v4 } = require("uuid");
 const { ObjectId } = require("mongodb");
 const { EMAIL_USER_IDENTIFIER_TYPE } = require("utils/constants");
 const sendgridMail = require("@sendgrid/mail");
+const { generateGuid } = require("utils/random");
 
 jest.mock("lib/security/oneTimeCode", () => ({
    ...jest.requireActual("lib/security/oneTimeCode"),
@@ -44,15 +45,18 @@ describe("challenge valid inputs with Sendgrid errors", () => {
          code,
          expiresOn: Date.now()
       }));
-      getOneTimeCodesCollection.mockImplementation(() => Promise.resolve({
-         create: async () => Promise.resolve({
-            _id: ObjectId(),
-            modifiedOn: new Date(),
-            createdOn: new Date(),
-            code,
-            key
+      getOneTimeCodesCollection.mockImplementation(() =>
+         Promise.resolve({
+            create: async () =>
+               Promise.resolve({
+                  id: generateGuid(),
+                  modifiedOn: new Date(),
+                  createdOn: new Date(),
+                  code,
+                  key
+               })
          })
-      }));
+      );
    });
 
    test("sendgrid service threw an error on connection", async () => {
@@ -61,12 +65,12 @@ describe("challenge valid inputs with Sendgrid errors", () => {
       });
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
-         expect(error.message).toBe("Downstream error: Sendgrid connection error");
+      } finally {
+         expect(error.message).toBe(
+            "Downstream error: Sendgrid connection error"
+         );
       }
    });
 
@@ -75,11 +79,9 @@ describe("challenge valid inputs with Sendgrid errors", () => {
       sendgridMail.send.mockImplementation(() => Promise.reject({}));
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("Downstream error: Sendgrid email error");
       }
    });

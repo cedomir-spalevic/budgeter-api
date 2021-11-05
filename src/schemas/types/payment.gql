@@ -1,5 +1,5 @@
 type Payment {
-   id: ObjectID!
+   id: ID!
    title: String!
    amount: Float!
    initialDay: Int! # day of week

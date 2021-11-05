@@ -1,12 +1,12 @@
 const { getDevicesCollection } = require("services/mongodb");
 
 const mapDevices = (devices) => {
-   return devices.map(device => ({
+   return devices.map((device) => ({
       os: device.os
    }));
 };
 
-const getUserDevices = async (req) => {   
+const getUserDevices = async (req) => {
    const devicesCollection = await getDevicesCollection(req);
    const devices = await devicesCollection.findMany({
       userId: req.user.id
@@ -18,8 +18,7 @@ const addDevice = async (req, input) => {
    const devicesCollection = await getDevicesCollection(req);
    const devices = await getUserDevices(req);
    // TODO: update compare function
-   if(devices.some(device => device.os === input.os))
-      return devices;
+   if (devices.some((device) => device.os === input.os)) return devices;
    let device = {
       userId: req.user.id,
       os: input.os
@@ -37,9 +36,9 @@ const removeDevice = async (req, input) => {
       userId: req.user.id
    });
    // TODO: update compare function
-   const deviceIndex = devices.findIndex(device => device.os === input.os);
-   if(deviceIndex === -1) return devices;
-   await devicesCollection.delete(devices[deviceIndex]._id);
+   const deviceIndex = devices.findIndex((device) => device.os === input.os);
+   if (deviceIndex === -1) return devices;
+   await devicesCollection.delete(devices[deviceIndex].id);
    devices.splice(deviceIndex, 1);
    return mapDevices(devices);
 };

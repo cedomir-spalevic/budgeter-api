@@ -5,6 +5,7 @@ const { v4 } = require("uuid");
 const { ObjectId } = require("mongodb");
 const twilio = require("twilio");
 const { PHONE_USER_IDENTIFIER_TYPE } = require("utils/constants");
+const { generateGuid } = require("utils/random");
 
 jest.mock("lib/security/oneTimeCode", () => ({
    ...jest.requireActual("lib/security/oneTimeCode"),
@@ -44,15 +45,18 @@ describe("challenge valid inputs with Twilio errors", () => {
          code,
          expiresOn: Date.now()
       }));
-      getOneTimeCodesCollection.mockImplementation(() => Promise.resolve({
-         create: async () => Promise.resolve({
-            _id: ObjectId(),
-            modifiedOn: new Date(),
-            createdOn: new Date(),
-            code,
-            key
+      getOneTimeCodesCollection.mockImplementation(() =>
+         Promise.resolve({
+            create: async () =>
+               Promise.resolve({
+                  id: generateGuid(),
+                  modifiedOn: new Date(),
+                  createdOn: new Date(),
+                  code,
+                  key
+               })
          })
-      }));
+      );
    });
 
    test("twilio service threw an error on connection", async () => {
@@ -61,16 +65,14 @@ describe("challenge valid inputs with Twilio errors", () => {
       });
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
-         expect(error.message).toBe("Downstream error: Twilio connection error");
+      } finally {
+         expect(error.message).toBe(
+            "Downstream error: Twilio connection error"
+         );
       }
    });
-
-   
 
    test("twilio service threw an error on send", async () => {
       twilio.mockImplementation(() => ({
@@ -80,11 +82,9 @@ describe("challenge valid inputs with Twilio errors", () => {
       }));
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("Downstream error: Twilio SMS error");
       }
    });

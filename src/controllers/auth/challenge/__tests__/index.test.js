@@ -1,9 +1,13 @@
 const challenge = require("controllers/auth/challenge");
-const { generateOneTimeCode, getExpirationLength } = require("lib/security/oneTimeCode");
+const {
+   generateOneTimeCode,
+   getExpirationLength
+} = require("lib/security/oneTimeCode");
 const { getOneTimeCodesCollection } = require("services/mongodb");
 const { sendOneTimeCodeVerification } = require("lib/verification");
 const { ObjectId } = require("mongodb");
 const { v4 } = require("uuid");
+const { generateGuid } = require("utils/random");
 
 jest.mock("lib/security/oneTimeCode", () => ({
    ...jest.requireActual("lib/security/oneTimeCode"),
@@ -42,11 +46,9 @@ describe("challenge controller invalid inputs", () => {
    test("missing userIdentifier", async () => {
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("userIdentifier is required");
       }
    });
@@ -57,37 +59,31 @@ describe("challenge controller invalid inputs", () => {
       };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("email is not valid");
       }
    });
-   
+
    test("blank userIdentifier", async () => {
       req.body = { userIdentifier: "" };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("email is not valid");
       }
    });
-   
+
    test("invalid email", async () => {
       req.body = { userIdentifier: "@charlie.gmail.com" };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("email is not valid");
       }
    });
@@ -96,11 +92,9 @@ describe("challenge controller invalid inputs", () => {
       req.body = { userIdentifier: "       @           " };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("email is not valid");
       }
    });
@@ -109,24 +103,22 @@ describe("challenge controller invalid inputs", () => {
       req.body = { userIdentifier: "                  " };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("phoneNumber is not valid");
       }
-   });   
+   });
 
    test("email with spaces", async () => {
-      req.body = { userIdentifier: "      CEDOMIR.SPALEVIC@GMAIL.COM         " };
+      req.body = {
+         userIdentifier: "      CEDOMIR.SPALEVIC@GMAIL.COM         "
+      };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("email is not valid");
       }
    });
@@ -137,7 +129,7 @@ describe("challenge controller valid inputs", () => {
       req = {
          body: {
             userIdentifier: ""
-         }, 
+         },
          logger: {
             info: jest.fn(),
             error: jest.fn()
@@ -157,15 +149,18 @@ describe("challenge controller valid inputs", () => {
          code,
          expiresOn: Date.now()
       }));
-      getOneTimeCodesCollection.mockImplementation(() => Promise.resolve({
-         create: async () => Promise.resolve({
-            _id: ObjectId(),
-            modifiedOn: new Date(),
-            createdOn: new Date(),
-            code,
-            key
+      getOneTimeCodesCollection.mockImplementation(() =>
+         Promise.resolve({
+            create: async () =>
+               Promise.resolve({
+                  id: generateGuid(),
+                  modifiedOn: new Date(),
+                  createdOn: new Date(),
+                  code,
+                  key
+               })
          })
-      }));
+      );
       sendOneTimeCodeVerification.mockImplementation(() => Promise.resolve({}));
    });
 
@@ -173,11 +168,9 @@ describe("challenge controller valid inputs", () => {
       req.body = { userIdentifier: "CEDOMIR.SPALEVIC@GMAIL.COM" };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
@@ -191,11 +184,9 @@ describe("challenge controller valid inputs", () => {
       req.body = { userIdentifier: "6309152350" };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
@@ -205,16 +196,13 @@ describe("challenge controller valid inputs", () => {
       }
    });
 
-   
    test("valid phone number", async () => {
       req.body = { userIdentifier: "(630) 915-2350" };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
@@ -228,11 +216,9 @@ describe("challenge controller valid inputs", () => {
       req.body = { userIdentifier: "1 630 915 2350" };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
@@ -241,16 +227,14 @@ describe("challenge controller valid inputs", () => {
          });
       }
    });
-   
+
    test("valid phone number", async () => {
       req.body = { userIdentifier: "16309152350" };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
@@ -264,11 +248,9 @@ describe("challenge controller valid inputs", () => {
       req.body = { userIdentifier: "+16309152350" };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
@@ -282,11 +264,9 @@ describe("challenge controller valid inputs", () => {
       req.body = { userIdentifier: "charlie.spalevic@gmail.com" };
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error).toBe(null);
          expect(res.json).toHaveBeenCalledTimes(1);
          expect(res.json).toHaveBeenCalledWith({
