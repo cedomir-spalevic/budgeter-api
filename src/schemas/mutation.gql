@@ -4,9 +4,13 @@ interface MutationResponse {
 }
 
 type Mutation {
-   addDevice(device: DeviceInput): DeviceMutationeResponse
-   removeDevice(device: DeviceInput): DeviceMutationeResponse
+   addDevice(device: DeviceInput): DeviceMutationResponse
+   removeDevice(device: DeviceInput): DeviceMutationResponse
+
    updateUserPreferences(
       preferences: PreferencesInput
    ): UpdatePreferencesResponse
+
+   addPaymentTag(paymentTag: PaymentTagInput): PaymentTagMutationResponse
+   removePaymentTag(id: ID): PaymentTagMutationResponse
 }

@@ -7,3 +7,4 @@
     - App Engine Admin
     - App Engine Creator
 5. Save credentials under configs
+6. Enable Secret Manager

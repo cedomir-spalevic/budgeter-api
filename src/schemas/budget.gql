@@ -1,0 +1,21 @@
+type Budget {
+   date: Int!
+   month: Int!
+   year: Int!
+   incomes: [BudgetIncome]
+   payments: [BudgetPayment]
+}
+
+type BudgetIncome {
+   dueToday: Boolean!
+   numberOfOccurrences: Int!
+   totalAmount: Float!
+   income: Income
+}
+
+type BudgetPayment {
+   dueToday: Boolean!
+   numberOfOccurrences: Int!
+   totalAmount: Float!
+   payment: Payment
+}

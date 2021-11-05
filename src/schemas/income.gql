@@ -1,4 +1,12 @@
 type Income {
+   id: ObjectID!
    title: String!
-   amount: Int
+   amount: Float!
+   initialDay: Int!
+   initialDate: Int!
+   initialMonth: Int!
+   initialYear: Int!
+   recurrence: Recurrence
+   createdOn: DateTime!
+   modifiedOn: DateTime!
 }

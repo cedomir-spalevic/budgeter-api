@@ -1,0 +1,17 @@
+type Payment {
+   id: ObjectID!
+   title: String!
+   amount: Float!
+   initialDay: Int! # day of week
+   initialDate: Int! # Day of month
+   initialMonth: Int!
+   initialYear: Int!
+   endDay: Int!
+   endDate: Int!
+   endMonth: Int!
+   endYear: Int!
+   recurrence: Recurrence!
+   createdOn: DateTime!
+   modifiedOn: DateTime!
+   tags: [PaymentTag]
+}

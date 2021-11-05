@@ -29,3 +29,7 @@ module.exports.MONGO_COLLECTIONS = {
    DEVICES: "devices",
    PREFERENCES: "preferences"
 };
+
+module.exports.NEO4J_ENTITIES = {
+   PAYMENT_TAGS: "PaymentTag"
+};

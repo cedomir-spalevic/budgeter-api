@@ -6,7 +6,7 @@ input DeviceInput {
    os: String!
 }
 
-type DeviceMutationeResponse implements MutationResponse {
+type DeviceMutationResponse implements MutationResponse {
    success: Boolean!
    message: String!
    devices: [Device]
