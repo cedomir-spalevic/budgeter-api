@@ -1,15 +1,24 @@
+"""
+Describes the preferences a user can have
+"""
 type Preferences {
    incomeNotifications: Boolean
    paymentNotifications: Boolean
 }
 
+"""
+Describes the preferences a user is allowed to configure
+"""
 input PreferencesInput {
    incomeNotifications: Boolean
    paymentNotifications: Boolean
 }
 
+"""
+Describes the response type when a user is attempting to change their preferences
+"""
 type UpdatePreferencesResponse implements MutationResponse {
-   success: Boolean!
    message: String!
    preferences: Preferences
+   success: Boolean!
 }

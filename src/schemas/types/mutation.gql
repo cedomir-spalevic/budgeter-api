@@ -1,31 +1,24 @@
+"""
+Describes the guideline for a mutation responses
+"""
 interface MutationResponse {
-   success: Boolean!
    message: String!
+   success: Boolean!
 }
 
+"""
+Describes all of the mutation queries that are allowed to be executed
+"""
 type Mutation {
-   # User Devices
    addDevice(device: DeviceInput): DeviceMutationResponse
+   addIncome(income: IncomeInput): IncomeMutationResponse
+   addPayment(payment: PaymentInput): PaymentMutationResponse
+   addPaymentTag(paymentTag: PaymentTagInput): PaymentTagMutationResponse
    removeDevice(device: DeviceInput): DeviceMutationResponse
-
-   # User Preferences
+   removeIncome(id: ID): IncomeMutationResponse
+   removePayment(id: ID): PaymentMutationResponse
+   removePaymentTag(id: ID): PaymentTagMutationResponse
    updateUserPreferences(
       preferences: PreferencesInput
    ): UpdatePreferencesResponse
-
-   # Tags
-   addPaymentTag(paymentTag: PaymentTagInput): PaymentTagMutationResponse
-   removePaymentTag(id: ID): PaymentTagMutationResponse
-
-   # Payments
-   addPayment(payment: PaymentInput): PaymentMutationResponse
-   removePayment(id: ID): PaymentMutationResponse
-   #updatePayment(id: ID, payment: PaymentInput): PaymentMutationResponse
-
-   # Incomes
-   addIncome(income: IncomeInput): IncomeMutationResponse
-   removeIncome(id: ID): IncomeMutationResponse
-   #updateIncome(id: ID, income: IncomeInput): IncomeMutationResponse
-
-   # Budgets
 }

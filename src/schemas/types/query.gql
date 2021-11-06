@@ -1,15 +1,12 @@
+"""
+Describes all of the queries that can be executed
+"""
 type Query {
-   # User
-   user: User
-
-   # Payments
-   paymentById(id: ID): Payment
-   payments: [Payment]
-
-   # Incomes
+   budget(day: Int!, month: Int!, year: Int!): Budget
    incomeById(id: ID): Income
    incomes: [Income]
-
-   # Tags
+   paymentById(id: ID): Payment
    paymentTags: [PaymentTag]
+   payments: [Payment]
+   user: User
 }

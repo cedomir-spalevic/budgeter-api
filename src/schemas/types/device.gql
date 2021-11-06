@@ -1,13 +1,22 @@
+"""
+Describes a device that a user has
+"""
 type Device {
    os: String!
 }
 
+"""
+Describes a device that a user is allowed to create
+"""
 input DeviceInput {
    os: String!
 }
 
+"""
+Describes the response type when a user is adding or removing a device
+"""
 type DeviceMutationResponse implements MutationResponse {
-   success: Boolean!
-   message: String!
    devices: [Device]
+   message: String!
+   success: Boolean!
 }

@@ -1,0 +1,4 @@
+"""
+Describes a field that contains date and time values
+"""
+scalar DateTime

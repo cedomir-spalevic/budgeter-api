@@ -1,14 +1,23 @@
+"""
+Describes a payment category
+"""
 type PaymentTag {
    id: ID!
    tag: String!
 }
 
+"""
+Describes the payment category an admin is allowed to make
+"""
 input PaymentTagInput {
    tag: String!
 }
 
+"""
+Describes the response type when an admin is attempting to create a new payment category
+"""
 type PaymentTagMutationResponse implements MutationResponse {
-   success: Boolean!
    message: String!
    paymentTag: PaymentTag
+   success: Boolean!
 }

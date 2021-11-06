@@ -1,38 +1,47 @@
+"""
+Describes a payment that a user makes
+"""
 type Payment {
-   id: ID!
-   title: String!
    amount: Float!
-   initialDay: Int! # Day of week
-   initialDate: Int! # Day of month
-   initialMonth: Int!
-   initialYear: Int!
-   endDay: Int
+   createdOn: DateTime!
    endDate: Int
+   endDay: Int
    endMonth: Int
    endYear: Int
-   recurrence: Recurrence!
-   createdOn: DateTime!
+   id: ID!
+   initialDate: Int! # Day of month
+   initialDay: Int! # Day of week
+   initialMonth: Int!
+   initialYear: Int!
    modifiedOn: DateTime!
+   recurrence: Recurrence!
    tags: [PaymentTag] @relationship(type: "TAGGED_WITH", direction: out)
+   title: String!
 }
 
+"""
+Describes a payment a user is allowed to create and update
+"""
 input PaymentInput {
-   title: String!
    amount: Float!
-   initialDay: Int! # Day of week
-   initialDate: Int! # Day of month
-   initialMonth: Int!
-   initialYear: Int!
-   endDay: Int
    endDate: Int
+   endDay: Int
    endMonth: Int
    endYear: Int
+   initialDate: Int! # Day of month
+   initialDay: Int! # Day of week
+   initialMonth: Int!
+   initialYear: Int!
    recurrence: Recurrence!
    tags: [String]
+   title: String!
 }
 
+"""
+Describes the response type when a user is attempting to add, update, or remove a payment
+"""
 type PaymentMutationResponse implements MutationResponse {
-   success: Boolean!
    message: String!
    payment: Payment
+   success: Boolean!
 }

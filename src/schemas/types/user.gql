@@ -1,9 +1,12 @@
+"""
+Describes a user stored in the system
+"""
 type User {
-   id: ID!
-   email: String
-   phoneNumber: String
    createdOn: DateTime!
-   modifiedOn: DateTime!
    devices: [Device]
+   email: String
+   id: ID!
+   modifiedOn: DateTime!
+   phoneNumber: String
    preferences: Preferences
 }

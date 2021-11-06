@@ -1,4 +1,7 @@
+"""
+Describes the direction when describing a Neo4J relationship between types
+"""
 enum Direction {
-   in
-   out
+   IN
+   OUT
 }

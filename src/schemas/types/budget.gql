@@ -1,21 +1,29 @@
+"""
+Describes a user budget for a given month
+"""
 type Budget {
-   date: Int!
-   month: Int!
-   year: Int!
    incomes: [BudgetIncome]
+   month: Int!
    payments: [BudgetPayment]
+   year: Int!
 }
 
+"""
+Describes an income that is stored in a budget
+"""
 type BudgetIncome {
    dueToday: Boolean!
+   income: Income
    numberOfOccurrences: Int!
    totalAmount: Float!
-   income: Income
 }
 
+"""
+Describes a payment that is stored in a budget
+"""
 type BudgetPayment {
    dueToday: Boolean!
    numberOfOccurrences: Int!
-   totalAmount: Float!
    payment: Payment
+   totalAmount: Float!
 }

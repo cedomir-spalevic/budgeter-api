@@ -1,0 +1,17 @@
+{
+   "rules": [
+      "defined-types-are-used",
+      "enum-values-all-caps",
+      "enum-values-sorted-alphabetically",
+      "fields-are-camel-cased",
+      "input-object-fields-sorted-alphabetically",
+      "input-object-values-are-camel-cased",
+      "interface-fields-sorted-alphabetically",
+      "type-fields-sorted-alphabetically",
+      "types-are-capitalized",
+      "types-have-descriptions"
+   ],
+   "schemaPaths": [
+      "schemas/**/*.gql"
+   ]
+}

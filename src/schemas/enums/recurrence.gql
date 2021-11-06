@@ -1,8 +1,11 @@
+"""
+Describes how a payment or income can reoccur for future budgets
+"""
 enum Recurrence {
-   oneTime
-   daily
-   weekly
-   biweekly
-   monthly
-   yearly
+   BIWEEKLY
+   DAILY
+   MONTHLY
+   ONETIME
+   WEEKLY
+   YEARLY
 }
