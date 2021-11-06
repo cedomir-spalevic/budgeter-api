@@ -9,20 +9,26 @@ class BudgeterError extends Error {
    format = () => ({ message: this.message });
 }
 
+// the 4th argument 'next' is required by express so that it can tell if this is the error handling middleware
+// eslint-disable-next-line no-unused-vars
 const budgeterErrorHandler = (err, req, res, next) => {
-   if(err instanceof BudgeterError) {
-      req.logger.error(`Custom error thrown: Status code = ${err.statusCode}, Message = ${err.message}`);
-      if(err.originalError) {
+   if (err instanceof BudgeterError) {
+      req.logger.error(
+         `Custom error thrown: Status code = ${err.statusCode}, Message = ${err.message}`
+      );
+      if (err.originalError) {
          req.logger.error("Original error provided:");
          req.logger.error(err.originalError);
       }
       res.status(err.statusCode).send(err.format());
-   }
-   else {
+   } else {
       req.logger.error(`Unknown error thrown: Message = ${err.message}`);
       req.logger.error("Error:");
       req.logger.error(err);
-      res.status(500).send({ message: "Something went wrong. Hopefully I got alerted so I can fix it. If not, you'll have to wait until then. :/"});
+      res.status(500).send({
+         message:
+            "Something went wrong. Hopefully I got alerted so I can fix it. If not, you'll have to wait until then. :/"
+      });
    }
 };
 
@@ -30,8 +36,7 @@ const asyncHandler = (fn) => {
    return async (req, res, next) => {
       try {
          await fn(req, res, next);
-      }
-      catch(error) {
+      } catch (error) {
          next(error);
       }
    };

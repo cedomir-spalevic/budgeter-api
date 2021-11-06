@@ -2,7 +2,7 @@ const lb = require("@google-cloud/logging-bunyan");
 
 module.exports.getLogger = async () => {
    let logger, loggingMiddleware;
-   if(process.env.LOCAL) {
+   if (process.env.LOCAL) {
       logger = {
          warn: (log) => console.warn(log),
          info: (log) => console.info(log),
@@ -12,8 +12,7 @@ module.exports.getLogger = async () => {
          req.logger = logger;
          next();
       };
-   }
-   else {
+   } else {
       const bunyanLogger = await lb.express.middleware({
          logName: "budgeter"
       });

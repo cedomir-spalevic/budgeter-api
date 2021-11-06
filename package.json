@@ -1,6 +1,14 @@
 {
-  "dependencies": {
-    "@graphql-tools/schema": "^8.3.1",
-    "@graphql-tools/utils": "^8.5.2"
-  }
+    "scripts": {
+        "prepare": "husky install",
+        "precommit": "npm-run-all precommit:*",
+        "precommit:validate-terraform": "terraform validate",
+        "precommit:format": "cd src && npm run format && cd ..",
+        "precommit:lint": "cd src && npm run lint && cd ..",
+        "precommit:test": "cd src && npm run test && cd .."
+    },
+    "devDependencies": {
+        "husky": "^7.0.4",
+        "npm-run-all": "^4.1.5"
+    }
 }

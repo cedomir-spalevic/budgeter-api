@@ -4,7 +4,6 @@ const {
    getUsersCollection,
    getRefreshTokensCollection
 } = require("services/mongodb");
-const { ObjectId } = require("mongodb");
 const { generateKey, generateGuid } = require("utils/random");
 
 jest.mock("services/mongodb");

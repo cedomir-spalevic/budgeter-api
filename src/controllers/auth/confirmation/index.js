@@ -109,7 +109,7 @@ const getUser = async (req, oneTimeCode) => {
    return user;
 };
 
-const confirmation = async (req, res, next) => {
+const confirmation = async (req, res) => {
    const input = validate(req);
    const oneTimeCode = await findOneTimeCode(req, input);
    const user = await getUser(req, oneTimeCode);

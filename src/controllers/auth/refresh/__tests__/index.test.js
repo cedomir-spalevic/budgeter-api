@@ -12,8 +12,7 @@ let error;
 describe("refresh controller invalid inputs", () => {
    beforeEach(() => {
       req = {
-         body: {
-         },
+         body: {},
          logger: {
             info: jest.fn(),
             error: jest.fn()
@@ -29,11 +28,9 @@ describe("refresh controller invalid inputs", () => {
    test("Missing refreshToken", async () => {
       try {
          await refresh(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("refreshToken is required");
       }
    });
@@ -44,11 +41,9 @@ describe("refresh controller invalid inputs", () => {
       };
       try {
          await refresh(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("refreshToken is not valid");
       }
    });
@@ -73,33 +68,34 @@ describe("refresh controller not found or expired refresh tokens", () => {
    });
 
    test("no refresh token found", async () => {
-      getRefreshTokensCollection.mockImplementation(() => Promise.resolve({
-         find: async () => Promise.resolve(null)
-      }));
+      getRefreshTokensCollection.mockImplementation(() =>
+         Promise.resolve({
+            find: async () => Promise.resolve(null)
+         })
+      );
       try {
          await refresh(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("Unauthorized");
       }
    });
 
    test("expired refresh token", async () => {
-      getRefreshTokensCollection.mockImplementation(() => Promise.resolve({
-         find: async () => Promise.resolve({
-            expires: Date.now()-100000 // forcing expiration
+      getRefreshTokensCollection.mockImplementation(() =>
+         Promise.resolve({
+            find: async () =>
+               Promise.resolve({
+                  expires: Date.now() - 100000 // forcing expiration
+               })
          })
-      }));
+      );
       try {
          await refresh(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("Unauthorized");
       }
    });

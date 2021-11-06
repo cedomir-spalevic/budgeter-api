@@ -15,12 +15,12 @@ const addPaymentTag = async (req, input) => {
 };
 
 const removePaymentTag = async (req, id) => {
-   const paymentTagGraphQueries = getPaymentTagGraphQueries();
+   const paymentTagGraphQueries = getPaymentTagGraphQueries(req);
    await paymentTagGraphQueries.delete(id);
 };
 
 const getAllPaymentTags = async (req) => {
-   const paymentTagGraphQueries = getPaymentTagGraphQueries();
+   const paymentTagGraphQueries = getPaymentTagGraphQueries(req);
    const paymentTags = await paymentTagGraphQueries.getAll();
    return paymentTags.map(mapResponse);
 };

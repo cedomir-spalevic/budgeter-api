@@ -5,7 +5,7 @@ const { getConfig } = require("config");
 const getExpiration = () => Date.now() + getExpirationLength();
 
 /**
- * 
+ *
  * @returns Expiration length (5 minutes)
  */
 const getExpirationLength = () => ms(getConfig("ONE_TIME_CODE_EXPIRATION"));

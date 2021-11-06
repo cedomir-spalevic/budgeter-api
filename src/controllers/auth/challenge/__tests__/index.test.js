@@ -5,7 +5,6 @@ const {
 } = require("lib/security/oneTimeCode");
 const { getOneTimeCodesCollection } = require("services/mongodb");
 const { sendOneTimeCodeVerification } = require("lib/verification");
-const { ObjectId } = require("mongodb");
 const { v4 } = require("uuid");
 const { generateGuid } = require("utils/random");
 

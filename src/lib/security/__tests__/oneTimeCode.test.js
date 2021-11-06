@@ -1,4 +1,7 @@
-const { generateOneTimeCode, isOneTimeCode } = require("lib/security/oneTimeCode");
+const {
+   generateOneTimeCode,
+   isOneTimeCode
+} = require("lib/security/oneTimeCode");
 const { EMAIL_USER_IDENTIFIER_TYPE } = require("utils/constants");
 
 let req;
@@ -57,7 +60,11 @@ describe("one time code tests", () => {
    });
 
    test("generated one time code has all of the required properties", () => {
-      const otc = generateOneTimeCode(req, "cedomir.spalevic@gmail.com", EMAIL_USER_IDENTIFIER_TYPE);
+      const otc = generateOneTimeCode(
+         req,
+         "cedomir.spalevic@gmail.com",
+         EMAIL_USER_IDENTIFIER_TYPE
+      );
       expect(otc).toHaveProperty("code");
       expect(otc).toHaveProperty("key");
       expect(otc).toHaveProperty("userIdentifier");

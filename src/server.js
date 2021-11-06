@@ -23,15 +23,14 @@ const startServer = async () => {
 
    setupAuthRoutes(app);
    setupApolloServer(app);
-   
+
    app.use(budgeterErrorHandler);
-   
-   if(process.env.LOCAL) {
+
+   if (process.env.LOCAL) {
       app.listen(port, () => {
          logger.info(`Server listening on port ${port}`);
       });
-   }
-   else {
+   } else {
       app.listen(port, "0.0.0.0", () => {
          logger.info("Server started! 🚀");
       });

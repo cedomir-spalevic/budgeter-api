@@ -10,9 +10,11 @@ const setupTestConfigs = () => {
    };
 };
 
-
 const setupConfigs = async () => {
-   const userConfigPath = process.env.LOCAL === "true" ? "./config/development.json" : "./config/production.json";
+   const userConfigPath =
+      process.env.LOCAL === "true"
+         ? "./config/development.json"
+         : "./config/production.json";
    const userConfig = JSON.parse(fs.readFileSync(userConfigPath));
    const secretConfig = await getSecrets();
    configs = {
@@ -22,7 +24,7 @@ const setupConfigs = async () => {
 };
 
 const getConfig = (name) => {
-   if(name in configs) return configs[name];
+   if (name in configs) return configs[name];
    return "";
 };
 

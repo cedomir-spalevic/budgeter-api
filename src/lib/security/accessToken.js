@@ -6,7 +6,7 @@ const { getConfig } = require("config");
 const getExpiration = () => Date.now() + getExpirationLength();
 
 /**
- * 
+ *
  * @returns Expiration length (15 minutes)
  */
 const getExpirationLength = () => ms(getConfig("ACCESS_TOKEN_EXPIRATION"));
@@ -26,8 +26,7 @@ const decodeAccessToken = (token) => {
       return jwt.verify(token, getConfig("JWT_SECRET_KEY"), {
          algorithms: ["HS256"]
       });
-   }
-   catch(error) {
+   } catch (error) {
       throw new BudgeterError(401, "Unauthorized");
    }
 };

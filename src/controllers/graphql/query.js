@@ -4,7 +4,7 @@ const { getAllPaymentTags } = require("./processors/paymentTags");
 const { findUserById } = require("./processors/user");
 
 const getQueryResolver = (processor) => {
-   return async (parent, args, context, info) => {
+   return async (parent, args, context) => {
       const { req } = context;
       return processor(req, args);
    };

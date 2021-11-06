@@ -7,7 +7,7 @@ jest.mock("lib/security/oneTimeCode", () => ({
    generateOneTimeCode: jest.fn()
 }));
 jest.mock("mongodb", () => ({
-   MongoClient: function() {
+   MongoClient: function () {
       return {
          connect: () => Promise.reject({})
       };
@@ -49,12 +49,12 @@ describe("challenge valid inputs with mongodb errors", () => {
    test("mongodb service threw an error on connection", async () => {
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
-         expect(error.message).toBe("Downstream error: Mongodb connection error");
+      } finally {
+         expect(error.message).toBe(
+            "Downstream error: Mongodb connection error"
+         );
       }
    });
 
@@ -62,11 +62,9 @@ describe("challenge valid inputs with mongodb errors", () => {
    test.skip("mongodb service threw an error on create", async () => {
       try {
          await challenge(req, res);
-      }
-      catch(e) {
+      } catch (e) {
          error = e;
-      }
-      finally {
+      } finally {
          expect(error.message).toBe("Hello");
       }
    });

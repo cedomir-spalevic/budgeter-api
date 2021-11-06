@@ -2,15 +2,14 @@ const confirm = require("controllers/auth/confirmation");
 const {
    getOneTimeCodesCollection,
    getUsersCollection,
+   getPreferencesCollection,
    getRefreshTokensCollection
 } = require("services/mongodb");
-const { ObjectId } = require("mongodb");
 const { generateKey, generateCode, generateGuid } = require("utils/random");
 const {
    EMAIL_USER_IDENTIFIER_TYPE,
    PHONE_USER_IDENTIFIER_TYPE
 } = require("utils/constants");
-const { generateRefreshToken } = require("lib/security/refreshToken");
 
 jest.mock("services/mongodb");
 jest.mock("jsonwebtoken");
@@ -94,7 +93,10 @@ describe("confirmation controller with mongo errors", () => {
    });
 
    test("user not found, user should get created", async () => {
-      const createMock = jest.fn(() => Promise.resolve({ id: generateGuid() }));
+      const createUserMock = jest.fn(() =>
+         Promise.resolve({ id: generateGuid() })
+      );
+      const createPrefMock = jest.fn(() => Promise.resolve({}));
       getOneTimeCodesCollection.mockImplementation(() =>
          Promise.resolve({
             find: async () =>
@@ -106,7 +108,12 @@ describe("confirmation controller with mongo errors", () => {
       getUsersCollection.mockImplementation(() =>
          Promise.resolve({
             find: async () => Promise.resolve(null),
-            create: createMock
+            create: createUserMock
+         })
+      );
+      getPreferencesCollection.mockImplementation(() =>
+         Promise.resolve({
+            create: createPrefMock
          })
       );
       try {
@@ -114,8 +121,9 @@ describe("confirmation controller with mongo errors", () => {
       } catch (e) {
          error = e;
       } finally {
-         expect(createMock).toHaveBeenCalled();
          expect(error).toBe(null);
+         expect(createUserMock).toHaveBeenCalled();
+         expect(createPrefMock).toHaveBeenCalled();
       }
    });
 

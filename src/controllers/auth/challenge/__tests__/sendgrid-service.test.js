@@ -2,7 +2,6 @@ const challenge = require("controllers/auth/challenge");
 const { generateOneTimeCode } = require("lib/security/oneTimeCode");
 const { getOneTimeCodesCollection } = require("services/mongodb");
 const { v4 } = require("uuid");
-const { ObjectId } = require("mongodb");
 const { EMAIL_USER_IDENTIFIER_TYPE } = require("utils/constants");
 const sendgridMail = require("@sendgrid/mail");
 const { generateGuid } = require("utils/random");

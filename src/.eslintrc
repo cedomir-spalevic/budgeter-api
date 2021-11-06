@@ -1,34 +1,25 @@
 {
-	"env": {
+   "env": {
       "es6": true,
       "node": true,
       "jest/globals": true
-	},
+   },
    "plugins": ["jest"],
-	"extends": ["eslint:recommended"],
-	"parserOptions": {
-		"ecmaVersion": "latest",
+   "extends": ["eslint:recommended"],
+   "parserOptions": {
+      "ecmaVersion": "latest",
       "sourceType": "module"
-	},
-	"rules": {
-		"linebreak-style": [
-			"error",
-			"unix"
-		],
-		"quotes": [
-			"error",
-			"double"
-		],
-		"semi": [
-			"error",
-			"always"
-		],
-      "no-unused-vars": "off",
+   },
+   "rules": {
+      "linebreak-style": ["error", "unix"],
+      "quotes": ["error", "double"],
+      "semi": ["error", "always"],
+      "no-unused-vars": ["error"],
       "jest/consistent-test-it": [
          "error",
          {
             "fn": "test"
          }
       ]
-	}
+   }
 }

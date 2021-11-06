@@ -2,7 +2,6 @@ const challenge = require("controllers/auth/challenge");
 const { generateOneTimeCode } = require("lib/security/oneTimeCode");
 const { getOneTimeCodesCollection } = require("services/mongodb");
 const { v4 } = require("uuid");
-const { ObjectId } = require("mongodb");
 const twilio = require("twilio");
 const { PHONE_USER_IDENTIFIER_TYPE } = require("utils/constants");
 const { generateGuid } = require("utils/random");

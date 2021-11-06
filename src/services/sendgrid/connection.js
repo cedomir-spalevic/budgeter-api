@@ -7,8 +7,11 @@ module.exports.getClient = (req) => {
       req.logger.info("Sendgrid service: attempting to set connection");
       sendgridMail.setApiKey(getConfig("SENDGRID_API_KEY"));
       return sendgridMail;
-   }
-   catch(error) {
-      throw new BudgeterError(400, "Downstream error: Sendgrid connection error", error);
+   } catch (error) {
+      throw new BudgeterError(
+         400,
+         "Downstream error: Sendgrid connection error",
+         error
+      );
    }
 };

@@ -30,13 +30,20 @@ const localBlocklistedRoutes = [
 ];
 
 module.exports.verifyAuthenticatedRequest = (req, res, next) => {
-   const blocklistedRoutes = process.env.LOCAL ? localBlocklistedRoutes : prodBlocklistedRoutes;
-   if(blocklistedRoutes.some(route => route.path === req.originalUrl && route.method === req.method)) {
+   const blocklistedRoutes = process.env.LOCAL
+      ? localBlocklistedRoutes
+      : prodBlocklistedRoutes;
+   if (
+      blocklistedRoutes.some(
+         (route) =>
+            route.path === req.originalUrl && route.method === req.method
+      )
+   ) {
       next();
       return;
    }
    let token = req.headers["authorization"];
-   if(!token) {
+   if (!token) {
       next(new BudgeterError(401, "Unauthorized"));
       return;
    }

@@ -24,7 +24,7 @@ const tryMutation = async (req, processor, errorMessage, entityProperty) => {
 };
 
 const getMutationResolver = (processor, errorMessage, entityProperty) => {
-   return async (parent, args, context, info) => {
+   return async (parent, args, context) => {
       const { req } = context;
       return await tryMutation(
          req,

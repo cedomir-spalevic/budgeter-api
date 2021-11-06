@@ -17,12 +17,17 @@ const getCollection = async (req, collectionName) => {
    return new EntityCollection(req, collection);
 };
 
-module.exports.getOneTimeCodesCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.ONE_TIME_CODES);
+module.exports.getOneTimeCodesCollection = async (req) =>
+   await getCollection(req, MONGO_COLLECTIONS.ONE_TIME_CODES);
 
-module.exports.getRefreshTokensCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.REFRESH_TOKENS);
+module.exports.getRefreshTokensCollection = async (req) =>
+   await getCollection(req, MONGO_COLLECTIONS.REFRESH_TOKENS);
 
-module.exports.getUsersCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.USERS);
+module.exports.getUsersCollection = async (req) =>
+   await getCollection(req, MONGO_COLLECTIONS.USERS);
 
-module.exports.getDevicesCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.DEVICES);
+module.exports.getDevicesCollection = async (req) =>
+   await getCollection(req, MONGO_COLLECTIONS.DEVICES);
 
-module.exports.getPreferencesCollection = async (req) => await getCollection(req, MONGO_COLLECTIONS.PREFERENCES);
+module.exports.getPreferencesCollection = async (req) =>
+   await getCollection(req, MONGO_COLLECTIONS.PREFERENCES);
