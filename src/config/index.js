@@ -13,7 +13,7 @@ const setupTestConfigs = () => {
 const setupConfigs = async () => {
    const userConfigPath =
       process.env.LOCAL === "true"
-         ? "./config/development.json"
+         ? "./config/local.json"
          : "./config/production.json";
    const userConfig = JSON.parse(fs.readFileSync(userConfigPath));
    const secretConfig = await getSecrets();

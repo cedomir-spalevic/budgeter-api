@@ -18,10 +18,6 @@ class EntityCollection {
       }
    }
 
-   async aggregate(pipeline, options) {
-      return await this.#collection.aggregate(pipeline, options).toArray();
-   }
-
    async create(entity) {
       const date = new Date();
       const entityToCreate = {
@@ -71,24 +67,10 @@ class EntityCollection {
       return entityToUpdate;
    }
 
-   async replace(filter, entity) {
-      const entityToUpdate = {
-         ...entity,
-         modifiedOn: new Date()
-      };
-      await this.#collection.replaceOne(filter, entityToUpdate);
-   }
-
    async delete(id) {
+      this.#logMessage("Deleting record", id);
       await this.#collection.deleteOne({ id });
-   }
-
-   async deleteAll(filter) {
-      await this.#collection.deleteMany(filter);
-   }
-
-   async count(query) {
-      return await this.#collection.countDocuments(query);
+      this.#logMessage("Deleted record", id);
    }
 }
 

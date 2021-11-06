@@ -39,7 +39,7 @@ const getIncomeById = async (req, id) => {
 
 const getAllIncomes = async (req) => {
    const incomeGraphQueries = getIncomeGraphQueries(req);
-   const incomes = await incomeGraphQueries.getAll({
+   const incomes = await incomeGraphQueries.find({
       userId: req.user.id
    });
    return incomes.map(mapResponse);

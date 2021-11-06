@@ -37,16 +37,16 @@ const getPaymentById = async (req, id) => {
    return mapResponse(payments[0]);
 };
 
-const getAllPayments = async (req) => {
+const getPayments = async (req) => {
    const paymentGraphQueries = getPaymentGraphQueries(req);
-   const payments = await paymentGraphQueries.getAll({
+   const payments = await paymentGraphQueries.find({
       userId: req.user.id
    });
    return payments.map(mapResponse);
 };
 
 module.exports = {
-   getAllPayments,
+   getPayments,
    addPayment,
    removePayment,
    getPaymentById

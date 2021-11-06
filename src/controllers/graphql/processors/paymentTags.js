@@ -19,14 +19,14 @@ const removePaymentTag = async (req, id) => {
    await paymentTagGraphQueries.delete(id);
 };
 
-const getAllPaymentTags = async (req) => {
+const getPaymentTags = async (req) => {
    const paymentTagGraphQueries = getPaymentTagGraphQueries(req);
-   const paymentTags = await paymentTagGraphQueries.getAll();
+   const paymentTags = await paymentTagGraphQueries.find();
    return paymentTags.map(mapResponse);
 };
 
 module.exports = {
    addPaymentTag,
    removePaymentTag,
-   getAllPaymentTags
+   getPaymentTags
 };

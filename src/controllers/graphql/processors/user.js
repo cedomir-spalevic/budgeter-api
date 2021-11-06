@@ -1,6 +1,6 @@
 const { getUsersCollection } = require("services/mongodb");
 
-const findUserById = async (req) => {
+const getUserById = async (req) => {
    const usersCollection = await getUsersCollection(req);
    const user = await usersCollection.find({
       id: req.user.id
@@ -15,5 +15,5 @@ const findUserById = async (req) => {
 };
 
 module.exports = {
-   findUserById
+   getUserById
 };
