@@ -1,13 +1,15 @@
-const { removeDevice, addDevice } = require("./utils/devices");
-const { addPaymentTag, removePaymentTag } = require("./utils/paymentTags");
-const { updateUserPreferences } = require("./utils/preferences");
+const { removeDevice, addDevice } = require("./processors/devices");
+const { addPaymentTag, removePaymentTag } = require("./processors/paymentTags");
+const { updateUserPreferences } = require("./processors/preferences");
+const { addPayment, removePayment } = require("./processors/payments");
+const { addIncome, removeIncome } = require("./processors/incomes");
 
-const tryMutation = async (req, asyncFunc, errorMessage) => {
+const tryMutation = async (req, processor, errorMessage, entityProperty) => {
    let message = "",
       success = true,
-      funcResponse = {};
+      processorResponse = {};
    try {
-      funcResponse = await asyncFunc();
+      processorResponse = await processor();
    } catch (error) {
       req.logger.error(`Error during tryMutation: ${errorMessage}`);
       req.logger.error(error);
@@ -17,82 +19,78 @@ const tryMutation = async (req, asyncFunc, errorMessage) => {
    return {
       message,
       success,
-      funcResponse
+      [entityProperty]: success ? processorResponse : null
+   };
+};
+
+const getMutationResolver = (processor, errorMessage, entityProperty) => {
+   return async (parent, args, context, info) => {
+      const { req } = context;
+      return await tryMutation(
+         req,
+         processor(req, args),
+         errorMessage,
+         entityProperty
+      );
    };
 };
 
 module.exports.resolvers = {
    Mutation: {
-      addDevice: async (parent, args, context, info) => {
-         const { req } = context;
-         const asyncFunc = async () => addDevice(req, args.device);
-         const response = await tryMutation(
-            req,
-            asyncFunc,
-            "Unable to add device"
-         );
-         return {
-            success: response.success,
-            message: response.message,
-            devices: response.success ? response.funcResponse : null
-         };
-      },
-      removeDevice: async (parent, args, context, info) => {
-         const { req } = context;
-         const asyncFunc = async () => removeDevice(req, args.device);
-         const response = await tryMutation(
-            req,
-            asyncFunc,
-            "Unable to remove device"
-         );
-         return {
-            success: response.success,
-            message: response.message,
-            devices: response.success ? response.funcResponse : null
-         };
-      },
-      updateUserPreferences: async (parent, args, context, info) => {
-         const { req } = context;
-         const asyncFunc = async () =>
-            updateUserPreferences(req, args.preferences);
-         const response = await tryMutation(
-            req,
-            asyncFunc,
-            "Unable to update preferences"
-         );
-         return {
-            success: response.success,
-            message: response.message,
-            preferences: response.success ? response.funcResponse : null
-         };
-      },
-      addPaymentTag: async (parent, args, context, info) => {
-         const { req } = context;
-         const asyncFunc = async () => addPaymentTag(req, args.paymentTag);
-         const response = await tryMutation(
-            req,
-            asyncFunc,
-            "Unable to create payment tag"
-         );
-         return {
-            success: response.success,
-            message: response.message,
-            paymentTag: response.success ? response.funcResponse : null
-         };
-      },
-      removePaymentTag: async (parent, args, context, info) => {
-         const { req } = context;
-         const asyncFunc = async () => removePaymentTag(req, args.id);
-         const response = await tryMutation(
-            req,
-            asyncFunc,
-            "Unable to remove payment tag"
-         );
-         return {
-            success: response.success,
-            message: response.message,
-            paymentTag: null
-         };
-      }
+      // Device
+      addDevice: getMutationResolver(
+         (req, args) => async () => addDevice(req, args.device),
+         "Unable to add device",
+         "devices"
+      ),
+      removeDevice: getMutationResolver(
+         (req, args) => async () => removeDevice(req, args.device),
+         "Unable to remove device",
+         "devices"
+      ),
+
+      // User preferences
+      updateUserPreferences: getMutationResolver(
+         (req, args) => async () =>
+            updateUserPreferences(req, args.preferences),
+         "Unable to update preferences",
+         "preferences"
+      ),
+
+      // Payment Tags
+      addPaymentTag: getMutationResolver(
+         (req, args) => async () => addPaymentTag(req, args.paymentTag),
+         "Unable to create payment tag",
+         "paymentTag"
+      ),
+      removePaymentTag: getMutationResolver(
+         (req, args) => async () => removePaymentTag(req, args.id),
+         "Unable to remove payment tag",
+         "paymentTag"
+      ),
+
+      // Payments
+      addPayment: getMutationResolver(
+         (req, args) => async () => addPayment(req, args.payment),
+         "Unable to create payment",
+         "payment"
+      ),
+      removePayment: getMutationResolver(
+         (req, args) => async () => removePayment(req, args.id),
+         "Unable to remove payment",
+         "payment"
+      ),
+
+      // Incomes
+      addIncome: getMutationResolver(
+         (req, args) => async () => addIncome(req, args.income),
+         "Unable to create income",
+         "income"
+      ),
+      removeIncome: getMutationResolver(
+         (req, args) => async () => removeIncome(req, args.id),
+         "Unable to remove income",
+         "income"
+      )
    }
 };

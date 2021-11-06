@@ -2,11 +2,28 @@ type Income {
    id: ID!
    title: String!
    amount: Float!
-   initialDay: Int!
-   initialDate: Int!
+   initialDay: Int! # Day of week
+   initialDate: Int! # Day of month
    initialMonth: Int!
    initialYear: Int!
    recurrence: Recurrence
    createdOn: DateTime!
    modifiedOn: DateTime!
+}
+
+input IncomeInput {
+   title: String!
+   amount: Float!
+   initialDay: Int! # Day of week
+   initialDate: Int! # Day of month
+   initialMonth: Int!
+   initialYear: Int!
+   recurrence: Recurrence!
+   tags: [String]
+}
+
+type IncomeMutationResponse implements MutationResponse {
+   success: Boolean!
+   message: String!
+   income: Income
 }

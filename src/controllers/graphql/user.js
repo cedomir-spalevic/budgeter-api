@@ -1,5 +1,5 @@
-const { getUserDevices } = require("./utils/devices");
-const { getUserPreferences } = require("./utils/preferences");
+const { getUserDevices } = require("./processors/devices");
+const { getUserPreferences } = require("./processors/preferences");
 
 module.exports.resolvers = {
    User: {

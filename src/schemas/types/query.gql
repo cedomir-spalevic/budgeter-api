@@ -1,4 +1,15 @@
 type Query {
+   # User
    user: User
+
+   # Payments
+   paymentById(id: ID): Payment
+   payments: [Payment]
+
+   # Incomes
+   incomeById(id: ID): Income
+   incomes: [Income]
+
+   # Tags
    paymentTags: [PaymentTag]
 }

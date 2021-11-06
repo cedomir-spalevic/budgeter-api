@@ -31,5 +31,7 @@ module.exports.MONGO_COLLECTIONS = {
 };
 
 module.exports.NEO4J_ENTITIES = {
+   INCOMES: "Income",
+   PAYMENTS: "Payment",
    PAYMENT_TAGS: "PaymentTag"
 };

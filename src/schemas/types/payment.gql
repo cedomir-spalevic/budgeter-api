@@ -2,16 +2,37 @@ type Payment {
    id: ID!
    title: String!
    amount: Float!
-   initialDay: Int! # day of week
+   initialDay: Int! # Day of week
    initialDate: Int! # Day of month
    initialMonth: Int!
    initialYear: Int!
-   endDay: Int!
-   endDate: Int!
-   endMonth: Int!
-   endYear: Int!
+   endDay: Int
+   endDate: Int
+   endMonth: Int
+   endYear: Int
    recurrence: Recurrence!
    createdOn: DateTime!
    modifiedOn: DateTime!
    tags: [PaymentTag] @relationship(type: "TAGGED_WITH", direction: out)
+}
+
+input PaymentInput {
+   title: String!
+   amount: Float!
+   initialDay: Int! # Day of week
+   initialDate: Int! # Day of month
+   initialMonth: Int!
+   initialYear: Int!
+   endDay: Int
+   endDate: Int
+   endMonth: Int
+   endYear: Int
+   recurrence: Recurrence!
+   tags: [String]
+}
+
+type PaymentMutationResponse implements MutationResponse {
+   success: Boolean!
+   message: String!
+   payment: Payment
 }

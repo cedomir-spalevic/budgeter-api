@@ -7,7 +7,10 @@ const mapResponse = (paymentTag) => ({
 
 const addPaymentTag = async (req, input) => {
    const paymentTagGraphQueries = getPaymentTagGraphQueries();
-   const paymentTag = await paymentTagGraphQueries.create({ tag: input.tag });
+   const existingTags = await paymentTagGraphQueries.find({ tag: input.tag });
+   if (existingTags.length > 0)
+      throw new Error(`Payment Tag of ${input.tag} already exists`);
+   const paymentTag = await paymentTagGraphQueries.create(input);
    return mapResponse(paymentTag[0]);
 };
 
