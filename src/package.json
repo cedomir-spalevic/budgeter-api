@@ -16,7 +16,8 @@
       "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
       "deploy": "gcloud app deploy",
       "postinstall": "link-module-alias",
-      "preinstall": "command -v link-module-alias && link-module-alias clean || true"
+      "preinstall": "command -v link-module-alias && link-module-alias clean || true",
+      "fix-alias": "npm run preinstall && npm run postinstall"
    },
    "author": "Cedomir Spalevic",
    "license": "ISC",
