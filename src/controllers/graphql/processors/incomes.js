@@ -31,6 +31,12 @@ const removeIncome = async (req, id) => {
    await incomeGraphQueries.delete(id);
 };
 
+const updateIncome = async (req, input) => {
+   const incomeGraphQueries = getIncomeGraphQueries(req);
+   const incomes = await incomeGraphQueries.update(input.id, input.income);
+   return mapResponse(incomes[0]);
+};
+
 const getIncomeById = async (req, id) => {
    const incomeGraphQueries = getIncomeGraphQueries(req);
    const payments = await incomeGraphQueries.getById(id);
@@ -49,5 +55,6 @@ module.exports = {
    getAllIncomes,
    addIncome,
    removeIncome,
+   updateIncome,
    getIncomeById
 };

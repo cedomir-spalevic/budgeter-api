@@ -20,9 +20,9 @@ type Payment {
 }
 
 """
-Describes a payment a user is allowed to create and update
+Describes a payment a user is allowed to add
 """
-input PaymentInput {
+input AddPaymentInput {
    amount: Float!
    endDate: Date
    endDay: Day
@@ -35,6 +35,24 @@ input PaymentInput {
    recurrence: Recurrence!
    tags: [String]
    title: String!
+}
+
+"""
+Describes a payment a user is allowed to update
+"""
+input UpdatePaymentInput {
+   amount: Float
+   endDate: Date
+   endDay: Day
+   endMonth: Month
+   endYear: Year
+   initialDate: Date
+   initialDay: Day
+   initialMonth: Month
+   initialYear: Year
+   recurrence: Recurrence
+   tags: [String]
+   title: String
 }
 
 """

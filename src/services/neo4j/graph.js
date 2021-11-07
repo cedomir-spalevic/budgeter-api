@@ -21,7 +21,7 @@ class NeoGraphQueries {
       return result.records.map((r) => r.toObject().n.properties);
    }
 
-   async create(record) {
+   async create(properties) {
       const utcDateTime = new Date().toISOString();
       const driver = getDriver();
       const session = driver.session();
@@ -29,13 +29,34 @@ class NeoGraphQueries {
          `CREATE (n: ${this.#entityName} $input) RETURN n`,
          {
             input: {
-               ...record,
+               ...properties,
                id: generateGuid(),
                createdOn: utcDateTime,
                modifiedOn: utcDateTime
             }
          }
       );
+      return this.#getRecords(result);
+   }
+
+   async update(id, properties) {
+      const driver = getDriver();
+      const session = driver.session();
+      let query = `MATCH (n: ${this.#entityName} {id: $id})`;
+      if (properties) {
+         properties = { ...properties, modifiedOn: new Date().toISOString() };
+         const whereClause = Object.keys(properties)
+            .map((property) => `n.${property} = $input.${property}`)
+            .join(", ");
+         query += ` SET ${whereClause}`;
+      }
+      query += " RETURN n";
+      const result = await session.run(query, {
+         id,
+         input: {
+            ...properties
+         }
+      });
       return this.#getRecords(result);
    }
 
@@ -72,14 +93,14 @@ class NeoGraphQueries {
    async find(properties) {
       const driver = getDriver();
       const session = driver.session();
-      let query = `MATCH (n: ${this.#entityName}) `;
+      let query = `MATCH (n: ${this.#entityName})`;
       if (properties) {
          const whereClause = Object.keys(properties)
             .map((property) => `n.${property} = $input.${property}`)
             .join(" AND ");
-         query += ` WHERE ${whereClause} `;
+         query += ` WHERE ${whereClause}`;
       }
-      query += "RETURN n";
+      query += " RETURN n";
       const result = await session.run(query, {
          input: {
             ...properties

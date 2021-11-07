@@ -31,6 +31,12 @@ const removePayment = async (req, id) => {
    await paymentGraphQueries.delete(id);
 };
 
+const updatePayment = async (req, input) => {
+   const paymentGraphQueries = getPaymentGraphQueries(req);
+   const payments = await paymentGraphQueries.update(input.id, input.payment);
+   return mapResponse(payments[0]);
+};
+
 const getPaymentById = async (req, id) => {
    const paymentGraphQueries = getPaymentGraphQueries(req);
    const payments = await paymentGraphQueries.getById(id);
@@ -49,5 +55,6 @@ module.exports = {
    getPayments,
    addPayment,
    removePayment,
+   updatePayment,
    getPaymentById
 };

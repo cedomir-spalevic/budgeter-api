@@ -1,8 +1,16 @@
 const { removeDevice, addDevice } = require("./processors/devices");
 const { addPaymentTag, removePaymentTag } = require("./processors/paymentTags");
 const { updateUserPreferences } = require("./processors/preferences");
-const { addPayment, removePayment } = require("./processors/payments");
-const { addIncome, removeIncome } = require("./processors/incomes");
+const {
+   addPayment,
+   removePayment,
+   updatePayment
+} = require("./processors/payments");
+const {
+   addIncome,
+   removeIncome,
+   updateIncome
+} = require("./processors/incomes");
 
 const tryMutation = async (req, processor, errorMessage, entityProperty) => {
    let message = "",
@@ -80,6 +88,11 @@ module.exports.resolvers = {
          "Unable to remove payment",
          "payment"
       ),
+      updatePayment: getMutationResolver(
+         (req, args) => async () => updatePayment(req, args),
+         "Unable to update payment",
+         "payment"
+      ),
 
       // Incomes
       addIncome: getMutationResolver(
@@ -90,6 +103,11 @@ module.exports.resolvers = {
       removeIncome: getMutationResolver(
          (req, args) => async () => removeIncome(req, args.id),
          "Unable to remove income",
+         "income"
+      ),
+      updateIncome: getMutationResolver(
+         (req, args) => async () => updateIncome(req, args),
+         "Unable to update income",
          "income"
       )
    }

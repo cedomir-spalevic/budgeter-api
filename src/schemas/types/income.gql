@@ -15,17 +15,29 @@ type Income {
 }
 
 """
-Describes an income a user is allowed to create and update
+Describes an income a user is allowed to add
 """
-input IncomeInput {
+input AddIncomeInput {
    amount: Float!
    initialDate: Date!
    initialDay: Day!
    initialMonth: Month!
    initialYear: Year!
    recurrence: Recurrence!
-   tags: [String]
    title: String!
+}
+
+"""
+Describes an income a user is allowed to update
+"""
+input UpdateIncomeInput {
+   amount: Float
+   initialDate: Date
+   initialDay: Day
+   initialMonth: Month
+   initialYear: Year
+   recurrence: Recurrence
+   title: String
 }
 
 """
