@@ -13,7 +13,7 @@ let server;
 const executeOp = async (input) => {
    return await server.executeOperation({
       query: gql`
-         mutation ADD_PAYMENT($input: PaymentInput) {
+         mutation ADD_PAYMENT($input: AddPaymentInput) {
             addPayment(payment: $input) {
                success
                message
