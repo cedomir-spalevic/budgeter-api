@@ -1,0 +1,5 @@
+"""
+Describes a field that represents a day of the week. Follows the JavaScript day standard
+Accepts: integer between 0-6
+"""
+scalar Day

@@ -1,0 +1,4 @@
+"""
+Describes a field that represents a year
+"""
+scalar Year

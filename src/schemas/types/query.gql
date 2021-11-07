@@ -2,7 +2,7 @@
 Describes all of the queries that can be executed
 """
 type Query {
-   budget(day: Int!, month: Int!, year: Int!): Budget
+   budget(day: Day!, month: Month!, year: Year!): Budget
    incomeById(id: ID): Income
    incomes: [Income]
    paymentById(id: ID): Payment

@@ -3,9 +3,9 @@ Describes a user budget for a given month
 """
 type Budget {
    incomes: [BudgetIncome]
-   month: Int!
+   month: Month!
    payments: [BudgetPayment]
-   year: Int!
+   year: Year!
 }
 
 """

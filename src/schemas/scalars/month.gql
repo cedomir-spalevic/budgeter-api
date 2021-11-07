@@ -1,0 +1,5 @@
+"""
+Describes a field that represents a month. Follows the JavaScript month standard
+Accepts: integer between 0-11
+"""
+scalar Month

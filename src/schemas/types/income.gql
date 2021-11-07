@@ -5,10 +5,10 @@ type Income {
    amount: Float!
    createdOn: DateTime!
    id: ID!
-   initialDate: Int! # Day of month
-   initialDay: Int! # Day of week
-   initialMonth: Int!
-   initialYear: Int!
+   initialDate: Date!
+   initialDay: Day!
+   initialMonth: Month!
+   initialYear: Year!
    modifiedOn: DateTime!
    recurrence: Recurrence
    title: String!
@@ -19,10 +19,10 @@ Describes an income a user is allowed to create and update
 """
 input IncomeInput {
    amount: Float!
-   initialDate: Int! # Day of month
-   initialDay: Int! # Day of week
-   initialMonth: Int!
-   initialYear: Int!
+   initialDate: Date!
+   initialDay: Day!
+   initialMonth: Month!
+   initialYear: Year!
    recurrence: Recurrence!
    tags: [String]
    title: String!

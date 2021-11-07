@@ -4,15 +4,15 @@ Describes a payment that a user makes
 type Payment {
    amount: Float!
    createdOn: DateTime!
-   endDate: Int
-   endDay: Int
-   endMonth: Int
-   endYear: Int
+   endDate: Date
+   endDay: Day
+   endMonth: Month
+   endYear: Year
    id: ID!
-   initialDate: Int! # Day of month
-   initialDay: Int! # Day of week
-   initialMonth: Int!
-   initialYear: Int!
+   initialDate: Date!
+   initialDay: Day!
+   initialMonth: Month!
+   initialYear: Year!
    modifiedOn: DateTime!
    recurrence: Recurrence!
    tags: [PaymentTag] @relationship(type: "TAGGED_WITH", direction: out)
@@ -24,14 +24,14 @@ Describes a payment a user is allowed to create and update
 """
 input PaymentInput {
    amount: Float!
-   endDate: Int
-   endDay: Int
-   endMonth: Int
-   endYear: Int
-   initialDate: Int! # Day of month
-   initialDay: Int! # Day of week
-   initialMonth: Int!
-   initialYear: Int!
+   endDate: Date
+   endDay: Day
+   endMonth: Month
+   endYear: Year
+   initialDate: Date!
+   initialDay: Day!
+   initialMonth: Month!
+   initialYear: Year!
    recurrence: Recurrence!
    tags: [String]
    title: String!

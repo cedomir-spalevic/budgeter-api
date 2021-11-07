@@ -13,7 +13,7 @@ const tryMutation = async (req, processor, errorMessage, entityProperty) => {
    } catch (error) {
       req.logger.error(`Error during tryMutation: ${errorMessage}`);
       req.logger.error(error);
-      message = errorMessage;
+      message = error.message;
       success = false;
    }
    return {

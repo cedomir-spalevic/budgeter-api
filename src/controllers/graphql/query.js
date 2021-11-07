@@ -1,7 +1,7 @@
 const { getAllIncomes, getIncomeById } = require("./processors/incomes");
 const { getPayments, getPaymentById } = require("./processors/payments");
 const { getPaymentTags } = require("./processors/paymentTags");
-const { findUserById } = require("./processors/user");
+const { getUserById } = require("./processors/user");
 
 const getQueryResolver = (processor) => {
    return async (parent, args, context) => {
@@ -13,7 +13,7 @@ const getQueryResolver = (processor) => {
 module.exports.resolvers = {
    Query: {
       // User
-      user: getQueryResolver((req) => findUserById(req)),
+      user: getQueryResolver((req) => getUserById(req)),
 
       // Income
       incomes: getQueryResolver((req) => getAllIncomes(req)),
