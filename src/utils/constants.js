@@ -35,3 +35,15 @@ module.exports.NEO4J_ENTITIES = {
    PAYMENTS: "Payment",
    PAYMENT_TAGS: "PaymentTag"
 };
+
+module.exports.NEO4J_RELATIONSHIPS = {
+   TAGGED_WITH: "TAGGED_WITH"
+};
+
+module.exports.CYPHER_KEYWORDS = {
+   MATCH: "MATCH",
+   CREATE: "CREATE",
+   RETURNS: "RETURNS",
+   WHERE: "WHERE",
+   WITH: "WITH"
+};

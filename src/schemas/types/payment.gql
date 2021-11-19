@@ -15,7 +15,7 @@ type Payment {
    initialYear: Year!
    modifiedOn: DateTime!
    recurrence: Recurrence!
-   tags: [PaymentTag] @relationship(type: "TAGGED_WITH", direction: out)
+   tags: [PaymentTag]
    title: String!
 }
 

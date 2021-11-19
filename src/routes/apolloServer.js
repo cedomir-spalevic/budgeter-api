@@ -15,6 +15,7 @@ const setupRoutes = async (app) => {
       extensions: ["js"]
    });
    const resolvers = mergeResolvers(resolversArray);
+
    const server = new ApolloServer({
       typeDefs,
       resolvers,

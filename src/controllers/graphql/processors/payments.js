@@ -1,4 +1,5 @@
 const { getPaymentGraphQueries } = require("services/neo4j");
+const { NEO4J_RELATIONSHIPS } = require("utils/constants");
 
 const mapResponse = (payment) => ({
    id: payment.id,
@@ -18,11 +19,18 @@ const mapResponse = (payment) => ({
 });
 
 const addPayment = async (req, input) => {
-   const paymentGraphQueries = getPaymentGraphQueries(req);
-   const payments = await paymentGraphQueries.create({
+   const properties = {
       userId: req.user.id,
       ...input
-   });
+   };
+   if (properties.tags) {
+      properties.tags = properties.tags.map((tag) => ({
+         relationship: NEO4J_RELATIONSHIPS.TAGGED_WITH,
+         value: tag
+      }));
+   }
+   const paymentGraphQueries = getPaymentGraphQueries(req);
+   const payments = await paymentGraphQueries.create(properties);
    return mapResponse(payments[0]);
 };
 

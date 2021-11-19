@@ -1,7 +1,7 @@
-const monthScalarType = require("./scalarTypes/month");
-const yearScalarType = require("./scalarTypes/year");
-const dayScalarType = require("./scalarTypes/day");
-const dateScalarType = require("./scalarTypes/date");
+const monthScalarType = require("./scalars/month");
+const yearScalarType = require("./scalars/year");
+const dayScalarType = require("./scalars/day");
+const dateScalarType = require("./scalars/date");
 
 module.exports.resolvers = {
    Day: dayScalarType,

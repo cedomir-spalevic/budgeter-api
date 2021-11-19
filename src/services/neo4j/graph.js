@@ -2,31 +2,35 @@ const { generateGuid } = require("utils/random");
 const { getDriver } = require("./connection");
 
 class NeoGraphQueries {
-   #req = null;
-   #entityName = null;
-
    constructor(req, entityName) {
-      this.#req = req;
-      this.#entityName = entityName;
+      this.req = req;
+      this.entityName = entityName;
    }
 
-   #logMessage(message, obj) {
-      this.#req.logger.info(`Neo4J ${this.#entityName} service: ${message}`);
+   logMessage(message, obj) {
+      this.req.logger.info(`Neo4J ${this.entityName} service: ${message}`);
       if (obj) {
-         this.#req.logger.info(obj);
+         this.req.logger.info(obj);
       }
    }
 
-   #getRecords(result) {
+   getRecords(result) {
       return result.records.map((r) => r.toObject().n.properties);
    }
+
+   /**
+    * Create a new record
+    * @param {*} properties
+    * @param {*} relationships [{ name: "<name of relationship>", properties: {} }]
+    * @returns
+    */
 
    async create(properties) {
       const utcDateTime = new Date().toISOString();
       const driver = getDriver();
       const session = driver.session();
       const result = await session.run(
-         `CREATE (n: ${this.#entityName} $input) RETURN n`,
+         `CREATE (n: ${this.entityName} $input) RETURN n`,
          {
             input: {
                ...properties,
@@ -36,13 +40,13 @@ class NeoGraphQueries {
             }
          }
       );
-      return this.#getRecords(result);
+      return this.getRecords(result);
    }
 
    async update(id, properties) {
       const driver = getDriver();
       const session = driver.session();
-      let query = `MATCH (n: ${this.#entityName} {id: $id})`;
+      let query = `MATCH (n: ${this.entityName} {id: $id})`;
       if (properties) {
          properties = { ...properties, modifiedOn: new Date().toISOString() };
          const whereClause = Object.keys(properties)
@@ -57,14 +61,14 @@ class NeoGraphQueries {
             ...properties
          }
       });
-      return this.#getRecords(result);
+      return this.getRecords(result);
    }
 
    async delete(id) {
       const driver = getDriver();
       const session = driver.session();
       await session.run(
-         `MATCH (n: ${this.#entityName}) WHERE n.id = $input.id DELETE n`,
+         `MATCH (n: ${this.entityName}) WHERE n.id = $input.id DELETE n`,
          {
             input: {
                id
@@ -77,23 +81,21 @@ class NeoGraphQueries {
       const driver = getDriver();
       const session = driver.session();
       const result = await session.run(
-         `MATCH (n: ${
-            this.#entityName
-         }) WHERE n.id = $input.id AND n.userId = $input.userId RETURN n`,
+         `MATCH (n: ${this.entityName}) WHERE n.id = $input.id AND n.userId = $input.userId RETURN n`,
          {
             input: {
                id,
-               userId: this.#req.user.id
+               userId: this.req.user.id
             }
          }
       );
-      return this.#getRecords(result);
+      return this.getRecords(result);
    }
 
    async find(properties) {
       const driver = getDriver();
       const session = driver.session();
-      let query = `MATCH (n: ${this.#entityName})`;
+      let query = `MATCH (n: ${this.entityName})`;
       if (properties) {
          const whereClause = Object.keys(properties)
             .map((property) => `n.${property} = $input.${property}`)
@@ -106,7 +108,7 @@ class NeoGraphQueries {
             ...properties
          }
       });
-      return this.#getRecords(result);
+      return this.getRecords(result);
    }
 
    // TODO: clean this up
@@ -130,10 +132,10 @@ RETURN p, rel, t
    //       .map((key) => `n.${key} = '${properties[key]}'`)
    //       .join(logicalOperator);
    //    const query = `MATCH (n: ${
-   //       this.#entityName
+   //       this.entityName
    //    }) WHERE ${whereClause} RETURN n`;
    //    const result = await session.run(query);
-   //    return this.#getRecords(result);
+   //    return this.getRecords(result);
    // }
 }
 
