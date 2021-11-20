@@ -5,16 +5,32 @@ class QueryBuilder {
       this.query = "";
    }
 
+   build() {
+      return this.query;
+   }
+
    /**
     * create("p", "PaymentTag")
     * return
-    * CREATE (p:PaymentTag)
+    * CREATE (p:PaymentTag $p)
+    * $p is the input provided to neo4j driver
     * @param {*} identifier
     * @param {*} entityName
     * @returns
     */
    create(identifier, entityName) {
-      this.query += `${CYPHER_KEYWORDS.CREATE} (${identifier}:${entityName})\n`;
+      this.query += `${CYPHER_KEYWORDS.CREATE} (${identifier}:${entityName} $${identifier})\n`;
+      return this;
+   }
+
+   /**
+    * delete("p")
+    * returns
+    * DELETE p
+    * @param {*} identifier
+    */
+   delete(identifier) {
+      this.query += `${CYPHER_KEYWORDS.DELETE} ${identifier}`;
       return this;
    }
 
@@ -31,14 +47,53 @@ class QueryBuilder {
    }
 
    /**
+    * merge("p", "rel", "TAGGED_WITH", "a")
+    * returns
+    * MERGE (p)-[rel: TAGGED_WITH]-(a)
+    * @param {*} firstIdentifier
+    * @param {*} relationshipIdentifier
+    * @param {*} relationshipName
+    * @param {*} secondIdentifier
+    * @returns
+    */
+   merge(
+      firstIdentifier,
+      relationshipIdentifier,
+      relationshipName,
+      secondIdentifier
+   ) {
+      this.query += `${CYPHER_KEYWORDS.MERGE} (${firstIdentifier})-[${relationshipIdentifier}: ${relationshipName}]-(${secondIdentifier})\n`;
+      return this;
+   }
+
+   /**
     * returns("a", "b")
     * returns
-    * RETURNS a,b
+    * RETURN a,b
     * @param  {...any} identifier
     */
    returns(...identifiers) {
-      this.query += `${CYPHER_KEYWORDS.RETURNS} ${identifiers.join(",")}`;
-      return this.query;
+      this.query += `${CYPHER_KEYWORDS.RETURN} ${identifiers.join(",")}`;
+      return this;
+   }
+
+   /**
+    * set("p", { c: "charlie is awesome", t: "test" })
+    * returns
+    * SET p.c = "charlie is awesome", p.t = "test"
+    * @param {*} identifier
+    * @param {*} properties
+    * @returns
+    */
+   set(identifier, properties) {
+      const setClause = Object.keys(properties)
+         .map(
+            (property) =>
+               `${identifier}.${property} = $${identifier}.${property}`
+         )
+         .join(", ");
+      this.query += `${CYPHER_KEYWORDS.SET} ${setClause}\n`;
+      return this;
    }
 
    /**

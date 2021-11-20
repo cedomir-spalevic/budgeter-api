@@ -43,7 +43,10 @@ module.exports.NEO4J_RELATIONSHIPS = {
 module.exports.CYPHER_KEYWORDS = {
    MATCH: "MATCH",
    CREATE: "CREATE",
-   RETURNS: "RETURNS",
+   DELETE: "DELETE",
+   RETURN: "RETURN",
+   SET: "SET",
    WHERE: "WHERE",
-   WITH: "WITH"
+   WITH: "WITH",
+   MERGE: "MERGE"
 };

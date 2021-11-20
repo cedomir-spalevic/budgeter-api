@@ -1,10 +1,15 @@
 const { generateGuid } = require("utils/random");
 const { getDriver } = require("./connection");
+const { getQueryBuilder } = require("./cypher");
 
 class NeoGraphQueries {
    constructor(req, entityName) {
       this.req = req;
       this.entityName = entityName;
+   }
+
+   getEntityName() {
+      return this.entityName;
    }
 
    logMessage(message, obj) {
@@ -24,40 +29,38 @@ class NeoGraphQueries {
     * @param {*} relationships [{ name: "<name of relationship>", properties: {} }]
     * @returns
     */
-
    async create(properties) {
+      const query = getQueryBuilder()
+         .create("input", this.entityName)
+         .returns("input")
+         .build();
       const utcDateTime = new Date().toISOString();
       const driver = getDriver();
       const session = driver.session();
-      const result = await session.run(
-         `CREATE (n: ${this.entityName} $input) RETURN n`,
-         {
-            input: {
-               ...properties,
-               id: generateGuid(),
-               createdOn: utcDateTime,
-               modifiedOn: utcDateTime
-            }
+      const result = await session.run(query, {
+         input: {
+            ...properties,
+            id: generateGuid(),
+            createdOn: utcDateTime,
+            modifiedOn: utcDateTime
          }
-      );
+      });
       return this.getRecords(result);
    }
 
    async update(id, properties) {
+      properties = { ...properties, modifiedOn: new Date().toISOString() };
+      const query = getQueryBuilder()
+         .match("input", this.entityName)
+         .where("input", { id })
+         .set("input", properties)
+         .returns("input")
+         .build();
       const driver = getDriver();
       const session = driver.session();
-      let query = `MATCH (n: ${this.entityName} {id: $id})`;
-      if (properties) {
-         properties = { ...properties, modifiedOn: new Date().toISOString() };
-         const whereClause = Object.keys(properties)
-            .map((property) => `n.${property} = $input.${property}`)
-            .join(", ");
-         query += ` SET ${whereClause}`;
-      }
-      query += " RETURN n";
       const result = await session.run(query, {
-         id,
          input: {
+            id,
             ...properties
          }
       });
@@ -65,44 +68,45 @@ class NeoGraphQueries {
    }
 
    async delete(id) {
+      const query = getQueryBuilder()
+         .match("input", this.entityName)
+         .where("input", { id })
+         .delete("input")
+         .build();
       const driver = getDriver();
       const session = driver.session();
-      await session.run(
-         `MATCH (n: ${this.entityName}) WHERE n.id = $input.id DELETE n`,
-         {
-            input: {
-               id
-            }
+      await session.run(query, {
+         input: {
+            id
          }
-      );
+      });
    }
 
    async getById(id) {
+      const query = getQueryBuilder()
+         .match("input", this.entityName)
+         .where("input", { id })
+         .returns("input")
+         .build();
       const driver = getDriver();
       const session = driver.session();
-      const result = await session.run(
-         `MATCH (n: ${this.entityName}) WHERE n.id = $input.id AND n.userId = $input.userId RETURN n`,
-         {
-            input: {
-               id,
-               userId: this.req.user.id
-            }
+      const result = await session.run(query, {
+         input: {
+            id,
+            userId: this.req.user.id
          }
-      );
+      });
       return this.getRecords(result);
    }
 
    async find(properties) {
+      const query = getQueryBuilder()
+         .match("input", this.entityName)
+         .where("input", properties)
+         .returns("input")
+         .build();
       const driver = getDriver();
       const session = driver.session();
-      let query = `MATCH (n: ${this.entityName})`;
-      if (properties) {
-         const whereClause = Object.keys(properties)
-            .map((property) => `n.${property} = $input.${property}`)
-            .join(" AND ");
-         query += ` WHERE ${whereClause}`;
-      }
-      query += " RETURN n";
       const result = await session.run(query, {
          input: {
             ...properties

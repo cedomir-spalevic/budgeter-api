@@ -13,6 +13,7 @@
       "lint:js": "eslint . --ext .js",
       "lint:graphql": "graphql-schema-linter",
       "test": "jest --coverage",
+      "test:watch": "jest --watchAll",
       "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
       "deploy": "gcloud app deploy",
       "postinstall": "link-module-alias",
